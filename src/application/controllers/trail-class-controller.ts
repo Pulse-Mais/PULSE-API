@@ -37,6 +37,9 @@ import { ListTrailClassesUseCase } from '../use-cases/educational-content-cases/
 import { PublishTrailClassOutputDTO } from '../use-cases/educational-content-cases/trail-class/publish/dto/publish-trail-class-output-dto';
 import { PublishTrailClassInputDTO } from '../use-cases/educational-content-cases/trail-class/publish/dto/publish-trail-class-input-dto';
 import { UpdateTrailClassVideoContentInputDTO } from '../use-cases/educational-content-cases/trail-class-content/update-video-content/dto/update-trail-class-video-content-input-dto';
+import { GetTrailClassOutputDTO } from '../use-cases/educational-content-cases/trail-class/read/get-trail-class-use-case/dto/get-trail-class-output-DTO';
+import { GetTrailClassInputDTO } from '../use-cases/educational-content-cases/trail-class/read/get-trail-class-use-case/dto/get-trail-class-input-DTO';
+import { GetTrailClassUseCase } from '../use-cases/educational-content-cases/trail-class/read/get-trail-class-use-case/get-trail-class-use-case';
 
 export class TrailClassControler extends GenericController {
 
@@ -66,6 +69,28 @@ export class TrailClassControler extends GenericController {
             }
 
             const output: CreateTrailClassOutputDTO = await new CreateTrailClassUseCase(this.trailClassRepository, this.trailRepository, this.storageService).execute(input)
+
+            return ctx.sendResponse(this.createSuccessResponse(output))
+
+        } catch (error) {
+            return ctx.sendResponse(this.createErrorResponse(error))
+        }
+    }
+
+    async getTrailClass(ctx: IHttpContext): Promise<IHttpResponse<GetTrailClassOutputDTO>> {
+
+        try {
+
+            const { idTrail, idTrailClass } = ctx.getRequest().params
+            if (!idTrail) throw new InvalidRequestParamsAppException("trail-class-controller", "36", "idTrail");
+            if (!idTrailClass) throw new InvalidRequestParamsAppException("trail-class-controller", "36", "idTrailClass");
+
+            const input: GetTrailClassInputDTO = {
+                idTrail,
+                idTrailClass
+            }
+
+            const output: GetTrailClassOutputDTO = await new GetTrailClassUseCase(this.trailRepository).execute(input)
 
             return ctx.sendResponse(this.createSuccessResponse(output))
 

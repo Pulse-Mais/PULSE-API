@@ -158,4 +158,11 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
         return await trailClassController.listTrailClasses(fastifyAdapter)
     })
 
+    server.get("/trail/:idTrail/trail-class/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
+        const fastifyAdapter = new FastifyAdapter(request, reply);
+
+        return await trailClassController.getTrailClass(fastifyAdapter)
+
+    })
+
 }
