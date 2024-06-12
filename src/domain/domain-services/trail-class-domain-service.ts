@@ -169,7 +169,7 @@ export class TrailClassDomainService {
         const trailClassParts = trailClassKey.split("/");
 
         if (trailParts[1] !== trailClassParts[1]) throw new Error("");
-        if (trailClassKey[2] !== `trailClass-${trailClass.getId()}`) throw new Error("");
+        if (trailClassParts[2] !== `trailClass-${trailClass.getId()}`) throw new Error(trailClassKey);
 
         const key = `${trailClassKey}content.${contentParams.archiveExtension}`
 

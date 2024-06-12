@@ -235,6 +235,8 @@ export class TrailClassControler extends GenericController {
                 idTrailClass
             }
 
+            console.log()
+
             const output: UpdateTrailClassArchiveContentOutputDTO = await new UpdateTrailClassArchiveContentUseCase(this.trailRepository, this.trailClassRepository, new TrailClassDomainService()).execute(input)
 
             return ctx.sendResponse(this.createSuccessResponse(output))

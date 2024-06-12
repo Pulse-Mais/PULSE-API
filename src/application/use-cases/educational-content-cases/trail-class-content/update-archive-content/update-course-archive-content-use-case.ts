@@ -18,7 +18,7 @@ export class UpdateTrailClassArchiveContentUseCase extends GenericUseCase {
 
     async execute(input: UpdateTrailClassArchiveContentInputDTO): Promise<UpdateTrailClassArchiveContentOutputDTO> {
 
-        const trail = await this.trailRepository.findById(input.idTrailClass);
+        const trail = await this.trailRepository.findById(input.idTrail);
         if (!trail) throw new TrailNotFoundApplicationException(this.filename, "20")
 
         const newContent = this.trailClassDomainService.createdFilledArchiveContentObject(trail, input.idTrailClass)

@@ -21,9 +21,10 @@ export class MySqlTrailRepository implements ITrailRepository {
 
     constructor(private readonly courseRepository: ITrailClassRepository) {
         this.pool = createPool({
-            host: '127.0.0.1',
+            host: 'localhost',
             user: 'root',
-            password: 'Bruna280312!',
+            password: 'M1SQL_local4',
+            port: 3388,
             database: 'pulse',
             waitForConnections: true,
             connectionLimit: 10,
