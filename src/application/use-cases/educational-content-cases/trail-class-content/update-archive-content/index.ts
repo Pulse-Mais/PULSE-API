@@ -2,7 +2,7 @@ export { ITrailRepository } from '@/domain/repository/ITrail-Repository';
 export { ITrailClassRepository } from '@/domain/repository/ITrail-class-Repository';
 export { GenericUseCase } from '@/application/use-cases/gereric-use-case';
 export { TrailClassDomainService } from '../get-url-for-upload-archive';
-export { TrailClassNotSavedOnRepositoryApplicationException } from './../../../../application-exceptions/trail-class-not-saved-on-repository-app-exception';
+export { TrailClassNotSavedOnRepositoryApplicationException } from '../../../../application-exceptions/use-cases-application-exceptions/trail-class-not-saved-on-repository-app-exception';
 export { UpdateTrailClassArchiveContentOutputDTO } from './dto/update-trail-class-archive-content-output-dto';
 export { TrailNotFoundApplicationException } from "../get-url-for-upload-video";
 export { UpdateTrailClassArchiveContentInputDTO } from './dto/update-trail-class-archive-content-input-dto';

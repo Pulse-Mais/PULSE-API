@@ -1,3 +1,4 @@
+export { TrailFolderNotAvaibilityApplicationException } from './../../../../application-exceptions/use-cases-application-exceptions/trail-folder-not-avaibility-application-exception';
 
 export { Trail } from "@/domain/entity/trail/trail-entity";
 export { TrailClass } from "@/domain/entity/trail-class/trail-class-entity";
@@ -10,12 +11,12 @@ export { ITrailClassRepository } from "../../../../../domain/repository/ITrail-c
 export { ITrailRepository } from "../../../../../domain/repository/ITrail-Repository";
 
 
-export { TrailNotFoundApplicationException } from "@/application/application-exceptions/trail-not-found-app-exception";
-export { TrailStorageKeyEmptyApplicationException } from "@/application/application-exceptions/trail-storage-key-empty-app-exception";
-export  { TrailFolderNotAvaibilityApplicationException } from "@/application/application-exceptions/trail-folder-not-avaibility-application-exception";
-export { TrailClassStorageKeyEmptyApplicationException } from "@/application/application-exceptions/trail-class-storage-key-empty-app-exception";
-export { TrailClassPartionNotCreatedApplicationException } from "@/application/application-exceptions/trail-class-partition-not-created-app-exception";
-export { TrailClassNotSavedOnRepositoryApplicationException } from "@/application/application-exceptions/trail-class-not-saved-on-repository-app-exception";
+export { TrailNotFoundApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-not-found-app-exception";
+export { TrailStorageKeyEmptyApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-storage-key-empty-app-exception";
+ 
+export { TrailClassStorageKeyEmptyApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-class-storage-key-empty-app-exception";
+export { TrailClassPartionNotCreatedApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-class-partition-not-created-app-exception";
+export { TrailClassNotSavedOnRepositoryApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-class-not-saved-on-repository-app-exception";
 
 
 export { IStorageService } from "../../../../interfaces/IStorage-service";

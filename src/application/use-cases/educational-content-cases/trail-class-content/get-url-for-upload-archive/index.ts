@@ -6,7 +6,7 @@ export { Content, ContentValueObject } from "../../../../../domain/entity/value-
 export { TrailClassNotFoundOnTrailDomainException } from "@/domain/domain-exception/trail-class-not-found-on-trail-domain-exception";
 export { GenericUseCase } from "@/application/use-cases/gereric-use-case";
 export { TrailClass } from "@/domain/entity/trail-class/trail-class-entity";
-export { InvalidRequestParamsAppException } from "@/application/application-exceptions/invalid-request-params-app-exception";
+export { InvalidRequestParamsAppException } from "@/application/application-exceptions/controllers-application-exceptions/invalid-request-params-app-exception";
 export { TrailClassNotSavedOnRepositoryApplicationException } from "../../trail-class/create";
 export { GetUrlForUploadClassArchiveInputDTO } from "./dto/get-url-for-upload-archive-content-input-dto";
 export { GetUrlForUploadClassArchiveOutputDTO } from "./dto/get-url-for-upload-archive-content-output-dto";

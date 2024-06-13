@@ -19,15 +19,15 @@ export class CreateTrailUseCase extends GenericUseCase {
         const trail = new TrailDomainService().createTrail(input);
         const trailStorageKey = trail.getStorageKey()
 
-        if (!trailStorageKey) throw new Error("Criar exception!");
+        if (!trailStorageKey) throw new Error("Storage Key is undefined");
 
         if (!(await this.storageService.createTrailFolder(trailStorageKey))) {
           
-            throw new Error("Criar exception!");
+            throw new Error("Não criou a partição da trilha no storage!");
         }
 
         const saved = await this.trailRepository.save(trail)
-        if (!saved) throw new Error("Criar exception!");
+        if (!saved) throw new Error("Não salvou no banco!");
        
         return saved
     }

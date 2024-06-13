@@ -19,12 +19,12 @@ export class MySqlTrailRepository implements ITrailRepository {
     private readonly tableName = 'trails';
     private pool: Pool;
 
+    // TO-DO criar envs e criar a super classe.
     constructor(private readonly courseRepository: ITrailClassRepository) {
         this.pool = createPool({
-            host: 'localhost',
+            host: '127.0.0.1',
             user: 'root',
-            password: 'M1SQL_local4',
-            port: 3388,
+            password: 'Bruna280312!',
             database: 'pulse',
             waitForConnections: true,
             connectionLimit: 10,

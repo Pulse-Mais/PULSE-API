@@ -16,7 +16,7 @@ import { TrailClassDomainService } from "../../domain/domain-services/trail-clas
 import { GetUrlForUploadVideoContent } from "@/application/use-cases/educational-content-cases/trail-class-content/get-url-for-upload-video/get-url-for-upload-video-content";
 import { IVideoService } from "../interfaces/IVideo-service";
 
-import { InvalidRequestParamsAppException } from "../application-exceptions/invalid-request-params-app-exception";
+import { InvalidRequestParamsAppException } from "../application-exceptions/controllers-application-exceptions/invalid-request-params-app-exception";
 import { UpdateTrailClassInfoUseCase } from "../use-cases/educational-content-cases/trail-class/update/update-trail-class-info-use-case";
 import { PublishTrailClassUseCase } from "../use-cases/educational-content-cases/trail-class/publish/publish-trail-class-use-case";
 import { UnlockTrailClassUseCase } from "../use-cases/educational-content-cases/trail-class/unlock/unlock-trail-class-use-case";
@@ -40,6 +40,7 @@ import { UpdateTrailClassVideoContentInputDTO } from '../use-cases/educational-c
 import { GetTrailClassOutputDTO } from '../use-cases/educational-content-cases/trail-class/read/get-trail-class-use-case/dto/get-trail-class-output-DTO';
 import { GetTrailClassInputDTO } from '../use-cases/educational-content-cases/trail-class/read/get-trail-class-use-case/dto/get-trail-class-input-DTO';
 import { GetTrailClassUseCase } from '../use-cases/educational-content-cases/trail-class/read/get-trail-class-use-case/get-trail-class-use-case';
+import { IContentDeliveryNetworkingService } from '../interfaces/IContent-delivery-networking-service';
 
 export class TrailClassControler extends GenericController {
 
@@ -47,7 +48,8 @@ export class TrailClassControler extends GenericController {
         private readonly trailRepository: ITrailRepository,
         private readonly trailClassRepository: ITrailClassRepository,
         private readonly storageService: IStorageService,
-        private readonly videoService: IVideoService
+        private readonly videoService: IVideoService,
+        private readonly contentDeliveryService: IContentDeliveryNetworkingService
     ) {
         super();
     }
@@ -90,7 +92,7 @@ export class TrailClassControler extends GenericController {
                 idTrailClass
             }
 
-            const output: GetTrailClassOutputDTO = await new GetTrailClassUseCase(this.trailRepository).execute(input)
+            const output: GetTrailClassOutputDTO = await new GetTrailClassUseCase(this.trailRepository, this.contentDeliveryService).execute(input)
 
             return ctx.sendResponse(this.createSuccessResponse(output))
 

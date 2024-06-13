@@ -1,5 +1,6 @@
 import Mux from '@mux/mux-node';
 import "dotenv"
+
 export class MuxVideoServiceAdapter {
 
     private readonly mux: Mux = new Mux({

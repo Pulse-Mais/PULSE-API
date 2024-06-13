@@ -2,7 +2,7 @@ export { IVideoService } from "@/application/interfaces/IVideo-service";
 export { ITrailClassRepository } from "../get-url-for-upload-archive";
 export { TrailClassDomainService } from "../get-url-for-upload-archive";
 export { ITrailRepository } from "@/domain/repository/ITrail-Repository";
-export { TrailNotFoundApplicationException } from "@/application/application-exceptions/trail-not-found-app-exception";
+export { TrailNotFoundApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-not-found-app-exception";
 export { GenericUseCase } from "@/application/use-cases/gereric-use-case";
 export { Trail } from "@/domain/entity/trail/trail-entity";
 export { GetUrlForUploadClassVideoContentOutputDTO } from "./dto/get-url-for-upload-video-content-output-dto";

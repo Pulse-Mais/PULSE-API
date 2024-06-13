@@ -40,10 +40,28 @@ interface RestoreInput {
     updateAt: string;
 }
 
+interface GetTrailClassInput {
+    trail: Trail
+    idTrailClass: string
+}
+
 
 export class TrailClassDomainService {
 
     constructor() { }
+
+    getTrailClass(input: GetTrailClassInput) {
+
+        const { trail, idTrailClass } = input;
+        if (!trail) throw new InvalidTrailDomainException("trailClass-domain-service.ts", "46");
+
+        const trailClass: TrailClass | null = trail.getTrailClassById(idTrailClass)
+        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "97");
+
+
+
+    }
+
 
     createTrailClass(input: CreateInput) {
 
@@ -203,13 +221,19 @@ export class TrailClassDomainService {
         return updatedContent
     }
 
-    createdFilledArchiveContentObject(trail: Trail, idTrailClass: string) {
+    createdFilledArchiveContentObject(trail: Trail, idTrailClass: string, signedContentKeyUrl?: string) {
 
         const trailClass = trail.getTrailClassById(idTrailClass)
         if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trail-class-domain-service.ts", "124")
 
         const actualContent = trailClass.getContent()
         if (!actualContent) throw new Error("")
+
+        if (signedContentKeyUrl) {
+            const updatedContent = new Content(signedContentKeyUrl, actualContent.type, actualContent.format, "filled", { id: "none", status: "asset_created" });
+            
+            return updatedContent
+        }
 
         const updatedContent = new Content(actualContent.key, actualContent.type, actualContent.format, "filled", { id: "none", status: "asset_created" });
 

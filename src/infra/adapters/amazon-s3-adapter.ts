@@ -5,13 +5,18 @@ import 'dotenv/config';
 
 export class AmazonS3Adapter implements IStorageService {
 
-    private readonly bucketKey: string = "content-pulse-mais"
+    private readonly acesssKeyId: string = process.env.AWS_ACCESS_KEY_ID!;
+    private readonly secretAccessKey: string = process.env.AWS_SECRET_ACCESS_KEY!;
+    private readonly region: string = process.env.AWS_REGION!;
+    private readonly bucketKey: string = process.env.S3_BUCKET_KEY!;
+
+    // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
 
     private readonly client: S3Client = new S3Client({
-        region: "us-east-1",
+        region: this.region,
         credentials: {
-          accessKeyId: `${process.env.AWS_ACCESS_KEY_ID}`,
-          secretAccessKey: `${process.env.AWS_SECRET_ACCESS_KEY}`
+          accessKeyId: this.acesssKeyId,
+          secretAccessKey: this.secretAccessKey
         }
     })
 
@@ -20,6 +25,7 @@ export class AmazonS3Adapter implements IStorageService {
             await this.client.send(new PutObjectCommand({ Bucket: this.bucketKey, Key: key }))
             return true
         } catch (error) {
+            console.log(error, "ERROR CRIANDO FOLDER");
             return false
         }
             
