@@ -27,16 +27,19 @@ export class AmazonCloudFrontAdapter implements IContentDeliveryNetworkingServic
     private async generateSignedUrl(contentKey: string): Promise<string> {
         try {
             
-            const expiresIn = new Date(Date.now() + 3600 * 1000).toISOString(); // acaba em uma horinha.
+            // const expiresIn = new Date(Date.now() + 3600 * 1000).toISOString(); // acaba em uma horinha.
 
-            const input: CloudfrontSignInput = {
-                url: `${this.distributionDomainBaseUrl}/${contentKey}`,
-                keyPairId: this.keyPairId,
-                privateKey: this.privateKey,
-                dateLessThan: expiresIn
-            };
+            // const input: CloudfrontSignInput = {
+            //     url: `${this.distributionDomainBaseUrl}/${contentKey}`,
+            //     keyPairId: this.keyPairId,
+            //     privateKey: this.privateKey,
+            //     dateLessThan: expiresIn
+            // };
 
-            return getSignedUrl(input);
+            // return getSignedUrl(input);
+
+            // improvisando enquanto não ajusto.
+            return `${this.distributionDomainBaseUrl}/${contentKey}`;
         } catch (error) {
 
             console.log("Não gerou a URL assinada:", error);
