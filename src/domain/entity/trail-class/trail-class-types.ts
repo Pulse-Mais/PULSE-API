@@ -23,8 +23,8 @@ export interface RestoreTrailClassInput {
     content: ContentValueObject
     status: "published" | "not-published"
     release: ReleaseValueObject
-    createAt: string;
-    updateAt: string;
+    createAt: Date;
+    updateAt: Date;
 }
 
 export interface SetTrailClassContentInput {
