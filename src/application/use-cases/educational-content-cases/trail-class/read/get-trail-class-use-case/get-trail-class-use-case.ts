@@ -25,7 +25,6 @@ export class GetTrailClassUseCase {
         const content: ContentValueObject = trailClass.getContent()!;
 
         if (content.status === 'filled') {
-            console.log(content, "AAAAAAAAAAAAAAA")
             return await this.returnWithSignedContentUrl(trail, input.idTrailClass, content.key);
         }
 
