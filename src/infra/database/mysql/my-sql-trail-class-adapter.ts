@@ -83,7 +83,7 @@ export class MySqlTrailClassAdapter extends MySqlDatabaseAdapter implements ITra
             idTrail = VALUES(idTrail), title = VALUES(title), description = VALUES(description), subtitle = VALUES(subtitle), status = VALUES(status), releaseSchedule = VALUES(releaseSchedule), releaseStatus = VALUES(releaseStatus), trailClassStorageKey = VALUES(trailClassStorageKey), contentUploadId = VALUES(contentUploadId), contentUploadStatus = VALUES(contentUploadStatus), contentStatus = VALUES(contentStatus), contentKey = VALUES(contentKey), contentType = VALUES(contentType), contentFormat = VALUES(contentFormat), createAt = VALUES(createAt), updateAt = VALUES(updateAt)`,
             [
                 id, idTrail, title, description, subtitle, status, new Date(), "locked", trailClassStorageKey,
-                content.upload.id, content.upload.status, content.status, content.key, content.type, content.format,
+                content.upload.id, content.upload.status, content.status, content.key, content.type,
                 createdAt.toISOString().slice(0, 19).replace('T', ' '),
                 updatedAt.toISOString().slice(0, 19).replace('T', ' ')
             ]

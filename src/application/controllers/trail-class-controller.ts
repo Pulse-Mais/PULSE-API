@@ -208,7 +208,6 @@ export class TrailClassControler extends GenericController {
                 idTrailClass,
                 idTrail,
                 archiveExtension: archiveExtension,
-                format: format,
                 type: type
             }
 

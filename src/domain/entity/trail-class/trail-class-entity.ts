@@ -29,7 +29,7 @@ export class TrailClass extends TrailClassBaseEntity {
         trailClass.setDescription(input.description)
         trailClass.setStatus("not-published")
         trailClass.setRelease(new Release("locked", "empty"))
-        trailClass.setContent(new Content(`${trailClass.getTrailClassStorageKey()}`, "empty", "empty", "empty", {id: "empty", status: "none"}))
+        trailClass.setContent(new Content(`${trailClass.getTrailClassStorageKey()}`, "empty", "empty", {id: "empty", status: "none"}))
         trailClass.setCreateAt(dateNow)
         trailClass.setUpdateAt(dateNow)
 
@@ -72,7 +72,7 @@ export class TrailClass extends TrailClassBaseEntity {
     
         if (!input.status) throw new Error("O conteúdo não possuí status!");
         
-        this.setContent(new Content(input.key, input.type, input.format, input.status, input.upload))
+        this.setContent(new Content(input.key, input.type, input.status, input.upload))
     }
 
     public publish(releaseSchedule: ReleaseValueObject) {

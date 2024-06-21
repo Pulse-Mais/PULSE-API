@@ -30,7 +30,6 @@ export class GetUrlForUploadArchiveContent extends GenericUseCase {
  
         const newContent: ContentValueObject = this.trailClassService.createNewArchiveContentObject(trail, input.idTrailClass, {
             archiveExtension: input.archiveExtension,
-            format: input.format,
             type: input.type
         })
 
@@ -50,7 +49,6 @@ export class GetUrlForUploadArchiveContent extends GenericUseCase {
             content: {
                 key: updatedContent.key,
                 type: updatedContent.type,
-                format: updatedContent.format,
                 status: updatedContent.status
             }
         }

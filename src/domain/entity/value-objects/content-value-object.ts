@@ -10,12 +10,10 @@ export class Content implements ContentValueObject {
     status: "empty" | "in-upload" | "filled";
     key: string;
     type: "video" | "archive" | "empty";
-    format: "planilha" | "pdf" | "slides" | "video" | "empty";
 
-    constructor(key: string, type: "video" | "archive" | "empty", format: "planilha" | "pdf" | "slides" | "video" | "empty", status: "empty" | "in-upload" | "filled", upload: { id: string; status: 'waiting' | 'asset_created' | 'errored' | 'cancelled' | 'timed_out' | 'none'; }) {
+    constructor(key: string, type: "video" | "archive" | "empty", status: "empty" | "in-upload" | "filled", upload: { id: string; status: 'waiting' | 'asset_created' | 'errored' | 'cancelled' | 'timed_out' | 'none'; }) {
         this.key = key;
         this.type = type;
-        this.format = format;
         this.status = status;
         this.upload = upload;
     }
@@ -29,7 +27,6 @@ export interface ContentValueObject {
         status: 'waiting' | 'asset_created' | 'errored' | 'cancelled' | 'timed_out' | 'none';
     }
     type: "video" | "archive" | "empty", 
-    format: "planilha" | "pdf" | "slides" | "video"| "empty"
 }
 
 // passo 01: veriofico se a aulaa existe. 

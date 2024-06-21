@@ -1,5 +1,3 @@
-import { IHttpResponse } from "@/infra/port/http/IHttp-response";
-
 
 export abstract class GenericController {
 

@@ -14,6 +14,5 @@ export interface GetUrlForUploadClassArchiveInputDTO {
     | "xls"
     | "txt";
     type: "video" | "archive"
-    format: "planilha" | "pdf" | "slides" | "video"
 }
 

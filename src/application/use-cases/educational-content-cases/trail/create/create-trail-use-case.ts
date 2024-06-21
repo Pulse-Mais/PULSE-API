@@ -1,9 +1,11 @@
-import { Trail } from "../../../../../domain/entity/trail/trail-entity";
-import { ITrailRepository } from "../../../../../domain/repository/ITrail-Repository";
-import { TrailDomainService } from "../../../../../domain/domain-services/trail-domain-service";
-import { GenericUseCase } from "../../../gereric-use-case";
-import { IStorageService } from "../../../../interfaces/IStorage-service";
-import { CreateTrailInputDTO } from "./dto/create-trail-input-dto";
+import {
+    Trail,
+    ITrailRepository,
+    TrailDomainService,
+    GenericUseCase,
+    IStorageService,
+    CreateTrailInputDTO
+} from "./index"
 
 export class CreateTrailUseCase extends GenericUseCase {
 
@@ -22,13 +24,12 @@ export class CreateTrailUseCase extends GenericUseCase {
         if (!trailStorageKey) throw new Error("Storage Key is undefined");
 
         if (!(await this.storageService.createTrailFolder(trailStorageKey))) {
-          
             throw new Error("Não criou a partição da trilha no storage!");
         }
 
         const saved = await this.trailRepository.save(trail)
         if (!saved) throw new Error("Não salvou no banco!");
-       
+
         return saved
     }
 }
