@@ -8,7 +8,7 @@ import { InvalidTrailPropetyDomainException } from "@/domain/domain-exception/in
 export class MySqlTrailRepository extends MySqlDatabaseAdapter implements ITrailRepository {
     private readonly tableName = 'trails';
 
-    constructor(private readonly courseRepository: ITrailClassRepository) {
+    constructor(private readonly traiRepository: ITrailClassRepository) {
         super();
     }
 
@@ -85,7 +85,7 @@ export class MySqlTrailRepository extends MySqlDatabaseAdapter implements ITrail
 
         const courses = trail.getTrailClasss();
         for (const course of courses) {
-            await this.courseRepository.save(course);
+            await this.traiRepository.save(course);
         }
 
         return trail;
@@ -154,7 +154,7 @@ export class MySqlTrailRepository extends MySqlDatabaseAdapter implements ITrail
             throw new InvalidTrailPropetyDomainException("my-sql-trail-adapter.ts", "51", "updatedAt");
         }
 
-        const trailClasses = await this.courseRepository.listByTrail(id);
+        const trailClasses = await this.traiRepository.listByTrail(id);
 
         return Trail.restore({
             id,

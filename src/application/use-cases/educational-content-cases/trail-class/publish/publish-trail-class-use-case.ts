@@ -63,7 +63,6 @@ export class PublishTrailClassUseCase extends GenericUseCase {
                 key: content.key,
                 contentStatus: content.status,
                 type: content.type,
-                format: content.format
             },
             release: {
                 schedule: release.schedule,

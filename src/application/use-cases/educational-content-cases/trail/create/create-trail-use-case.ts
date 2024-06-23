@@ -4,8 +4,12 @@ import {
     TrailDomainService,
     GenericUseCase,
     IStorageService,
-    CreateTrailInputDTO
+    CreateTrailInputDTO,
+    TrailClassPartionNotCreatedApplicationException,
+    TrailClassNotSavedOnRepositoryApplicationException,
+    InvalidContentKeyDomainException    
 } from "./index"
+
 
 export class CreateTrailUseCase extends GenericUseCase {
 
@@ -21,14 +25,13 @@ export class CreateTrailUseCase extends GenericUseCase {
         const trail = new TrailDomainService().createTrail(input);
         const trailStorageKey = trail.getStorageKey()
 
-        if (!trailStorageKey) throw new Error("Storage Key is undefined");
+        if (!trailStorageKey) throw new InvalidContentKeyDomainException("create-trail-use-case.ts", "27");
 
-        if (!(await this.storageService.createTrailFolder(trailStorageKey))) {
-            throw new Error("Não criou a partição da trilha no storage!");
-        }
+        const partitionFolderCreated = await this.storageService.createTrailFolder(trailStorageKey)
+        if (!partitionFolderCreated) throw new TrailClassPartionNotCreatedApplicationException("create-trail-use-case.ts", "25");
 
         const saved = await this.trailRepository.save(trail)
-        if (!saved) throw new Error("Não salvou no banco!");
+        if (!saved) throw new TrailClassNotSavedOnRepositoryApplicationException("create-trail-use-case.ts", "34")
 
         return saved
     }

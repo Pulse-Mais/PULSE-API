@@ -39,7 +39,10 @@ export class CreateTrailClassUseCase extends GenericUseCase {
         if (!trailStorageKey) throw new TrailStorageKeyEmptyApplicationException(this.filename, "39");
 
         const folderIsAvaibility: boolean = await this.storageService.verifyFolderAvailability(trailStorageKey)
-        if (!folderIsAvaibility) throw new TrailFolderNotAvaibilityApplicationException(this.filename, "42");
+        if (!folderIsAvaibility) {
+            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            throw new TrailFolderNotAvaibilityApplicationException(this.filename, "42");
+        }
 
         const trailClass: TrailClass = new TrailClassDomainService().createTrailClass({
             trail,
@@ -47,6 +50,7 @@ export class CreateTrailClassUseCase extends GenericUseCase {
             subtitle: input.subtitle,
             description: input.description
         });
+
 
         const trailClassStorageKey = trailClass.getTrailClassStorageKey();
         if (!trailClassStorageKey) throw new TrailClassStorageKeyEmptyApplicationException(this.filename, "52");
@@ -56,7 +60,7 @@ export class CreateTrailClassUseCase extends GenericUseCase {
 
         const saved = await this.trailClassRepository.save(trailClass);
         if (!saved) throw new TrailClassNotSavedOnRepositoryApplicationException(this.filename, "58");
-        
+
         const outputId = saved.getId();
         if (!outputId) throw new Error("ID is undefined");
         

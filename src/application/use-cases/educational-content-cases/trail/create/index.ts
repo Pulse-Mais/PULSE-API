@@ -4,3 +4,7 @@ export { TrailDomainService } from "../../../../../domain/domain-services/trail-
 export { GenericUseCase } from "../../../gereric-use-case";
 export { IStorageService } from "../../../../interfaces/IStorage-service";
 export { CreateTrailInputDTO } from "./dto/create-trail-input-dto";
+export { CreateTrailUseCase } from "./create-trail-use-case";
+export { TrailClassPartionNotCreatedApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-class-partition-not-created-app-exception";
+export { TrailClassNotSavedOnRepositoryApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-class-not-saved-on-repository-app-exception";
+export { InvalidContentKeyDomainException } from "@/domain/domain-exception/invalid-content-key-domain-exception";

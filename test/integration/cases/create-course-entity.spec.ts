@@ -1,5 +1,5 @@
 import { CreateCourseUseCase } from "@/application/use-cases/educational-content-cases/trail-class/create/create-trail-class-use-case";
-import { InMemoryCourseRepository } from "../../memory/in-memory-course-repository";
+import { InMemoryCourseRepository } from "../../memory/in-memory-trail-class-repository";
 import { InMemoryTrailRepository } from "../../memory/in-memory-trail-repository";
 import { AmazonS3Adapter } from "@/infra/adapters/amazon-s3-adapter";
 

@@ -4,7 +4,7 @@ import { CreateCourseUseCase } from "@/application/use-cases/educational-content
 import { CreateTrailUseCase } from "@/application/use-cases/educational-content-cases/trail/create-trail-use-case"
 import { CourseDomainService } from "@/domain/domain-services/trail-class-domain-service"
 import { AmazonS3Adapter } from "@/infra/adapters/amazon-s3-adapter"
-import { InMemoryCourseRepository } from "../../memory/in-memory-course-repository"
+import { InMemoryCourseRepository } from "../../memory/in-memory-trail-class-repository"
 import { InMemoryTrailRepository } from "../../memory/in-memory-trail-repository"
 import { GetUrlForUploadVideoContent } from "@/application/use-cases/educational-content-cases/trail-class-content/get-url-for-upload-video-content"
 import { MuxVideoServiceAdapter } from "@/infra/adapters/mux-video-service-adapter"

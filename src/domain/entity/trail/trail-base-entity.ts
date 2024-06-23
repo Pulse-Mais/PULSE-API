@@ -10,15 +10,15 @@ export class TrailBase {
 
     private storageKey?: string;
     private status?: "published" | "not-published";
-    
+
     private createAt?: Date;
     private updateAt?: Date;
-    
+
     private trailClass: TrailClass[] = [];
 
     constructor() { }
 
-    public getId(): string | undefined { 
+    public getId(): string | undefined {
         return this.id;
     }
 
@@ -33,58 +33,87 @@ export class TrailBase {
         this.id = id;
     }
 
-    public getTitle(): string | undefined {
+    public getTitle() {
         return this.title;
     }
 
     public setTitle(title: string): void {
+        if (!title) throw new Error("O título não pode ser vazio!");
 
-        const invalidCharacters = /[^a-zA-ZáéíóúÁÉÍÓÚàÀêÊôÔçÇüÜ0-9 -]/;
+        if (title.length < 5 || title.length > 70) {
+            throw new Error("O título deve ter entre 5 e 70 caracteres.");
+        }
 
-        if (invalidCharacters.test(title)) {
+
+        const invalidCharacters = /[^a-zA-Z\u00C0-\u00FF0-9\s ?!.,"'-]/;
+        const matches = title.match(invalidCharacters);
+        if (matches) {
+            console.error("Caracteres inválidos encontrados:", matches);
             throw new Error("O título contém caracteres inválidos.");
         }
 
-        if (title.length < 5) {
-            throw new Error("O título deve ter pelo menos 5 caracteres.");
+        if (/(\d{2,})/.test(title)) {
+            throw new Error("O título não pode conter sequências numéricas.");
+        }
+
+        if (this.verifyIfContainsSwearsWords(title.toLowerCase())) {
+            throw new Error(`O título contém palavras de baixo calão.`);
         }
 
         this.title = title;
     }
 
-    public getSubtitle(): string | undefined {
+
+    public getSubtitle() {
         return this.subtitle;
     }
 
     public setSubtitle(subtitle: string): void {
+        if (!subtitle) throw new Error("O subtítulo não pode ser vazio!");
 
-        const invalidSubtitleCharacters = /[^a-zA-ZáéíóúÁÉÍÓÚàÀêÊôÔçÇüÜ0-9 -]/;
-
-        if (invalidSubtitleCharacters.test(subtitle)) {
+        if (subtitle.length < 5 || subtitle.length > 70) {
+            throw new Error("O subtítulo deve ter entre 5 e 70 caracteres.");
+        }
+        const invalidCharacters = /[^a-zA-Z\u00C0-\u00FF0-9\s ?!.,"'-]/;
+        const matches = subtitle.match(invalidCharacters);
+        if (matches) {
+            console.error("Caracteres inválidos encontrados:", matches);
             throw new Error("O subtítulo contém caracteres inválidos.");
         }
 
-        if (subtitle.length < 5) {
-            throw new Error("O subtítulo deve ter pelo menos 5 caracteres.");
+        if (/(\d{2,})/.test(subtitle)) {
+            throw new Error("O subtítulo não pode conter sequências numéricas.");
+        }
+
+        if (this.verifyIfContainsSwearsWords(subtitle.toLowerCase())) {
+            throw new Error(`O subtítulo contém palavras de baixo calão.`);
         }
 
         this.subtitle = subtitle;
     }
 
-    public getDescription(): string | undefined {
-        return this.description;
+    public getDescription() {
+        return this.description
     }
 
     public setDescription(description: string): void {
+        if (!description) throw new Error("A descrição não pode ser vazia!")
 
-        const invalidDescriptionCharacters = /[^a-zA-ZáéíóúÁÉÍÓÚàÀêÊôÔçÇüÜ0-9 -]/;
+        if (description.length < 5 || description.length > 600) {
+            throw new Error("O subtítulo deve ter entre 5 e 600 caracteres.");
+        }
 
+        const invalidDescriptionCharacters = /[^a-zA-Z\u00C0-\u00FF0-9\s ?!.,"'-]/;
         if (invalidDescriptionCharacters.test(description)) {
             throw new Error("A descrição contém caracteres inválidos.");
         }
 
-        if (description.length < 10) {
-            throw new Error("A descrição deve ter pelo menos 10 caracteres.");
+        if (/(\d{10,})/.test(description)) {
+            throw new Error("O subtítulo não pode conter sequências numéricas.");
+        }
+
+        if (this.verifyIfContainsSwearsWords(description)) {
+            throw new Error("A descrição contém palavras de baixo calão.");
         }
 
         this.description = description;
@@ -164,9 +193,21 @@ export class TrailBase {
         }
     }
 
-
     private isValidDate(dateStr: string): boolean {
         // const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
         return true;
-      }
+    }
+
+
+    private verifyIfContainsSwearsWords(str: string): boolean {
+        console.log(str)
+        const swearWords = ["caralho", "porra", "sexo", "piroca", "puta", "pinto", "buceta", "pênis", "cu"];
+
+        const containsSwearWords: boolean = swearWords.some(swear => str.toLowerCase().split(' ').includes(swear));
+        if (containsSwearWords) {
+            return true
+        }
+
+        return false
+    }
 }

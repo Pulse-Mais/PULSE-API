@@ -1,5 +1,5 @@
 import { CourseDomainService } from "@/domain/domain-services/trail-class-domain-service"
-import { InMemoryCourseRepository } from "../../memory/in-memory-course-repository"
+import { InMemoryCourseRepository } from "../../memory/in-memory-trail-class-repository"
 import { GetUrlForUploadArchiveContent } from "@/application/use-cases/educational-content-cases/trail-class-content/get-url-for-upload-archive/get-url-for-upload-archive-content"
 import { InMemoryTrailRepository } from "../../memory/in-memory-trail-repository"
 import { AmazonS3Adapter } from "@/infra/adapters/amazon-s3-adapter"
