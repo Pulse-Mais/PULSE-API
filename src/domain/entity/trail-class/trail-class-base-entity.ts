@@ -276,17 +276,17 @@ export class TrailClassBaseEntity {
 
     public setTrailClassStorageKey(key: string) {
         const idValidCharacters = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-        const validPrefix = "trilhas/trail-class-"
-
+        const validPrefix = `trilhas/trail-${this.getIdTrail()}/trailClass-`
+         
         const keyStartsWithValidPrefix = key.startsWith(validPrefix)
-        const keyLengthIsValid = key.length === validPrefix.length + 36
+        const keyLengthIsValid = key.length >= 99
 
         if (!keyStartsWithValidPrefix) {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
                 "241",
                 "trailClassStorageKey",
-                `o prexido da key é inválido.`
+                `o prexifo da key é inválido.`
             )
         }
 
@@ -299,16 +299,49 @@ export class TrailClassBaseEntity {
             )
         }
 
-        const idPart = key.slice(validPrefix.length);
+        const contentKeyParts = key.split("/")
+        const idTrailOnContentKeyParts = contentKeyParts[1].split("trail-")[1]
+        const idTrailClassOnContentKeyParts = contentKeyParts[2].split("trailClass-")[1]
 
-        const isValidId = idValidCharacters.test(idPart)
+        const isValidIdTrailFormat = idValidCharacters.test(idTrailOnContentKeyParts) 
+        const isValidIdTrailClassFormat = idValidCharacters.test(idTrailClassOnContentKeyParts)
 
-        if (!isValidId) {
+        if (!isValidIdTrailFormat) {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
                 "241",
                 "trailClassStorageKey",
-                `O formato do id presente da key da aula é inválido.`
+                `O formato do id da trilha presente da key da aula é inválido.`
+            )
+        }
+
+        if (!isValidIdTrailClassFormat) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "241",
+                "trailClassStorageKey",
+                `O formato do id da aula presente da key da aula é inválido.`
+            )
+        }
+
+        const isValidIdTrail = this.getIdTrail() === idTrailOnContentKeyParts
+        const isValidIdTrailClass = this.getId() === idTrailClassOnContentKeyParts
+
+        if (!isValidIdTrail) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "241",
+                "trailClassStorageKey",
+                `O id da aula presente na key da aula não é igual ao id da aula.`
+            )
+        }
+
+        if (!isValidIdTrailClass) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "241",
+                "trailClassStorageKey",
+                `O id da aula presente na key da aula não é igual ao id da aula.`
             )
         }
 
@@ -330,7 +363,7 @@ export class TrailClassBaseEntity {
             )
         }
 
-        const validPrefix = "trilhas/trail-"
+        const validPrefix = `trilhas/trail-${this.getIdTrail()}/trailClass-${this.getId()}/`
         const contentKey = content.key
 
         if (!contentKey) {
@@ -342,7 +375,7 @@ export class TrailClassBaseEntity {
             )
         }
 
-        if (contentKey.length < 36 + validPrefix.length) {
+        if (contentKey.length < validPrefix.length) {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
                 "241",
@@ -355,7 +388,7 @@ export class TrailClassBaseEntity {
         const idTrailOnContentKeyParts = contentKeyParts[1].split("trail-")[1]
         const idTrailClassOnContentKeyParts = contentKeyParts[2].split("trailClass-")[1]
 
-        console.log(idTrailOnContentKeyParts)
+   
         if (this.getIdTrail() !== idTrailOnContentKeyParts) {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
