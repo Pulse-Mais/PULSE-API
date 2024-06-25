@@ -62,8 +62,8 @@ export class UnlockTrailClassUseCase extends GenericUseCase {
             content: {
                 key: content.key,
                 contentStatus: content.status,
-                type: content.type,
-                format: content.format
+                type: content.type
+                // format: content.format AQUI
             },
             release: {
                 schedule: release.schedule,

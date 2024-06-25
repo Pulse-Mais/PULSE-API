@@ -11,7 +11,6 @@ export interface CreateTrailClassInput {
 }
 
 export interface RestoreTrailClassInput {
-
     id: string
     idTrail: string
 
@@ -30,6 +29,30 @@ export interface RestoreTrailClassInput {
 export interface SetTrailClassContentInput {
     readonly key: string,
     readonly type: "empty" | "video" | "archive" 
-    readonly format: "planilha" | "pdf" | "slides" | "video"| "empty"
+    readonly format: "pptx"
+    | "xlsx"
+    | "empty"
+    | "pdf"
+    | "jpg"
+    | "jpeg"
+    | "png"
+    | "svg"
+    | "doc"
+    | "docx"
+    | "xls"
+    | "txt";
+    readonly archiveExtension:
+    "pptx"
+    | "xlsx"
+    | "empty"
+    | "pdf"
+    | "jpg"
+    | "jpeg"
+    | "png"
+    | "svg"
+    | "doc"
+    | "docx"
+    | "xls"
+    | "txt";
     readonly status: "empty" | "filled"
 }

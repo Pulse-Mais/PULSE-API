@@ -5,6 +5,7 @@ export interface GetUrlForUploadClassArchiveInputDTO {
     | "pptx"
     | "xlsx"
     | "pdf"
+    | "empty"
     | "jpg"
     | "jpeg"
     | "png"

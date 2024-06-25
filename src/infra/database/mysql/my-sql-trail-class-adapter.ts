@@ -76,6 +76,15 @@ export class MySqlTrailClassAdapter extends MySqlDatabaseAdapter implements ITra
             throw new InvalidTrailClassPropetyDomainException("my-sql-trail-class-adapter.ts", "57", "updatedAt");
         }
 
+        // console.log([
+        //     id, idTrail, title, description, subtitle, status, new Date(), "locked", trailClassStorageKey,
+        //     content.upload.id, content.upload.status, content.status, content.key, content.type, content.archiveExtension,
+        //     createdAt.toISOString().slice(0, 19).replace('T', ' '),
+        //     updatedAt.toISOString().slice(0, 19).replace('T', ' ') // 16
+        // ])
+
+        // console.log(content)
+
         await this.pool.execute(
             `INSERT INTO ${this.tableName} (id, idTrail, title, description, subtitle, status, releaseSchedule, releaseStatus, trailClassStorageKey, contentUploadId, contentUploadStatus, contentStatus, contentKey, contentType, contentFormat, createAt, updateAt) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -83,9 +92,9 @@ export class MySqlTrailClassAdapter extends MySqlDatabaseAdapter implements ITra
             idTrail = VALUES(idTrail), title = VALUES(title), description = VALUES(description), subtitle = VALUES(subtitle), status = VALUES(status), releaseSchedule = VALUES(releaseSchedule), releaseStatus = VALUES(releaseStatus), trailClassStorageKey = VALUES(trailClassStorageKey), contentUploadId = VALUES(contentUploadId), contentUploadStatus = VALUES(contentUploadStatus), contentStatus = VALUES(contentStatus), contentKey = VALUES(contentKey), contentType = VALUES(contentType), contentFormat = VALUES(contentFormat), createAt = VALUES(createAt), updateAt = VALUES(updateAt)`,
             [
                 id, idTrail, title, description, subtitle, status, new Date(), "locked", trailClassStorageKey,
-                content.upload.id, content.upload.status, content.status, content.key, content.type,
+                content.upload.id, content.upload.status, content.status, content.key, content.type, content.archiveExtension,
                 createdAt.toISOString().slice(0, 19).replace('T', ' '),
-                updatedAt.toISOString().slice(0, 19).replace('T', ' ')
+                updatedAt.toISOString().slice(0, 19).replace('T', ' ') // 16
             ]
         );
 
@@ -177,11 +186,13 @@ export class MySqlTrailClassAdapter extends MySqlDatabaseAdapter implements ITra
             format: row.contentFormat,
             key: row.contentKey,
             status: row.contentStatus,
+            archiveExtension: row.contentFormat,
             upload: {
                 id: row.contentUploadId,
                 status: row.contentUploadStatus
             }
         };
+        
         if (!content) {
             throw new InvalidTrailClassPropetyDomainException("my-sql-trail-class-adapter.ts", "51", "content");
         }

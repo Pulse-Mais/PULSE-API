@@ -54,7 +54,7 @@ export class UpdateTrailClassVideoContentUseCase extends GenericUseCase {
             content: {
                 key: updatedContent.key,
                 type: updatedContent.type,
-                format: updatedContent.format,
+                // format: updatedContent.format,AQUI
                 status: updatedContent.status
             }
         }

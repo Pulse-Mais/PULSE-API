@@ -29,7 +29,7 @@ export class TrailClass extends TrailClassBaseEntity {
         trailClass.setDescription(input.description)
         trailClass.setStatus("not-published")
         trailClass.setRelease(new Release("locked", "empty"))
-        trailClass.setContent(new Content(`${trailClass.getTrailClassStorageKey()}`, "empty", "empty", {id: "empty", status: "none"}))
+        trailClass.setContent(new Content(`${trailClass.getTrailClassStorageKey()}`, "empty", "empty", {id: "empty", status: "none"}, "pdf"))
         trailClass.setCreateAt(dateNow)
         trailClass.setUpdateAt(dateNow)
 
@@ -58,9 +58,9 @@ export class TrailClass extends TrailClassBaseEntity {
 
     public updateContent(input: ContentValueObject) {
         
-        if (this.getStatus() === "published") {
-            throw new Error("Não é possível alterar o conteúdo de uma aula já públicada!")
-        }
+        // if (this.getStatus() === "published") { AQUI Alterar para uma exceção personalizada
+        //     throw new Error("Não é possível alterar o conteúdo de uma aula já públicada!")
+        // }
 
         if (!input.key) throw new Error("aaaa");
 
@@ -71,8 +71,8 @@ export class TrailClass extends TrailClassBaseEntity {
         if (!input.type || input.type === "empty") throw new Error("O tipo do conteúdo não pode ser vazio!");
     
         if (!input.status) throw new Error("O conteúdo não possuí status!");
-        
-        this.setContent(new Content(input.key, input.type, input.status, input.upload))
+
+        this.setContent(new Content(input.key, input.type, input.status, input.upload, input.archiveExtension))
     }
 
     public publish(releaseSchedule: ReleaseValueObject) {
@@ -94,12 +94,12 @@ export class TrailClass extends TrailClassBaseEntity {
         const release = this.getRelease()
         if (!release) throw new InvalidTrailClassPropetyDomainException("trail-class-entity", "93", "release");
 
-        if (release.schedule !== "empty") throw new InvalidReleaseScheduleDomainException("trail-class-entity", "95");
-        if (release.status !== "locked") throw new InvalidReleaseStatusDomainException("trail-class-entity", "96");
+        // if (release.schedule !== "empty") throw new InvalidReleaseScheduleDomainException("trail-class-entity", "95");
+        // if (release.status !== "locked") throw new InvalidReleaseStatusDomainException("trail-class-entity", "96");
 
-        if (releaseSchedule.schedule === "empty") throw new Error("aaaa");
-        if (releaseSchedule.status !== "locked") throw new Error("aaaa");
-        if (typeof(releaseSchedule.schedule) !== Date()) throw new Error("aaaa");
+        if (releaseSchedule.schedule === "empty") throw new Error("aaaa1");
+        // if (releaseSchedule.status !== "locked") throw new Error("aaaa2");
+        // if (releaseSchedule.schedule !== new Date()) throw new Error("aaaa3"); AQUI | Verificar está validação.
 
         this.setRelease(releaseSchedule)
         this.setStatus("published")

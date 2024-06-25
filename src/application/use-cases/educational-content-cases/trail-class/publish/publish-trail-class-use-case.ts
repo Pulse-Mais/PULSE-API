@@ -24,7 +24,7 @@ export class PublishTrailClassUseCase extends GenericUseCase {
         const trail = await this.trailRepository.findById(input.idTrail)
         if (!trail) throw new TrailNotFoundApplicationException(this.filename, "30");
 
-        const publishedTrailClass: TrailClass = new TrailClassDomainService().publishTrailClass(trail, input.idTrailClass, input.unlockDate)
+        const publishedTrailClass: TrailClass = new TrailClassDomainService().publishTrailClass(trail, input.idTrailClass)
 
         const saved: TrailClass = await this.trailClassRepository.save(publishedTrailClass);
         if (!saved) throw new TrailClassNotSavedOnRepositoryApplicationException(this.filename, "35");
@@ -63,7 +63,7 @@ export class PublishTrailClassUseCase extends GenericUseCase {
                 key: content.key,
                 contentStatus: content.status,
                 type: content.type,
-                format: content.format
+                // format: content.format AQUI
             },
             release: {
                 schedule: release.schedule,

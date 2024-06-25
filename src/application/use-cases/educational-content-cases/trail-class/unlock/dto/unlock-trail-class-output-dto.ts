@@ -7,7 +7,7 @@ export interface UnlockTrailClassOutputDTO {
         key: string,
         contentStatus: "empty" | "in-upload" | "filled"
         type: string
-        format: string
+        // format: string
     }
     release: {
         schedule: Date

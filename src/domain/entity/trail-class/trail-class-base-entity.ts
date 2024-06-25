@@ -162,6 +162,7 @@ export class TrailClassBaseEntity {
     }
 
     public setContent(content: ContentValueObject) {
+        console.log(content)
         this.content = content
     }
 

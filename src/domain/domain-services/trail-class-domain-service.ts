@@ -108,13 +108,13 @@ export class TrailClassDomainService {
 
     }
 
-    publishTrailClass(trail: Trail, idTrailClass: string, unlockDate: Date) {
+    publishTrailClass(trail: Trail, idTrailClass: string) {
 
         const trailClass: TrailClass | null = trail.getTrailClassById(idTrailClass)
         if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "97");
 
-        if (!unlockDate) throw new Error("unlockDate is required");
-        const releaseSchedule = new Release("locked", unlockDate)
+        // if (!unlockDate) throw new Error("unlockDate is required");
+        const releaseSchedule = new Release("unlocked", new Date())
         trailClass.publish(releaseSchedule)
 
         return trailClass
@@ -158,6 +158,7 @@ export class TrailClassDomainService {
         | "pptx"
         | "xlsx"
         | "pdf"
+        | "empty"
         | "jpg"
         | "jpeg"
         | "png"
@@ -186,7 +187,7 @@ export class TrailClassDomainService {
 
         const key = `${trailClassKey}content.${contentParams.archiveExtension}`
 
-        const newContent = new Content(key, contentParams.type, "empty", { id: "none", status: "waiting" });
+        const newContent = new Content(key, contentParams.type, "empty", { id: "none", status: "waiting" }, contentParams.archiveExtension );
 
         return newContent
     }
@@ -199,7 +200,7 @@ export class TrailClassDomainService {
         const actualContent = trailClass.getContent()
         if (!actualContent) throw new InvalidTrailClassPropetyDomainException("trail-class-domain-service.ts", "187", "content")
 
-        const newContent = new Content(actualContent.key, "video", "empty", { id: idUpload, status: "waiting" });
+        const newContent = new Content(actualContent.key, "video", "empty", { id: idUpload, status: "waiting" }, actualContent.archiveExtension);
 
         return newContent
     }
@@ -211,7 +212,7 @@ export class TrailClassDomainService {
         const actualContent = trailClass.getContent()
         if (!actualContent) throw new InvalidTrailClassPropetyDomainException("trail-class-domain-service.ts", "199", "content")
 
-        const updatedContent = new Content(newKey, actualContent.type, "filled", { id: actualContent.upload.id, status: "asset_created" });
+        const updatedContent = new Content(newKey, actualContent.type, "filled", { id: actualContent.upload.id, status: "asset_created" }, actualContent.archiveExtension);
 
         return updatedContent
     }
@@ -225,12 +226,12 @@ export class TrailClassDomainService {
         if (!actualContent) throw new Error("")
 
         if (signedContentKeyUrl) {
-            const updatedContent = new Content(signedContentKeyUrl, actualContent.type, "filled", { id: "none", status: "asset_created" });
+            const updatedContent = new Content(signedContentKeyUrl, actualContent.type, "filled", { id: "none", status: "asset_created" }, actualContent.archiveExtension);
             
             return updatedContent
         }
 
-        const updatedContent = new Content(actualContent.key, actualContent.type, "filled", { id: "none", status: "asset_created" });
+        const updatedContent = new Content(actualContent.key, actualContent.type, "filled", { id: "none", status: "asset_created" }, actualContent.archiveExtension);
 
         return updatedContent
     }

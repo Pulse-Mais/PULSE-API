@@ -7,7 +7,7 @@ export interface PublishTrailClassOutputDTO {
         key: string,
         contentStatus: "empty" | "in-upload" | "filled"
         type: string
-        format: string
+        // format: string AQUI
     }
     release: {
         schedule: Date

@@ -130,16 +130,16 @@ export class TrailClassControler extends GenericController {
     async publishTrailClass(ctx: IHttpContext): Promise<IHttpResponse<PublishTrailClassOutputDTO>> {
         try {
             const { idTrail, idTrailClass } = ctx.getRequest().params
-            const unlockDate = ctx.getRequest().body.unlockDate
+            // const unlockDate = ctx.getRequest().body.unlockDate
 
             if (!idTrail) throw new InvalidRequestParamsAppException("trail-class-controller", "61", "idTrail");
             if (!idTrailClass) throw new InvalidRequestParamsAppException("trail-class-controller", "62", "idTrailClass");
-            if (!unlockDate) throw new InvalidRequestParamsAppException("trail-class-controller", "63", "unlockDate");
+            // if (!unlockDate) throw new InvalidRequestParamsAppException("trail-class-controller", "63", "unlockDate");
 
             const input: PublishTrailClassInputDTO = {
                 idTrail,
                 idTrailClass,
-                unlockDate
+                // unlockDate
             }
 
             const output: PublishTrailClassOutputDTO = await new PublishTrailClassUseCase(this.trailRepository, this.trailClassRepository,).execute(input)
@@ -212,10 +212,10 @@ export class TrailClassControler extends GenericController {
             }
 
             const output: GetUrlForUploadClassArchiveOutputDTO = await new GetUrlForUploadArchiveContent(trailClassRepository, trailRepository, this.storageService, new TrailClassDomainService()).execute(input);
-
             return ctx.sendResponse(createSuccessResponse(output));
 
         } catch (error) {
+            console.log(error)
             return ctx.sendResponse(createErrorResponse(error));
         }
     }
@@ -236,7 +236,6 @@ export class TrailClassControler extends GenericController {
                 idTrailClass
             }
 
-            console.log()
 
             const output: UpdateTrailClassArchiveContentOutputDTO = await new UpdateTrailClassArchiveContentUseCase(this.trailRepository, this.trailClassRepository, new TrailClassDomainService()).execute(input)
 
