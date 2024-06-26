@@ -1,6 +1,7 @@
+import { InvalidTrailDomainException } from "@/domain/domain-exception/invalid-trail-domain-exception";
 import { TrailClass } from "../trail-class/trail-class-entity";
 
-export class TrailBase {
+export class TrailBaseEntity {
 
     private id?: string;
 
@@ -27,7 +28,11 @@ export class TrailBase {
         const validIdCharacters = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
         if (!validIdCharacters.test(id)) {
-            throw new Error("Id inválido!");
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "55",
+                "id"
+            )
         }
 
         this.id = id;
@@ -38,26 +43,53 @@ export class TrailBase {
     }
 
     public setTitle(title: string): void {
-        if (!title) throw new Error("O título não pode ser vazio!");
-
-        if (title.length < 5 || title.length > 70) {
-            throw new Error("O título deve ter entre 5 e 70 caracteres.");
+        if (!title) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "55",
+                "title",
+                "O título não pode ser vazio!"
+            )
         }
 
+        if (title.length < 5 || title.length > 70) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "62",
+                "title",
+                "O título deve ter entre 5 e 70 caracteres."
+            )
+        }
 
         const invalidCharacters = /[^a-zA-Z\u00C0-\u00FF0-9\s ?!.,"'-]/;
-        const matches = title.match(invalidCharacters);
-        if (matches) {
-            console.error("Caracteres inválidos encontrados:", matches);
-            throw new Error("O título contém caracteres inválidos.");
+        const hasInvalidCharacters = title.match(invalidCharacters);
+
+        if (hasInvalidCharacters) {
+
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "74",
+                "title",
+                `O título contém caracteres inválidos. \n Caracteres inválidos encontrados: ${hasInvalidCharacters}`
+            )
         }
 
         if (/(\d{2,})/.test(title)) {
-            throw new Error("O título não pode conter sequências numéricas.");
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "85",
+                "title",
+                `O título não pode conter sequências numéricas.`
+            )
         }
 
         if (this.verifyIfContainsSwearsWords(title.toLowerCase())) {
-            throw new Error(`O título contém palavras de baixo calão.`);
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "85",
+                "title",
+                `O título contém palavras de baixo calão.`
+            )
         }
 
         this.title = title;
@@ -69,24 +101,54 @@ export class TrailBase {
     }
 
     public setSubtitle(subtitle: string): void {
-        if (!subtitle) throw new Error("O subtítulo não pode ser vazio!");
+
+        if (!subtitle) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "113",
+                "subtitle",
+                `O subtítulo não pode ser vazio!`
+            )
+        }
 
         if (subtitle.length < 5 || subtitle.length > 70) {
-            throw new Error("O subtítulo deve ter entre 5 e 70 caracteres.");
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "122",
+                "subtitle",
+                `O subtítulo deve ter entre 5 e 70 caracteres.`
+            )
         }
+
         const invalidCharacters = /[^a-zA-Z\u00C0-\u00FF0-9\s ?!.,"'-]/;
-        const matches = subtitle.match(invalidCharacters);
-        if (matches) {
-            console.error("Caracteres inválidos encontrados:", matches);
-            throw new Error("O subtítulo contém caracteres inválidos.");
+        const hasInvalidCharacters = subtitle.match(invalidCharacters);
+
+        if (hasInvalidCharacters) {
+
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "131",
+                "subtitle",
+                `O subtítulo contém caracteres inválidos. \n Caracteres inválidos encontrados: ${hasInvalidCharacters}`
+            )
         }
 
         if (/(\d{2,})/.test(subtitle)) {
-            throw new Error("O subtítulo não pode conter sequências numéricas.");
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "140",
+                "subtitle",
+                `O subtítulo não pode conter sequências numéricas.`
+            )
         }
 
         if (this.verifyIfContainsSwearsWords(subtitle.toLowerCase())) {
-            throw new Error(`O subtítulo contém palavras de baixo calão.`);
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "149",
+                "subtitle",
+                `O subtítulo contém palavras de baixo calão.`
+            )
         }
 
         this.subtitle = subtitle;
@@ -97,23 +159,44 @@ export class TrailBase {
     }
 
     public setDescription(description: string): void {
-        if (!description) throw new Error("A descrição não pode ser vazia!")
-
-        if (description.length < 5 || description.length > 600) {
-            throw new Error("O subtítulo deve ter entre 5 e 600 caracteres.");
+        if (!description) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "166",
+                "description",
+                `A descrição não pode ser vazia!`
+            )
         }
 
-        const invalidDescriptionCharacters = /[^a-zA-Z\u00C0-\u00FF0-9\s ?!.,"'-]/;
-        if (invalidDescriptionCharacters.test(description)) {
-            throw new Error("A descrição contém caracteres inválidos.");
+        const invalidCharacters = /[^a-zA-Z\u00C0-\u00FF0-9\s ?!.,"'-]/;
+        const hasInvalidCharacters = description.match(invalidCharacters);
+
+        if (hasInvalidCharacters) {
+
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "180",
+                "description",
+                `A descrição contém caracteres inválidos. \n Caracteres inválidos encontrados: ${hasInvalidCharacters}`
+            )
         }
 
         if (/(\d{10,})/.test(description)) {
-            throw new Error("O subtítulo não pode conter sequências numéricas.");
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "189",
+                "description",
+                `a descrição não pode conter sequências numéricas muito longas.`
+            )
         }
 
         if (this.verifyIfContainsSwearsWords(description)) {
-            throw new Error("A descrição contém palavras de baixo calão.");
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "198",
+                "description",
+                `a descrição contém palavras de baixo calão.`
+            )
         }
 
         this.description = description;
@@ -124,9 +207,37 @@ export class TrailBase {
     }
 
     public setStatus(status: "published" | "not-published"): void {
-        if (status !== "published" && status !== "not-published") {
-            throw new Error("Status inválido");
+
+        if (typeof status !== 'string' || !['published', 'not-published'].includes(status)) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "223",
+                "status",
+                `status inválido. Status: ${status}`
+            )
         }
+
+        if (this.getStatus() === "published" && status === "not-published") {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "223",
+                "status",
+                `status inválido. Status: ${status}. Não é possível 'despublicar' uma trilha já publicada.`
+            )
+        }
+
+        const publishedTrailClasses = this.getTrailClasses().filter(c => c.getStatus() === "published")
+        const hasEnoughTrailClassesToPublish = publishedTrailClasses.length >= 1
+
+        if (status === "published" && hasEnoughTrailClassesToPublish === false) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "232",
+                "status",
+                `status inválido. O status não pode ser "published" se a trilha não tiver ao menos uma aula publicada.`
+            )
+        }
+
         this.status = status;
     }
 
@@ -135,72 +246,107 @@ export class TrailBase {
     }
 
     public setStorageKey(key: string): void {
+        const idValidCharacters = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        const validPrefix = "trilhas/trail-"
 
-        if (key.length < 10) {
-            throw new Error("Storage key inválida!");
+        const keyStartsWithValidPrefix = key.startsWith(validPrefix)
+        const keyLengthIsValid = key.length === 51
+
+        if (!keyStartsWithValidPrefix) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "241",
+                "trailStorageKey",
+                `o prexifo da key é inválido.`
+            )
         }
 
-        this.storageKey = key;
+        if (!keyLengthIsValid) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "241",
+                "trailStorageKey",
+                `O tamanho da key da trilha é inválido.`
+            )
+        }
+
+        const contentKeyParts = key.split("/")
+        const idTrailOnContentKeyParts = contentKeyParts[1].split("trail-")[1]
+
+        const isValidIdTrailFormat = idValidCharacters.test(idTrailOnContentKeyParts)
+
+
+        if (!isValidIdTrailFormat) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "241",
+                "trailStorageKey",
+                `O formato do id da trilha presente da key da trilha é inválido.`
+            )
+        }
+
+        const isValidIdTrail = this.getId() === idTrailOnContentKeyParts
+
+        if (!isValidIdTrail) {
+            throw new InvalidTrailDomainException(
+                "trail-base-entity.ts",
+                "241",
+                "trailStorageKey",
+                `O id da trilha presente na key da trilha não é igual ao id da trilha.`
+            )
+        }
+
+        this.storageKey = key
+
     }
 
-    public getTrailClasss(): TrailClass[] {
+    public getTrailClasses(): TrailClass[] {
         return this.trailClass;
     }
 
-    public setTrailClasss(trailClass: TrailClass[]): void {
-        this.trailClass = trailClass.filter(c => c.getIdTrail() === this.id);
+    public setTrailClasses(trailClasses: TrailClass[]): void {
+
+        const invalidTrailClasses: TrailClass[] = []
+        const validTrailClasses: TrailClass[] = []
+
+        trailClasses.forEach(trailClass => {
+            if (trailClass.getIdTrail() !== this.id) {
+                invalidTrailClasses.push(trailClass)
+            }
+
+            validTrailClasses.push(trailClass)
+        })
+
+        if (invalidTrailClasses.length > 0) {
+            throw new InvalidTrailDomainException(
+                "trail-class-entity",
+                "100",
+                "trailClasses",
+                `A trilha contém trilhas de outra trilha. trilhas inválidas encontradas: ${invalidTrailClasses}`
+            )
+        }
+
+        this.trailClass = validTrailClasses;
     }
 
     public getCreatedAt() {
         return this.createAt
     }
 
-    public setCreateAt(createAt: string | Date): void {
-        // if (!this.isValidDate(createAt)) {
-        //     throw new Error("Data de criação inválida ou em formato incorreto.");
-        // }
-
-        if (typeof createAt === 'string') {
-            const dateParts = createAt.split("/");
-            this.createAt = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
-        } else {
-            this.createAt = createAt;
-        }
-
-        if (isNaN(this.createAt.getTime())) {
-            throw new Error("Data de criação inválida.");
-        }
+    public setCreatedAt(createAt: Date): void {
+        this.createAt = createAt;
     }
 
     public getUpdatedAt() {
         return this.updateAt;
     }
 
-    public setUpdateAt(updateAt: string | Date): void {
-        // if (!this.isValidDate(updateAt)) {
-        //     throw new Error("Data de atualização inválida ou em formato incorreto.");
-        // }
-
-        if (typeof updateAt === 'string') {
-            const dateParts = updateAt.split("/");
-            this.updateAt = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
-        } else {
-            this.updateAt = updateAt;
-        }
-
-        if (isNaN(this.updateAt.getTime())) {
-            throw new Error("Data de atualização inválida.");
-        }
+    public setUpdatedAt(updateAt: Date): void {
+        this.updateAt = updateAt;
     }
-
-    private isValidDate(dateStr: string): boolean {
-        // const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
-        return true;
-    }
-
 
     private verifyIfContainsSwearsWords(str: string): boolean {
-        console.log(str)
+
         const swearWords = ["caralho", "porra", "sexo", "piroca", "puta", "pinto", "buceta", "pênis", "cu"];
 
         const containsSwearWords: boolean = swearWords.some(swear => str.toLowerCase().split(' ').includes(swear));

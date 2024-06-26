@@ -1,4 +1,5 @@
-import { TrailClass } from "../trail-class/trail-class-entity";
+import { TrailClass } from '@/domain/entity/trail-class/trail-class-entity';
+ 
 
 
 export interface CreateTrailInput {
@@ -16,8 +17,8 @@ export interface RestoreTrailInput {
     
     status: "published" | "not-published"
     storageTrailKey: string;
-    courses: TrailClass[]
+    trailClasses: TrailClass[]
 
-    createAt: string;
-    updateAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }

@@ -7,14 +7,14 @@ export class TrailClassBaseEntity {
     private id?: string;
     private idTrail?: string
     private title?: string
-    private description?: string
     private subtitle?: string
+    private description?: string
+    private duration?: number
     private status?: "published" | "not-published"
-    private release?: ReleaseValueObject
     private trailClassStorageKey?: string;
     private content?: ContentValueObject;
-    private createAt?: Date;
-    private updateAt?: Date;
+    private createdAt?: Date;
+    private updatedAt?: Date;
 
     constructor() { }
 
@@ -223,6 +223,15 @@ export class TrailClassBaseEntity {
             )
         }
 
+        if (this.getStatus() === "published" && status === "not-published") {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "223",
+                "status",
+                `status inválido. Status: ${status}. Não é possível 'despublicar' uma aula já publicada.`
+            )
+        }
+
         if (status === "published" && this.getContent() === undefined) {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
@@ -262,12 +271,39 @@ export class TrailClassBaseEntity {
         this.status = status;
     }
 
-    public getRelease() {
-        return this.release
+    public getDuration() {
+        return this.duration
     }
 
-    public setRelease(release: ReleaseValueObject) {
-        this.release = release
+    public setDuration(duration: number): void {
+        if (!duration) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "140",
+                "duration",
+                "O tempo de duração de uma aula precisa ser igual ou maior a 1 minuto."
+            )
+        }
+
+        if (duration > 30) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "140",
+                "duration",
+                `O tempo de duração de uma aula deve ser igual ou menor que 30 minutos.`
+            )
+        }
+
+        if (duration === 0) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "140",
+                "duration",
+                "O tempo de duração de uma aula precisa ser igual ou maior a 1 minuto."
+            )
+        }
+
+        this.duration = duration;
     }
 
     public getTrailClassStorageKey() {
@@ -277,11 +313,12 @@ export class TrailClassBaseEntity {
     public setTrailClassStorageKey(key: string) {
         const idValidCharacters = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         const validPrefix = `trilhas/trail-${this.getIdTrail()}/trailClass-`
-         
+
         const keyStartsWithValidPrefix = key.startsWith(validPrefix)
         const keyLengthIsValid = key.length >= 99
 
         if (!keyStartsWithValidPrefix) {
+            console.log(key)
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
                 "241",
@@ -303,7 +340,7 @@ export class TrailClassBaseEntity {
         const idTrailOnContentKeyParts = contentKeyParts[1].split("trail-")[1]
         const idTrailClassOnContentKeyParts = contentKeyParts[2].split("trailClass-")[1]
 
-        const isValidIdTrailFormat = idValidCharacters.test(idTrailOnContentKeyParts) 
+        const isValidIdTrailFormat = idValidCharacters.test(idTrailOnContentKeyParts)
         const isValidIdTrailClassFormat = idValidCharacters.test(idTrailClassOnContentKeyParts)
 
         if (!isValidIdTrailFormat) {
@@ -388,7 +425,7 @@ export class TrailClassBaseEntity {
         const idTrailOnContentKeyParts = contentKeyParts[1].split("trail-")[1]
         const idTrailClassOnContentKeyParts = contentKeyParts[2].split("trailClass-")[1]
 
-   
+
         if (this.getIdTrail() !== idTrailOnContentKeyParts) {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
@@ -437,60 +474,29 @@ export class TrailClassBaseEntity {
                 `Não é possível definir o conteúdo de uma aula publicada, com o status do conteúdo como 'in-upload'.`
             )
         }
-        
+
         this.content = content
     }
 
     public getCreatedAt() {
-        return this.createAt
+        return this.createdAt
     }
 
-    public setCreateAt(createAt: string | Date): void {
-        // if (!this.isValidDate(createAt)) {
-        //     throw new Error("Data de criação inválida ou em formato incorreto.");
-        // }
-
-        if (typeof createAt === 'string') {
-            const dateParts = createAt.split("/");
-            this.createAt = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
-        } else {
-            this.createAt = createAt;
-        }
-
-        if (isNaN(this.createAt.getTime())) {
-            throw new Error("Data de criação inválida.");
-        }
+    public setCreatedAt(createdAt: Date): void {
+        this.createdAt = createdAt;
     }
 
     public getUpdatedAt() {
-        return this.updateAt;
+        return this.updatedAt;
     }
 
-    public setUpdateAt(updateAt: string | Date): void {
-        // if (!this.isValidDate(updateAt)) {
-        //     throw new Error("Data de atualização inválida ou em formato incorreto.");
-        // }
-
-        if (typeof updateAt === 'string') {
-            const dateParts = updateAt.split("/");
-            this.updateAt = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
-        } else {
-            this.updateAt = updateAt;
-        }
-
-        if (isNaN(this.updateAt.getTime())) {
-            throw new Error("Data de atualização inválida.");
-        }
+    public setUpdatedAt(updatedAt: Date): void {
+        this.updatedAt = updatedAt;
     }
 
-    private isValidDate(dateStr: string): boolean {
-        // const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
-        // return regex.test(dateStr);
-        return true
-    }
 
     private verifyIfContainsSwearsWords(str: string): boolean {
-     
+
         const swearWords = ["caralho", "porra", "sexo", "piroca", "puta", "pinto", "buceta", "pênis", "cu"];
 
         const containsSwearWords: boolean = swearWords.some(swear => str.toLowerCase().split(' ').includes(swear));

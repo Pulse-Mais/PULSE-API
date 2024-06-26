@@ -1,5 +1,4 @@
-import { Content, ContentValueObject } from "../value-objects/content-value-object"
-import { ReleaseValueObject } from "../value-objects/release-value-object"
+import { ContentValueObject } from "../value-objects/content-value-object"
 
 
 export interface CreateTrailClassInput {
@@ -7,6 +6,7 @@ export interface CreateTrailClassInput {
     trailStorageKey: string,
     title: string
     description: string
+    duration: number
     subtitle: string
 }
 
@@ -16,20 +16,14 @@ export interface RestoreTrailClassInput {
     idTrail: string
 
     title: string
-    description: string
     subtitle: string
-
+    description: string
+    duration: number
+    
     trailClassStorageKey: string
     content: ContentValueObject
     status: "published" | "not-published"
-    release: ReleaseValueObject
-    createAt: Date | string;
-    updateAt: Date | string;
+    createdAt: Date
+    updatedAt: Date
 }
 
-export interface SetTrailClassContentInput {
-    readonly key: string,
-    readonly type: "empty" | "video" | "archive" 
-    readonly format: "planilha" | "pdf" | "slides" | "video"| "empty"
-    readonly status: "empty" | "filled"
-}

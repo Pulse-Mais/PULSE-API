@@ -6,8 +6,8 @@ export class InvalidTrailDomainException extends Error {
     private readonly logger: Logger
     public readonly name = 'InvalidTrailDomainException'
 
-    constructor(filename: string, line: string) {
-        super(`A trilha fornecida ao serviço de domínio não é válida!`);
+    constructor(filename: string, line: string, propety: string, message?: string) {
+        super(`\n A propriedade ${propety} da trilha está inválida! \n ${message}`);
         this.logger = new Logger("domain", filename, line)
     }
 

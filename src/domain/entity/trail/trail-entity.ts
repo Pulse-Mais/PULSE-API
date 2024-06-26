@@ -1,8 +1,12 @@
+import { TrailClassAlreadyAddedOnTrailDomainException } from "@/domain/domain-exception/trail-class-already-added-on-trail-domain-exception";
 import { TrailClass } from "../trail-class/trail-class-entity";
-import { TrailBase } from "./trail-base-entity";
+import { TrailBaseEntity } from "./trail-base-entity";
 import { CreateTrailInput, RestoreTrailInput } from "./trail-types";
+import { TrailClassIsNotPartOfTheTrailDomainException } from "@/domain/domain-exception/trail-class-is-not-part-of-the-trail-domain-exception";
+import { TrailDoesNotHaveEnoughClassesForPublicationDomainException } from "@/domain/domain-exception/trail-does-not-have-enough-classes-for-publication-domain-exception";
+import { TrailAlreadyPublishedDomainException } from "@/domain/domain-exception/trail-already-published-domain-exception";
 
-export class Trail extends TrailBase {
+export class Trail extends TrailBaseEntity {
 
     private constructor() {
         super();
@@ -10,28 +14,42 @@ export class Trail extends TrailBase {
     
     public publish() {
 
-        if (this.getTrailClasss().length < 1)  throw new Error("");
+        const publishedTrailClasses = this.getTrailClasses().filter(c => c.getStatus() === "published")
+        const hasEnoughTrailClassesToPublish = publishedTrailClasses.length > 0
 
-        if (this.getStatus() != "not-published") throw new Error("");
+        if (hasEnoughTrailClassesToPublish === false)  {
+            throw new TrailDoesNotHaveEnoughClassesForPublicationDomainException("trail-entity.ts", "100")  
+        }
+
+        const isTrailAlreadyPublished = this.getStatus() !== "not-published"
+
+        if (isTrailAlreadyPublished) {
+            throw new TrailAlreadyPublishedDomainException("trail-entity.ts", "100")
+        }
 
         this.setStatus("published")
     }
 
-    public addTrailClass(course: TrailClass) {
-        let courseIdTrail = course.getIdTrail()
+    public addTrailClass(trailClass: TrailClass) {
 
-        if (!courseIdTrail || courseIdTrail != this.getId()) {
-            throw new Error("A aula não pertente a trilha.");
+        if (this.getTrailClassById(`${trailClass.getId()}`)) {
+            throw new TrailClassAlreadyAddedOnTrailDomainException("trail-entity.ts", "24")  
         }
 
-        this.getTrailClasss().push(course)
+        const trailClassIdTrail = trailClass.getIdTrail()
+
+        if (!trailClassIdTrail || trailClassIdTrail != this.getId()) {
+            throw new TrailClassIsNotPartOfTheTrailDomainException("trail-entity.ts", "100")
+        }
+
+        this.getTrailClasses().push(trailClass)
     }
 
     public getTrailClassById(idTrailClass: string) {
         
-        if (!idTrailClass) throw new Error("falta id trailclassss")
+        if (!idTrailClass) throw new Error("falta id trailclassses")
 
-        const course = this.getTrailClasss().find(course => course.getId() === idTrailClass)
+        const course = this.getTrailClasses().find(course => course.getId() === idTrailClass)
 
         if (!course) return null;
 
@@ -39,20 +57,19 @@ export class Trail extends TrailBase {
     }
 
     static create(input: CreateTrailInput): Trail {
-        const dateNow = new Date().toLocaleDateString('pt-BR', {year: "numeric", month: "2-digit", day: "2-digit"}); 
         const trail = new Trail()
  
         trail.setId(crypto.randomUUID())
         trail.setStorageKey(`trilhas/trail-${trail.getId()}/`)
-        trail.setTrailClasss([])
+        trail.setTrailClasses([])
         trail.setStatus("not-published")
 
         trail.setTitle(input.title)
         trail.setSubtitle(input.subtitle)
         trail.setDescription(input.description)
 
-        trail.setCreateAt(dateNow)
-        trail.setUpdateAt(dateNow)
+        trail.setCreatedAt(new Date())
+        trail.setUpdatedAt(new Date())
        
         return trail
     }
@@ -64,15 +81,15 @@ export class Trail extends TrailBase {
         trail.setId(input.id);
         trail.setStorageKey(input.storageTrailKey);
 
-        trail.setTrailClasss(input.courses);
+        trail.setTrailClasses(input.trailClasses);
         trail.setStatus(input.status);
 
         trail.setTitle(input.title);
         trail.setSubtitle(input.subtitle);
         trail.setDescription(input.description);
 
-        trail.setCreateAt(input.createAt);
-        trail.setUpdateAt(input.updateAt);
+        trail.setCreatedAt(input.createdAt);
+        trail.setUpdatedAt(input.updatedAt);
         
         return trail
     }
