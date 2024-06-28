@@ -52,7 +52,7 @@ export class TrailClassDomainService {
     getTrailClass(input: GetTrailClassInput) {
 
         const { trail, idTrailClass } = input;
-        if (!trail) throw new InvalidTrailDomainException("trailClass-domain-service.ts", "46");
+        if (!trail) throw new InvalidTrailDomainException("trailClass-domain-service.ts", "46", "trail");
 
         const trailClass: TrailClass | null = trail.getTrailClassById(idTrailClass)
         if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "97");
@@ -62,7 +62,7 @@ export class TrailClassDomainService {
     createTrailClass(input: CreateInput) {
 
         const { trail } = input;
-        if (!trail) throw new InvalidTrailDomainException("trailClass-domain-service.ts", "46");
+        if (!trail) throw new InvalidTrailDomainException("trailClass-domain-service.ts", "46", "trail");
 
         const idTrail = trail.getId()
         if (!idTrail) throw new InvalidTrailPropetyDomainException("trailClass-domain-service.ts", "46", "idTrail");

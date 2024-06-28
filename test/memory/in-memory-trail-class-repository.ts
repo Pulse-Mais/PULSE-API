@@ -23,8 +23,10 @@ interface TrailClassTable {
 
 export class InMemoryTrailClassRepository implements ITrailClassRepository {
 
-    public trailClass: TrailClassTable[] = []
+    public trailClass: TrailClassTable[] = [
 
+    ]
+    
 
     constructor() { }
 
@@ -54,8 +56,8 @@ export class InMemoryTrailClassRepository implements ITrailClassRepository {
                     status: trailClass.contentUploadStatus
                 }
             },
-            createAt: trailClass.createAt,
-            updateAt: trailClass.updateAt
+            createdAt: trailClass.createAt,
+            updatedAt: trailClass.updateAt
         })
 
         return trailClassDomainEntity
