@@ -1,96 +1,60 @@
-import { TrailClassNotFoundOnTrailDomainException } from "../domain-exception/trail-class-not-found-on-trail-domain-exception";
-import { InvalidTrailDomainException } from "../domain-exception/invalid-trail-domain-exception";
-import { InvalidTrailPropetyDomainException } from "../domain-exception/invalid-trail-propety-domain-exception";
-import { TrailClass } from "../entity/trail-class/trail-class-entity";
-import { Trail } from "../entity/trail/trail-entity";
-import { Content, ContentValueObject } from "../entity/value-objects/content-value-object";
-import { Release, ReleaseValueObject } from "../entity/value-objects/release-value-object";
-import { InvalidTrailClassPropetyDomainException } from "../domain-exception/invalid-trail-class-propety-domain-exception";
+import { TrailClassInvalidUpdateDomainException } from "@/domain/domain-exception/trail-class-invalid-update-domain-expection";
+import { TrailClassNotFoundOnTrailDomainException,
+    InvalidTrailDomainException,
+    InvalidTrailPropetyDomainException,
+    TrailClass,
+    Trail,
+    Content,
+    ContentValueObject,
+    InvalidTrailClassPropetyDomainException,
+    CreateTrailClassDomainServiceInput,
+    RestoreTrailClassDomainServiceInput,
+    UpdateTrailClassDomainServiceInput
 
-interface CreateInput {
-    trail: Trail
-
-    title: string
-    description: string
-    subtitle: string
-}
-
-interface updateTrailClassInput {
-    idTrailClass: string
-    title?: string
-    description?: string
-    subtitle?: string
-}
-
-interface RestoreInput {
-    id: string
-    idTrail: string
-
-    title: string
-    description: string
-    subtitle: string
-
-    trailClassStorageKey: string
-    content: Content
-    status: "published" | "not-published"
-    release: ReleaseValueObject
-
-    createAt: string | Date;
-    updateAt: string | Date;
-}
-
-interface GetTrailClassInput {
-    trail: Trail
-    idTrailClass: string
-}
-
-
+} from "./index"
 export class TrailClassDomainService {
 
     constructor() { }
 
-    getTrailClass(input: GetTrailClassInput) {
-
-        const { trail, idTrailClass } = input;
-        if (!trail) throw new InvalidTrailDomainException("trailClass-domain-service.ts", "46", "trail");
-
-        const trailClass: TrailClass | null = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "97");
-    }
-
-
-    createTrailClass(input: CreateInput) {
-
+    createTrailClass(input: CreateTrailClassDomainServiceInput) {
         const { trail } = input;
-        if (!trail) throw new InvalidTrailDomainException("trailClass-domain-service.ts", "46", "trail");
+        if (!trail) {
+            throw new InvalidTrailDomainException("trailClass-domain-service.ts", "46", "trail");
+        }
 
         const idTrail = trail.getId()
-        if (!idTrail) throw new InvalidTrailPropetyDomainException("trailClass-domain-service.ts", "46", "idTrail");
+        if (!idTrail) {
+            throw new InvalidTrailPropetyDomainException("trailClass-domain-service.ts", "46", "idTrail")
+        }
 
         const trailStorageKey = trail.getStorageKey()
-        if (!trailStorageKey) throw new InvalidTrailPropetyDomainException("trailClass-domain-service.ts", "52", "trailStorageKey");
+        if (!trailStorageKey) {
+            throw new InvalidTrailPropetyDomainException("trailClass-domain-service.ts", "52", "trailStorageKey");
+        }
 
         const data = {
             idTrail,
             trailStorageKey,
             title: input.title,
+            subtitle: input.subtitle,
             description: input.description,
-            subtitle: input.subtitle
+            duration: input.duration
         }
 
         return TrailClass.create(data)
 
     }
 
-    restoreTrailClass(input: RestoreInput) {
-
+    restoreTrailClass(input: RestoreTrailClassDomainServiceInput) {
         return TrailClass.restore(input)
     }
 
-    updateTrailClassInfo(input: updateTrailClassInput, trail: Trail) {
+    updateTrailClassInfo(input: UpdateTrailClassDomainServiceInput, trail: Trail) {
         const trailClass = trail.getTrailClassById(input.idTrailClass)
 
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "76")
+        if (!trailClass) {
+            throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "76");
+        }
 
         if (input.title) {
             trailClass.updateTitle(input.title);
@@ -104,29 +68,25 @@ export class TrailClassDomainService {
             trailClass.updateDescription(input.description);
         }
 
+        if (input.duration) {
+            trailClass.updateDuration(input.duration);
+        }
+
+        if (!input.title && !input.subtitle && !input.description && !input.duration) {
+          throw new TrailClassInvalidUpdateDomainException("trailClass-domain-service.ts", "75");
+        }
+
         return trailClass
 
     }
 
-    publishTrailClass(trail: Trail, idTrailClass: string, unlockDate: Date) {
-
+    publishTrailClass(trail: Trail, idTrailClass: string) {
         const trailClass: TrailClass | null = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "97");
+        if (!trailClass) {
+            throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "97");
+        }
 
-        if (!unlockDate) throw new Error("unlockDate is required");
-        const releaseSchedule = new Release("locked", unlockDate)
-        trailClass.publish(releaseSchedule)
-
-        return trailClass
-    }
-
-    unlockTrailClass(trail: Trail, idTrailClass: string) {
-
-        const trailClass: TrailClass | null = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "107")
-
-        trailClass.unlock()
-
+        trailClass.publish()
         return trailClass
     }
 

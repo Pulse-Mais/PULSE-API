@@ -303,7 +303,7 @@ export class TrailClassBaseEntity {
             )
         }
 
-        this.duration = duration;
+        this.duration = parseInt(duration.toString());
     }
 
     public getTrailClassStorageKey() {
@@ -313,15 +313,14 @@ export class TrailClassBaseEntity {
     public setTrailClassStorageKey(key: string) {
         const idValidCharacters = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         const validPrefix = `trilhas/trail-${this.getIdTrail()}/trailClass-`
-
+        
         const keyStartsWithValidPrefix = key.startsWith(validPrefix)
         const keyLengthIsValid = key.length >= 99
 
         if (!keyStartsWithValidPrefix) {
-            console.log(key)
-            throw new InvalidTrailClassPropetyDomainException(
+            throw new InvalidTrailClassPropetyDomainException(  
                 "trail-class-base-entity.ts",
-                "241",
+                "324",
                 "trailClassStorageKey",
                 `o prexifo da key é inválido.`
             )

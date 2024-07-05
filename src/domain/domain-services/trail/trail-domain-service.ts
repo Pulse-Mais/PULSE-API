@@ -1,21 +1,45 @@
-import { Trail } from "../../entity/trail/trail-entity";
-import { CreateTrailInputDomainService, RestoreTrailInputDomainService } from "./@types/trail-domain-service-types";
+import {
+  Trail,
+  CreateTrailInputDomainService,
+  RestoreTrailInputDomainService,
+  GetTrailClassDomainServiceInput,
+  TrailClassNotFoundOnTrailDomainException,
+  InvalidTrailDomainException,
+  TrailClass,
+} from './index'
 
 export class TrailDomainService {
+  constructor() {}
 
-    constructor() { }
+  createTrail(input: CreateTrailInputDomainService): Trail {
+    return Trail.create(input)
+  }
 
-    createTrail(input: CreateTrailInputDomainService): Trail {
-        return Trail.create(input)
+  restoreTrail(input: RestoreTrailInputDomainService) {
+    return Trail.restore(input)
+  }
+
+  publishTrail(trail: Trail) {
+    trail.publish()
+    return trail
+  }
+
+  getTrailClass(input: GetTrailClassDomainServiceInput) {
+    const { trail, idTrailClass } = input
+    if (!trail) {
+      throw new InvalidTrailDomainException(
+        'trailClass-domain-service.ts',
+        '46',
+        'trail',
+      )
     }
 
-    restoreTrail(input: RestoreTrailInputDomainService) {
-        return Trail.restore(input)
+    const trailClass: TrailClass | null = trail.getTrailClassById(idTrailClass)
+    if (!trailClass) {
+      throw new TrailClassNotFoundOnTrailDomainException(
+        'trailClass-domain-service.ts',
+        '97',
+      )
     }
-
-    publishTrail(trail: Trail) {
-        trail.publish()
-        return trail
-    }
-
-}
+  }
+} 

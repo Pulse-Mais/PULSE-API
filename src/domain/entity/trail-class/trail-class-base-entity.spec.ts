@@ -279,6 +279,11 @@ describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {
         expect(trailClassBaseEntity.getDescription()).toEqual("Capture o mundo através de sua lente com nosso curso de Fotografia Digital. Aprenda as técnicas essenciais da fotografia, desde o manuseio da câmera até a composição e edição de imagens. Explore diferentes estilos e gêneros fotográficos e desenvolva seu olhar único como fotógrafo. Este curso é ideal para entusiastas da fotografia de todos os níveis que desejam aprimorar suas habilidades e transformar sua paixão em arte")
     })
 
+    it("(duration) - Deve converter a duração para um número inteiro de forma automática.", () => {
+        trailClassBaseEntity.setDuration(25.522)
+        expect(trailClassBaseEntity.getDuration()).toEqual(25)
+    })
+
     it("(duration) - Não deve alterar a duração caso não seja válida", () => {
         expect(() => trailClassBaseEntity.setDuration(0)).toThrow(
             new InvalidTrailClassPropetyDomainException(

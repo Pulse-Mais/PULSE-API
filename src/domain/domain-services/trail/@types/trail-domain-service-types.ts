@@ -1,4 +1,5 @@
 import { TrailClass } from "@/domain/entity/trail-class/trail-class-entity";
+import { Trail } from "@/domain/entity/trail/trail-entity";
 
 export interface CreateTrailInputDomainService {
     title: string
@@ -19,4 +20,9 @@ export interface RestoreTrailInputDomainService {
 
     createdAt: Date;
     updatedAt:Date;
+}
+
+export interface GetTrailClassDomainServiceInput {
+    trail: Trail
+    idTrailClass: string
 }
