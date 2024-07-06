@@ -1,5 +1,5 @@
+import { Trail } from "@/domain/entity/trail/trail-entity";
+
 export interface CreateTrailOutputDTO {
-    title: string
-    subtitle: string
-    description: string
+    trail: Trail
 }

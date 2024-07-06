@@ -2,37 +2,27 @@ import {
     Trail,
     ITrailRepository,
     TrailDomainService,
-    GenericUseCase,
-    IStorageService,
     CreateTrailInputDTO,
-    TrailClassPartionNotCreatedApplicationException,
+    CreateTrailOutputDTO,
     TrailClassNotSavedOnRepositoryApplicationException,
-    InvalidContentKeyDomainException    
 } from "./index"
 
 
-export class CreateTrailUseCase extends GenericUseCase {
+export class CreateTrailUseCase {
+    constructor(private readonly trailRepository: ITrailRepository) { }
 
-    constructor(
-        private readonly trailRepository: ITrailRepository,
-        private readonly storageService: IStorageService
-    ) {
-        super("create-class-use-case.ts", "src/application/use-cases/create-class-use-case.ts");
-    }
+    async execute(input: CreateTrailInputDTO): Promise<CreateTrailOutputDTO> {
+        const trail: Trail = new TrailDomainService().createTrail(input);
 
-    async execute(input: CreateTrailInputDTO): Promise<Trail> {
+        const saved: Trail = await this.trailRepository.save(trail)
+        if (!saved) {
+            throw new TrailClassNotSavedOnRepositoryApplicationException("create-trail-use-case.ts", "34")
+        }
 
-        const trail = new TrailDomainService().createTrail(input);
-        const trailStorageKey = trail.getStorageKey()
+        const outputDTO: CreateTrailOutputDTO = {
+            trail: saved,
+        }
 
-        if (!trailStorageKey) throw new InvalidContentKeyDomainException("create-trail-use-case.ts", "27");
-
-        const partitionFolderCreated = await this.storageService.createTrailFolder(trailStorageKey)
-        if (!partitionFolderCreated) throw new TrailClassPartionNotCreatedApplicationException("create-trail-use-case.ts", "25");
-
-        const saved = await this.trailRepository.save(trail)
-        if (!saved) throw new TrailClassNotSavedOnRepositoryApplicationException("create-trail-use-case.ts", "34")
-
-        return saved
+        return outputDTO
     }
 }
