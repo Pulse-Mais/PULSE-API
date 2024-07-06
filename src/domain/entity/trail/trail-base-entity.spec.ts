@@ -1,8 +1,8 @@
 import { InvalidTrailDomainException } from "@/domain/domain-exception/invalid-trail-domain-exception"
 import { TrailBaseEntity } from "./trail-base-entity"
 import { TrailClassBaseEntity } from "../trail-class/trail-class-base-entity"
-import { Content } from "../value-objects/content-value-object"
 import { TrailClass } from "../trail-class/trail-class-entity"
+import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object"
 
 
 describe("(UnityTest) - TrailBaseEntity \n\n", () => {
@@ -273,126 +273,31 @@ describe("(UnityTest) - TrailBaseEntity \n\n", () => {
         expect(trailBaseEntity.getDescription()).toEqual("Capture o mundo através de sua lente com nosso curso de Fotografia Digital. Aprenda as técnicas essenciais da fotografia, desde o manuseio da câmera até a composição e edição de imagens. Explore diferentes estilos e gêneros fotográficos e desenvolva seu olhar único como fotógrafo. Este curso é ideal para entusiastas da fotografia de todos os níveis que desejam aprimorar suas habilidades e transformar sua paixão em arte")
     })
 
-    it("(TrailStorageKey) - Não deve alterar a key da trilha caso a key não for válida", () => {
-        trailBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
 
-        const emptyKey = ""
-        expect(() => trailBaseEntity.setStorageKey(emptyKey)).toThrow(
-            new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `o prexifo da key é inválido.`
-            )
-        )
-
-        const invalidPatternKey = "12342542"
-        expect(() => trailBaseEntity.setStorageKey(invalidPatternKey)).toThrow(
-            new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `o prexifo da key é inválido.`
-            )
-        )
-
-        const keyWithInvalidIdTrail = "trilhas/trail-20e32e4c-568a-4779-b089-923148d32a97/"
-        expect(() => trailBaseEntity.setStorageKey(keyWithInvalidIdTrail)).toThrow(
-            new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `O id da trilha presente na key da trilha não é igual ao id da trilha.`
-            )
-        )
-
-        const keyWithInvalidPrefix = "tracks/trail-0799d17e-7e55-4d74-99d7-ab07de38ad7e"
-        expect(() => trailBaseEntity.setStorageKey(keyWithInvalidPrefix)).toThrow(
-            new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `o prexifo da key é inválido.`
-            )
-        )
-
-        const keyWithInvalidFormat = "trilhas/trail-0799d17e-7e55-4d74-99d7-ab07de38ad7ex"
-        expect(() => trailBaseEntity.setStorageKey(keyWithInvalidFormat)).toThrow(
-            new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `O formato do id da trilha presente da key da trilha é inválido.`
-            )
-        )
-    })
-
-    it("(TrailStorageKey) - O prexifo da key precisa ser válido", () => {
-        trailBaseEntity.setId("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const emptyKey = ""
-        expect(() => trailBaseEntity.setStorageKey(emptyKey)).toThrow(
-            new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `o prexifo da key é inválido.`
-            )
-        )
-    })
-
-    it("(TrailStorageKey) - O id da trilha presente na key da trilha precisa ser igual ao id da trilha na trilha.", () => {
-        trailBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-
-        const keyWithInvalidIdTrail = "trilhas/trail-20e32e4c-568a-4779-b089-923148d32a97/"
-        expect(() => trailBaseEntity.setStorageKey(keyWithInvalidIdTrail)).toThrow(
-            new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `O id da trilha presente na key da trilha não é igual ao id da trilha.`
-            )
-        )
-    })
-
-    it("(TrailStorageKey) - Deve alterar a key da trilha, caso a key seja válida", () => {
-
-        trailBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        const validKey = "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/"
-
-        trailBaseEntity.setStorageKey(validKey)
-        console.log(trailBaseEntity.getStorageKey())
-        expect(trailBaseEntity.getStorageKey()).toEqual(validKey)
-    })
 
     it("(status) - Uma trilha não pode ter o status 'publicada' com caso não tenha ao menos uma aula publicada", () => {
 
         const trail = new TrailBaseEntity()
         trail.setId("67e32e4c-568a-4779-b089-923148d32a97")
         trail.setStatus("not-published")
-        
+
         const trailClass = TrailClass.create({
             idTrail: "67e32e4c-568a-4779-b089-923148d32a97",
-            trailStorageKey: "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/",
             title: "Teste? Teste! Teste. têste ção são",
-            subtitle: "canção, são paulo. ácento cràse.",        
+            subtitle: "canção, são paulo. ácento cràse.",
             description: "Teste teste teste",
             duration: 10,
         })
 
-        const contentFilled = new Content(
+        const contentFilled = new ContentArchiveValueObject(
             `trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/trailClass-${trailClass.getId()}/`,
-            "archive",
             "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+            "pdf"
         )
 
         trailClass.setContent(contentFilled)
         trail.setTrailClasses([trailClass])
-        
+
         expect(() => trail.setStatus("published")).toThrow(
             new InvalidTrailDomainException(
                 "trail-base-entity.ts",
@@ -404,30 +309,25 @@ describe("(UnityTest) - TrailBaseEntity \n\n", () => {
 
     })
 
-    
+
     it("(status) - Uma trilha pode ser publicada caso tenha ao menos uma aula publicada", () => {
 
         const trail = new TrailBaseEntity()
         trail.setId("67e32e4c-568a-4779-b089-923148d32a97")
         trail.setStatus("not-published")
-        
+
         const trailClass = TrailClass.create({
             idTrail: "67e32e4c-568a-4779-b089-923148d32a97",
-            trailStorageKey: "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/",
             title: "Teste? Teste! Teste. têste ção são",
-            subtitle: "canção, são paulo. ácento cràse.",        
+            subtitle: "canção, são paulo. ácento cràse.",
             description: "Teste teste teste",
             duration: 10,
         })
 
-        const contentFilled = new Content(
+        const contentFilled = new ContentArchiveValueObject(
             `trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/trailClass-${trailClass.getId()}/`,
-            "archive",
             "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+            "pdf"
         )
 
         trailClass.setContent(contentFilled)
@@ -445,24 +345,19 @@ describe("(UnityTest) - TrailBaseEntity \n\n", () => {
         const trail = new TrailBaseEntity()
         trail.setId("67e32e4c-568a-4779-b089-923148d32a97")
         trail.setStatus("not-published")
-        
+
         const trailClass = TrailClass.create({
             idTrail: "67e32e4c-568a-4779-b089-923148d32a97",
-            trailStorageKey: "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/",
             title: "Teste? Teste! Teste. têste ção são",
-            subtitle: "canção, são paulo. ácento cràse.",        
+            subtitle: "canção, são paulo. ácento cràse.",
             description: "Teste teste teste",
             duration: 10,
         })
 
-        const contentFilled = new Content(
+        const contentFilled = new ContentArchiveValueObject(
             `trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/trailClass-${trailClass.getId()}/`,
-            "archive",
             "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+            "pdf"
         )
 
         trailClass.setContent(contentFilled)
@@ -489,9 +384,8 @@ describe("(UnityTest) - TrailBaseEntity \n\n", () => {
 
         const trailClass = TrailClass.create({
             idTrail: "10e32e4c-568a-4779-b089-923148d32a97",
-            trailStorageKey: "trilhas/trail-10e32e4c-568a-4779-b089-923148d32a97/",
             title: "Teste? Teste! Teste. têste ção são",
-            subtitle: "canção, são paulo. ácento cràse.",        
+            subtitle: "canção, são paulo. ácento cràse.",
             description: "Teste teste teste",
             duration: 10,
         })
@@ -513,9 +407,8 @@ describe("(UnityTest) - TrailBaseEntity \n\n", () => {
 
         const trailClass = TrailClass.create({
             idTrail: "67e32e4c-568a-4779-b089-923148d32a97",
-            trailStorageKey: "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/",
             title: "Teste? Teste! Teste. têste ção são",
-            subtitle: "canção, são paulo. ácento cràse.",        
+            subtitle: "canção, são paulo. ácento cràse.",
             description: "Teste teste teste",
             duration: 10,
         })

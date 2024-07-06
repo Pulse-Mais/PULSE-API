@@ -9,7 +9,6 @@ export class TrailBaseEntity {
     private description?: string;
     private subtitle?: string;
 
-    private storageKey?: string;
     private status?: "published" | "not-published";
 
     private createAt?: Date;
@@ -239,65 +238,6 @@ export class TrailBaseEntity {
         }
 
         this.status = status;
-    }
-
-    public getStorageKey(): string | undefined {
-        return this.storageKey;
-    }
-
-    public setStorageKey(key: string): void {
-        const idValidCharacters = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-        const validPrefix = "trilhas/trail-"
-
-        const keyStartsWithValidPrefix = key.startsWith(validPrefix)
-        const keyLengthIsValid = key.length === 51
-
-        if (!keyStartsWithValidPrefix) {
-            throw new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `o prexifo da key é inválido.`
-            )
-        }
-
-        if (!keyLengthIsValid) {
-            throw new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `O tamanho da key da trilha é inválido.`
-            )
-        }
-
-        const contentKeyParts = key.split("/")
-        const idTrailOnContentKeyParts = contentKeyParts[1].split("trail-")[1]
-
-        const isValidIdTrailFormat = idValidCharacters.test(idTrailOnContentKeyParts)
-
-
-        if (!isValidIdTrailFormat) {
-            throw new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `O formato do id da trilha presente da key da trilha é inválido.`
-            )
-        }
-
-        const isValidIdTrail = this.getId() === idTrailOnContentKeyParts
-
-        if (!isValidIdTrail) {
-            throw new InvalidTrailDomainException(
-                "trail-base-entity.ts",
-                "241",
-                "trailStorageKey",
-                `O id da trilha presente na key da trilha não é igual ao id da trilha.`
-            )
-        }
-
-        this.storageKey = key
-
     }
 
     public getTrailClasses(): TrailClass[] {

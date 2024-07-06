@@ -5,10 +5,10 @@ import { CreateTrailClassInput } from "../trail-class/trail-class-types"
 import { TrailClass } from "../trail-class/trail-class-entity"
 import { TrailClassAlreadyAddedOnTrailDomainException } from "@/domain/domain-exception/trail-class-already-added-on-trail-domain-exception"
 import { TrailClassIsNotPartOfTheTrailDomainException } from "@/domain/domain-exception/trail-class-is-not-part-of-the-trail-domain-exception"
-import { Content } from "../value-objects/content-value-object"
-import exp from "constants"
 import { TrailAlreadyPublishedDomainException } from "@/domain/domain-exception/trail-already-published-domain-exception"
 import { TrailDoesNotHaveEnoughClassesForPublicationDomainException } from "@/domain/domain-exception/trail-does-not-have-enough-classes-for-publication-domain-exception"
+import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object"
+
 
 describe("(UnityTest) - TrailDomainEntity \n\n", () => {
     const inputdDefaultTrail: CreateTrailInput = {
@@ -21,7 +21,6 @@ describe("(UnityTest) - TrailDomainEntity \n\n", () => {
 
     const inputdDefaultTrailClass: CreateTrailClassInput = {
         idTrail: `${trailDefault.getId()}`,
-        trailStorageKey: `trilhas/trail-${trailDefault.getId()}/`,
         title: "Teste",
         description: "teste",
         subtitle: "teste",
@@ -51,7 +50,6 @@ describe("(UnityTest) - TrailDomainEntity \n\n", () => {
     it("(restore) - Deve ser possível restaurar uma trilha se todos os dados forem válidos", () => {
         const trail = Trail.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            storageTrailKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             subtitle: "teste",
             description: "teste",
@@ -73,8 +71,7 @@ describe("(UnityTest) - TrailDomainEntity \n\n", () => {
     it("(restore) - Não deve ser possível restaurar uma trilha se todos os dados não forem válidos", () => {
         expect(() => Trail.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            storageTrailKey: "trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/",
-            title: "Teste",
+            title: "Te",
             subtitle: "teste",
             description: "teste",
             status: "not-published",
@@ -85,8 +82,8 @@ describe("(UnityTest) - TrailDomainEntity \n\n", () => {
             new InvalidTrailDomainException(
                 "trail-entity.ts",
                 "35",
-                "trailStorageKey",
-                "O id da trilha presente na key da trilha não é igual ao id da trilha."
+                "title",
+                "O título deve ter entre 5 e 70 caracteres."
             )
         )
     })
@@ -116,7 +113,6 @@ describe("(UnityTest) - TrailDomainEntity \n\n", () => {
 
         const trailClassNotPartOfTrailInput: CreateTrailClassInput = {
             idTrail: `30e4779b-8ab7-4d95-9905-d88c9aef924c`,
-            trailStorageKey: `trilhas/trail-30e4779b-8ab7-4d95-9905-d88c9aef924c/`,
             title: "Teste",
             description: "teste",
             subtitle: "teste",
@@ -137,7 +133,6 @@ describe("(UnityTest) - TrailDomainEntity \n\n", () => {
 
         const inputtrailClassPublished: CreateTrailClassInput = {
             idTrail: `${trailDefault.getId()}`,
-            trailStorageKey: `trilhas/trail-${trailDefault.getId()}/`,
             title: "Teste",
             description: "teste",
             subtitle: "teste",
@@ -148,17 +143,14 @@ describe("(UnityTest) - TrailDomainEntity \n\n", () => {
         expect(trailClassPublished).toBeTruthy()
         expect(trailClassPublished).toBeInstanceOf(TrailClass)
 
-        trailClassPublished.updateContent(new Content(
+        trailClassPublished.setArchiveTrailClassContent(new ContentArchiveValueObject(
             `trilhas/trail-${trailDefault.getId()}/trailClass-${trailClassPublished.getId()}/`,
-            "archive",
             "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+            "pdf"
         ))
+
         expect(trailClassPublished.getContent()).toBeTruthy()
-        expect(trailClassPublished.getContent()).toBeInstanceOf(Content)
+        expect(trailClassPublished.getContent()).toBeInstanceOf(ContentArchiveValueObject)
 
         trailClassPublished.publish()
         expect(trailClassPublished.getStatus()).toEqual("published")
@@ -187,7 +179,6 @@ describe("(UnityTest) - TrailDomainEntity \n\n", () => {
 
         const inputTrailClassNotPublished: CreateTrailClassInput = {
             idTrail: `${trail.getId()}`,
-            trailStorageKey: `trilhas/trail-${trail.getId()}/`,
             title: "Teste",
             description: "teste",
             subtitle: "teste",

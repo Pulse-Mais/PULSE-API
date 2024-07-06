@@ -16,7 +16,6 @@ export interface RestoreTrailInput {
     description: string
     
     status: "published" | "not-published"
-    storageTrailKey: string;
     trailClasses: TrailClass[]
 
     createdAt: Date;

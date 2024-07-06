@@ -2,7 +2,7 @@ import { CreateTrailClassInput } from "@/domain/entity/trail-class/trail-class-t
 import { CreateTrailInputDomainService, RestoreTrailInputDomainService } from "./@types/trail-domain-service-types"
 import { TrailDomainService } from "./trail-domain-service"
 import { TrailClass } from "@/domain/entity/trail-class/trail-class-entity"
-import { Content } from "@/domain/entity/value-objects/content-value-object"
+import { ContentArchiveValueObject } from "../trail-class"
 
 const trailDomainService = new TrailDomainService()
 
@@ -41,7 +41,6 @@ describe("TrailDomainService", () => {
             subtitle: "Subtítulo",
             description: "Descrição",
             status: "not-published",
-            storageTrailKey: "trilhas/trail-0799d17e-7e55-4d74-99d7-ab07de38ad7e/",
             trailClasses: [],
             createdAt: new Date(),
             updatedAt: new Date()
@@ -54,7 +53,6 @@ describe("TrailDomainService", () => {
         expect(trail.getSubtitle()).toBe("Subtítulo")
         expect(trail.getDescription()).toBe("Descrição")
         expect(trail.getStatus()).toBe("not-published")
-        expect(trail.getStorageKey()).toBe("trilhas/trail-0799d17e-7e55-4d74-99d7-ab07de38ad7e/")
 
     })
 
@@ -68,13 +66,11 @@ describe("TrailDomainService", () => {
 
     })
 
-
 })
 
 function generatePublishedTrailClass(): TrailClass {
     const inputtrailClassPublished: CreateTrailClassInput = {
         idTrail: `${trailDefault.getId()}`,
-        trailStorageKey: `trilhas/trail-${trailDefault.getId()}/`,
         title: "Teste",
         description: "teste",
         subtitle: "teste",
@@ -82,16 +78,13 @@ function generatePublishedTrailClass(): TrailClass {
     }
 
     const trailClassPublished = TrailClass.create(inputtrailClassPublished)
-  
-    trailClassPublished.updateContent(new Content(
-        `trilhas/trail-${trailDefault.getId()}/trailClass-${trailClassPublished.getId()}/`,
-        "archive",
-        "filled",
-        {
-            id: "id",
-            status: "none",
-        }
-    ))
+
+    trailClassPublished.setArchiveTrailClassContent(
+        new ContentArchiveValueObject(
+            `trilhas/trail-${trailDefault.getId()}/trailClass-${trailClassPublished.getId()}/`,
+            "filled",
+            "pdf"
+        ))
    
     trailClassPublished.publish()
 

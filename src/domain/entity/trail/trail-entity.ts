@@ -60,14 +60,11 @@ export class Trail extends TrailBaseEntity {
         const trail = new Trail()
  
         trail.setId(crypto.randomUUID())
-        trail.setStorageKey(`trilhas/trail-${trail.getId()}/`)
         trail.setTrailClasses([])
         trail.setStatus("not-published")
-
         trail.setTitle(input.title)
         trail.setSubtitle(input.subtitle)
         trail.setDescription(input.description)
-
         trail.setCreatedAt(new Date())
         trail.setUpdatedAt(new Date())
        
@@ -79,15 +76,11 @@ export class Trail extends TrailBaseEntity {
         const trail = new Trail() 
 
         trail.setId(input.id);
-        trail.setStorageKey(input.storageTrailKey);
-
         trail.setTrailClasses(input.trailClasses);
         trail.setStatus(input.status);
-
         trail.setTitle(input.title);
         trail.setSubtitle(input.subtitle);
         trail.setDescription(input.description);
-
         trail.setCreatedAt(input.createdAt);
         trail.setUpdatedAt(input.updatedAt);
         
