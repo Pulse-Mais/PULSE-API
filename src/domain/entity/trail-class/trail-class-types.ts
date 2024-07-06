@@ -1,9 +1,11 @@
-import { ContentValueObject } from "../value-objects/content-value-object"
+import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object"
+import { ContentArticleValueObject } from "../value-objects/content-article-value-object"
+import { ContentEmptyValueObject } from "../value-objects/content-empty-value-object"
+import { ContentVideoValueObject } from "../value-objects/content-video-value-object"
 
 
 export interface CreateTrailClassInput {
     idTrail: string
-    trailStorageKey: string,
     title: string
     description: string
     duration: number
@@ -20,8 +22,7 @@ export interface RestoreTrailClassInput {
     description: string
     duration: number
     
-    trailClassStorageKey: string
-    content: ContentValueObject
+    content: ContentEmptyValueObject | ContentArticleValueObject | ContentVideoValueObject | ContentArchiveValueObject
     status: "published" | "not-published"
     createdAt: Date
     updatedAt: Date

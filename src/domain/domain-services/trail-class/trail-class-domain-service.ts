@@ -1,40 +1,24 @@
-import { TrailClassInvalidUpdateDomainException } from "@/domain/domain-exception/trail-class-invalid-update-domain-expection";
-import { TrailClassNotFoundOnTrailDomainException,
-    InvalidTrailDomainException,
-    InvalidTrailPropetyDomainException,
+import {
     TrailClass,
-    Trail,
-    Content,
-    ContentValueObject,
     InvalidTrailClassPropetyDomainException,
     CreateTrailClassDomainServiceInput,
     RestoreTrailClassDomainServiceInput,
-    UpdateTrailClassDomainServiceInput
-
+    UpdateTrailClassDomainServiceInput,
+    ContentArchiveValueObject,
+    ContentVideoValueObject,
+    ContentArticleValueObject,
+    ContentEmptyValueObject,
+    ClassAlreadyPublishedDomainException,
+    TrailClassInvalidUpdateDomainException
 } from "./index"
+
 export class TrailClassDomainService {
 
     constructor() { }
 
     createTrailClass(input: CreateTrailClassDomainServiceInput) {
-        const { trail } = input;
-        if (!trail) {
-            throw new InvalidTrailDomainException("trailClass-domain-service.ts", "46", "trail");
-        }
-
-        const idTrail = trail.getId()
-        if (!idTrail) {
-            throw new InvalidTrailPropetyDomainException("trailClass-domain-service.ts", "46", "idTrail")
-        }
-
-        const trailStorageKey = trail.getStorageKey()
-        if (!trailStorageKey) {
-            throw new InvalidTrailPropetyDomainException("trailClass-domain-service.ts", "52", "trailStorageKey");
-        }
-
         const data = {
-            idTrail,
-            trailStorageKey,
+            idTrail: input.idTrail,
             title: input.title,
             subtitle: input.subtitle,
             description: input.description,
@@ -42,18 +26,17 @@ export class TrailClassDomainService {
         }
 
         return TrailClass.create(data)
-
     }
 
     restoreTrailClass(input: RestoreTrailClassDomainServiceInput) {
         return TrailClass.restore(input)
     }
 
-    updateTrailClassInfo(input: UpdateTrailClassDomainServiceInput, trail: Trail) {
-        const trailClass = trail.getTrailClassById(input.idTrailClass)
+    updateTrailClassInfo(input: UpdateTrailClassDomainServiceInput) {
+        const trailClass = input.trailClass
 
         if (!trailClass) {
-            throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "76");
+            throw new Error("Aula recebida é inválida, criar exception, 62 domain-service.");
         }
 
         if (input.title) {
@@ -73,137 +56,164 @@ export class TrailClassDomainService {
         }
 
         if (!input.title && !input.subtitle && !input.description && !input.duration) {
-          throw new TrailClassInvalidUpdateDomainException("trailClass-domain-service.ts", "75");
+            throw new TrailClassInvalidUpdateDomainException("trailClass-domain-service.ts", "75");
         }
 
         return trailClass
 
     }
 
-    publishTrailClass(trail: Trail, idTrailClass: string) {
-        const trailClass: TrailClass | null = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) {
-            throw new TrailClassNotFoundOnTrailDomainException("trailClass-domain-service.ts", "97");
-        }
-
+    publishTrailClass(trailClass: TrailClass) {
         trailClass.publish()
         return trailClass
     }
 
-    generateVideoContentKey(trail: Trail, idTrailClass: string, archiveExtension: string): string {
+    // OK
+    createFilledContentArticleValueObject(articleContent: string) {
+        const filledContentArticle = new ContentArticleValueObject(
+            articleContent
+        );
 
-        const trailClass = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trail-class-domain-service.ts", "124")
-
-        const trailKey = trail.getStorageKey()
-        const trailClassKey = trailClass.getTrailClassStorageKey()
-
-        if (!trailKey) throw new Error("");
-        if (!trailClassKey) throw new Error("");
-
-        const trailParts = trailKey.split("/");
-        const trailClassParts = trailClassKey.split("/");
-
-        if (trailParts[1] !== trailClassParts[1]) throw new Error("");
-        if (trailClassKey[2] !== `trailClass-${trailClass.getId()}`) throw new Error("");
-
-        const key = `${trailClassKey}content.${archiveExtension}`
-
-        return key
+        return filledContentArticle
     }
 
+    // OK
+    createdInUploadContentVideoValueObject(key: string, idUpload: string) {
+        const filledContentVideo = new ContentVideoValueObject(
+            key,
+            "in-upload",
+            idUpload,
+            "waiting"
+        );
 
-    createNewArchiveContentObject(trail: Trail, idTrailClass: string, contentParams: {
-        archiveExtension:
-        | "pptx"
-        | "xlsx"
-        | "pdf"
-        | "jpg"
-        | "jpeg"
-        | "png"
-        | "svg"
-        | "doc"
-        | "docx"
-        | "xls"
-        | "txt";
-        type: "video" | "archive"
-    }): ContentValueObject {
-
-        const trailClass = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trail-class-domain-service.ts", "124")
-
-        const trailKey = trail.getStorageKey()
-        const trailClassKey = trailClass.getTrailClassStorageKey()
-
-        if (!trailKey) throw new Error("");
-        if (!trailClassKey) throw new Error("");
-
-        const trailParts = trailKey.split("/");
-        const trailClassParts = trailClassKey.split("/");
-
-        if (trailParts[1] !== trailClassParts[1]) throw new Error("");
-        if (trailClassParts[2] !== `trailClass-${trailClass.getId()}`) throw new Error(trailClassKey);
-
-        const key = `${trailClassKey}content.${contentParams.archiveExtension}`
-
-        const newContent = new Content(key, contentParams.type, "empty", { id: "none", status: "waiting" });
-
-        return newContent
+        return filledContentVideo
     }
 
-    createNewVideoContentObject(trail: Trail, idTrailClass: string, idUpload: string): ContentValueObject {
+    // OK! (por enquanto). Depois é necessário pensar se é bom criar um value pra quando o conteúdo está
+    // em upload, preenchido, e quando deu erro. Assim da pra "limpar" o conteúdo. Caso tenha dado erro.
+    createdFilledContentVideoValueObject(key: string, idUpload: string) {
+        const filledContentVideo = new ContentVideoValueObject(
+            key,
+            "filled",
+            idUpload,
+            "asset_created"
+        );
 
-        const trailClass = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trail-class-domain-service.ts", "124")
-
-        const actualContent = trailClass.getContent()
-        if (!actualContent) throw new InvalidTrailClassPropetyDomainException("trail-class-domain-service.ts", "187", "content")
-
-        const newContent = new Content(actualContent.key, "video", "empty", { id: idUpload, status: "waiting" });
-
-        return newContent
+        return filledContentVideo
     }
 
-    createdFilledVideoContentObject(trail: Trail, idTrailClass: string, newKey: string) {
-        const trailClass = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trail-class-domain-service.ts", "124")
-
-        const actualContent = trailClass.getContent()
-        if (!actualContent) throw new InvalidTrailClassPropetyDomainException("trail-class-domain-service.ts", "199", "content")
-
-        const updatedContent = new Content(newKey, actualContent.type, "filled", { id: actualContent.upload.id, status: "asset_created" });
-
-        return updatedContent
-    }
-
-    createdFilledArchiveContentObject(trail: Trail, idTrailClass: string, signedContentKeyUrl?: string) {
-
-        const trailClass = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trail-class-domain-service.ts", "124")
-
-        const actualContent = trailClass.getContent()
-        if (!actualContent) throw new Error("")
-
-        if (signedContentKeyUrl) {
-            const updatedContent = new Content(signedContentKeyUrl, actualContent.type, "filled", { id: "none", status: "asset_created" });
-            
-            return updatedContent
+    // OK!
+    createInUploadContentArchiveValueObject(trailClass: TrailClass, archiveExtension: "pptx" | "xlsx" | "pdf" | "jpg" | "jpeg" | "png" | "svg" | "doc" | "docx" | "xls" | "txt", signedContentKeyUrl?: string) {
+        const idTrailClass = trailClass.getId()
+        if (!idTrailClass) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-domain-service.ts",
+                "189",
+                "idTrailClass",
+                "O id da aula não foi definido."
+            )
         }
 
-        const updatedContent = new Content(actualContent.key, actualContent.type, "filled", { id: "none", status: "asset_created" });
+        const idTrail = trailClass.getIdTrail()
+        if (!idTrail) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-domain-service.ts",
+                "189",
+                "idTrail",
+                "O id da trilha não foi definido."
+            )
+        }
 
-        return updatedContent
+        const contentKey = `trilhas/trail-${idTrail}/trailClass-${idTrailClass}/content.${archiveExtension}`
+
+        const inUploadContentArchive = new ContentArchiveValueObject(
+            contentKey,
+            "in-upload",
+            archiveExtension
+        );
+
+        return inUploadContentArchive
     }
 
-    updateTrailClassContent(trail: Trail, idTrailClass: string, content: ContentValueObject) {
+    // OK!
+    createFilledContentArchiveValueObject(trailClass: TrailClass, archiveExtension: "pptx" | "xlsx" | "pdf" | "jpg" | "jpeg" | "png" | "svg" | "doc" | "docx" | "xls" | "txt", signedContentKeyUrl?: string) {
+        const idTrailClass = trailClass.getId()
+        if (!idTrailClass) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-domain-service.ts",
+                "189",
+                "idTrailClass",
+                "O id da aula não foi definido."
+            )
+        }
 
-        const trailClass = trail.getTrailClassById(idTrailClass)
-        if (!trailClass) throw new TrailClassNotFoundOnTrailDomainException("trail-class-domain-service.ts", "147")
+        const idTrail = trailClass.getIdTrail()
+        if (!idTrail) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-domain-service.ts",
+                "189",
+                "idTrail",
+                "O id da trilha não foi definido."
+            )
+        }
 
-        trailClass.updateContent(content)
+        const contentKey = `trilhas/trail-${idTrail}/trailClass-${idTrailClass}/content.${archiveExtension}`
+
+        const filledContentArchive = new ContentArchiveValueObject(
+            contentKey,
+            "filled",
+            archiveExtension
+        );
+
+        return filledContentArchive
+    }
+
+    // OK!
+    public updateContent(trailClass: TrailClass, content: ContentEmptyValueObject | ContentArticleValueObject | ContentVideoValueObject | ContentArchiveValueObject) {
+        if (
+            !(content instanceof ContentEmptyValueObject) &&
+            !(content instanceof ContentArticleValueObject) &&
+            !(content instanceof ContentVideoValueObject) &&
+            !(content instanceof ContentArchiveValueObject)
+        ) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "404",
+                "content",
+                "O tipo de conteúdo não é suportado."
+            )
+        }
+
+        if (trailClass.getStatus() === "published") {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-entity",
+                "75",
+                "content",
+                "Você não não pode alterar o conteúdo de uma aula já públicada!"
+            )
+        }
+
+        if (content instanceof ContentEmptyValueObject) {
+            throw new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "241",
+                "content",
+                `Não é possível ataulizar o conteúdo de uma aula, para um conteúdo vazio.`
+            )
+        }
+
+        if (content instanceof ContentArchiveValueObject) {
+            trailClass.setArchiveTrailClassContent(content)
+        }
+
+        if (content instanceof ContentVideoValueObject) {
+            trailClass.setVideoTrailClassContent(content)
+        }
+
+        if (content instanceof ContentArticleValueObject) {
+            trailClass.setArticleTrailClassContent(content)
+        }
 
         return trailClass
     }
-
-
 }

@@ -1,6 +1,8 @@
 import { InvalidTrailClassPropetyDomainException } from "@/domain/domain-exception/invalid-trail-class-propety-domain-exception";
-import { ContentValueObject } from "../value-objects/content-value-object";
-import { ReleaseValueObject } from "../value-objects/release-value-object";
+import { ContentEmptyValueObject } from "../value-objects/content-empty-value-object";
+import { ContentArticleValueObject } from "../value-objects/content-article-value-object";
+import { ContentVideoValueObject } from "../value-objects/content-video-value-object";
+import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object";
 
 
 export class TrailClassBaseEntity {
@@ -11,8 +13,7 @@ export class TrailClassBaseEntity {
     private description?: string
     private duration?: number
     private status?: "published" | "not-published"
-    private trailClassStorageKey?: string;
-    private content?: ContentValueObject;
+    private content?: ContentEmptyValueObject | ContentArticleValueObject | ContentVideoValueObject | ContentArchiveValueObject;
     private createdAt?: Date;
     private updatedAt?: Date;
 
@@ -306,90 +307,11 @@ export class TrailClassBaseEntity {
         this.duration = parseInt(duration.toString());
     }
 
-    public getTrailClassStorageKey() {
-        return this.trailClassStorageKey;
-    }
-
-    public setTrailClassStorageKey(key: string) {
-        const idValidCharacters = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-        const validPrefix = `trilhas/trail-${this.getIdTrail()}/trailClass-`
-        
-        const keyStartsWithValidPrefix = key.startsWith(validPrefix)
-        const keyLengthIsValid = key.length >= 99
-
-        if (!keyStartsWithValidPrefix) {
-            throw new InvalidTrailClassPropetyDomainException(  
-                "trail-class-base-entity.ts",
-                "324",
-                "trailClassStorageKey",
-                `o prexifo da key é inválido.`
-            )
-        }
-
-        if (!keyLengthIsValid) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                `O tamanho da key da aula é inválido.`
-            )
-        }
-
-        const contentKeyParts = key.split("/")
-        const idTrailOnContentKeyParts = contentKeyParts[1].split("trail-")[1]
-        const idTrailClassOnContentKeyParts = contentKeyParts[2].split("trailClass-")[1]
-
-        const isValidIdTrailFormat = idValidCharacters.test(idTrailOnContentKeyParts)
-        const isValidIdTrailClassFormat = idValidCharacters.test(idTrailClassOnContentKeyParts)
-
-        if (!isValidIdTrailFormat) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                `O formato do id da trilha presente da key da aula é inválido.`
-            )
-        }
-
-        if (!isValidIdTrailClassFormat) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                `O formato do id da aula presente da key da aula é inválido.`
-            )
-        }
-
-        const isValidIdTrail = this.getIdTrail() === idTrailOnContentKeyParts
-        const isValidIdTrailClass = this.getId() === idTrailClassOnContentKeyParts
-
-        if (!isValidIdTrail) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                `O id da aula presente na key da aula não é igual ao id da aula.`
-            )
-        }
-
-        if (!isValidIdTrailClass) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                `O id da aula presente na key da aula não é igual ao id da aula.`
-            )
-        }
-
-        this.trailClassStorageKey = key;
-    }
-
     public getContent() {
         return this.content
     }
 
-    public setContent(content: ContentValueObject) {
-
+    public setContent(content: ContentEmptyValueObject | ContentArticleValueObject | ContentVideoValueObject | ContentArchiveValueObject) {
         if (!content) {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
@@ -398,54 +320,22 @@ export class TrailClassBaseEntity {
                 `Não é possível definir o conteúdo de uma aula, com um conteúdo vazio, meu mano.`
             )
         }
-
-        const validPrefix = `trilhas/trail-${this.getIdTrail()}/trailClass-${this.getId()}/`
-        const contentKey = content.key
-
-        if (!contentKey) {
+        
+        if (
+            !(content instanceof ContentEmptyValueObject) &&
+            !(content instanceof ContentArticleValueObject) &&
+            !(content instanceof ContentVideoValueObject) &&
+            !(content instanceof ContentArchiveValueObject)
+        ) {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
-                "241",
+                "404",
                 "content",
-                `Não é possível definir o conteúdo de uma aula, com a key do conteúdo vazia.`
+                "O tipo de conteúdo não é suportado."
             )
         }
 
-        if (contentKey.length < validPrefix.length) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `A key do conteúdo é muito curta.`
-            )
-        }
-
-        const contentKeyParts = contentKey.split("/")
-        const idTrailOnContentKeyParts = contentKeyParts[1].split("trail-")[1]
-        const idTrailClassOnContentKeyParts = contentKeyParts[2].split("trailClass-")[1]
-
-
-        if (this.getIdTrail() !== idTrailOnContentKeyParts) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `O idTrail presente na key do conteúdo não é igual ao idTrail da aula.`
-            )
-        }
-
-        if (this.getId() !== idTrailClassOnContentKeyParts) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `O id da aula presente na key do conteúdo não é igual ao id da aula.`
-            )
-        }
-
-        const contentType = content.type
-
-        if (this.getStatus() === "published" && contentType === "empty") {
+        if (this.getStatus() === "published" && content.type === "empty") {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
                 "241",
@@ -454,9 +344,7 @@ export class TrailClassBaseEntity {
             )
         }
 
-        const contentStatus = content.status
-
-        if (this.getStatus() === "published" && contentStatus === "empty") {
+        if (this.getStatus() === "published" && content.status === "empty") {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
                 "241",
@@ -465,7 +353,7 @@ export class TrailClassBaseEntity {
             )
         }
 
-        if (this.getStatus() === "published" && contentStatus === "in-upload") {
+        if (this.getStatus() === "published" && content.status === "in-upload") {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
                 "241",

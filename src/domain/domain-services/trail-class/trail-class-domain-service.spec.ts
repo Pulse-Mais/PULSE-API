@@ -1,7 +1,11 @@
-import { TrailClassNotFoundOnTrailDomainException } from '@/domain/domain-exception/trail-class-not-found-on-trail-domain-exception'
+import { ContentEmptyValueObject } from '@/domain/entity/value-objects/content-empty-value-object'
 import { TrailDomainService } from '../trail/trail-domain-service'
 import { CreateTrailClassDomainServiceInput, RestoreTrailClassDomainServiceInput, UpdateTrailClassDomainServiceInput } from './@types/trail-domain-service-types'
 import { TrailClassDomainService } from './trail-class-domain-service'
+import { InvalidTrailClassPropetyDomainException } from '@/domain/domain-exception/invalid-trail-class-propety-domain-exception'
+import { ClassAlreadyPublishedDomainException } from '@/domain/domain-exception/class-already-published-domain-exception'
+import { ContentArticleValueObject } from '@/domain/entity/value-objects/content-article-value-object'
+import { ContentArchiveValueObject } from '@/domain/entity/value-objects/content-archive-value-object'
 
 describe('TrailClassDomainService', () => {
   const trailDomainService = new TrailDomainService()
@@ -13,9 +17,8 @@ describe('TrailClassDomainService', () => {
     description: 'Descrição',
   })
 
-
   const defaultTrailClass = trailClassDomainService.createTrailClass({
-    trail: defaultTrail,
+    idTrail: defaultTrail.getId()!,
     title: 'Título de teste, aaa',
     subtitle: 'Subtítulo teste',
     description: 'Description teste',
@@ -26,14 +29,14 @@ describe('TrailClassDomainService', () => {
 
   it('(createTrailClass) - Deve ser possível criar uma aula', () => {
     const input: CreateTrailClassDomainServiceInput = {
-      trail: defaultTrail,
+      idTrail: defaultTrail.getId()!,
       title: 'Título de teste, aaa',
       subtitle: 'Subtítulo teste',
       description: 'Description teste',
       duration: 10,
     }
 
-    const trailClass = trailClassDomainService.createTrailClass(input) 
+    const trailClass = trailClassDomainService.createTrailClass(input)
 
     expect(trailClass).toBeTruthy()
     expect(trailClass.getTitle()).toBe('Título de teste, aaa')
@@ -42,10 +45,10 @@ describe('TrailClassDomainService', () => {
     expect(trailClass.getDuration()).toBe(10)
   })
 
-  
+
   it('(createTrailClass) - Não deve ser possível criar uma aula com parâmetros inválidos', () => {
     const input: CreateTrailClassDomainServiceInput = {
-      trail: defaultTrail,
+      idTrail: defaultTrail.getId()!,
       title: '25930295325',
       subtitle: 'Subtítulo teste',
       description: 'aaaaaaaaaaaaaaaaaa',
@@ -65,9 +68,8 @@ describe('TrailClassDomainService', () => {
       description: defaultTrailClass.getDescription()!,
       duration: defaultTrailClass.getDuration()!,
       createdAt: defaultTrailClass.getCreatedAt()!,
-      updatedAt: defaultTrailClass.getUpdatedAt()!, 
+      updatedAt: defaultTrailClass.getUpdatedAt()!,
       status: defaultTrailClass.getStatus()!,
-      trailClassStorageKey: defaultTrailClass.getTrailClassStorageKey()!
     }
 
     const restoredTrailClass = trailClassDomainService.restoreTrailClass(input)
@@ -89,9 +91,8 @@ describe('TrailClassDomainService', () => {
       description: defaultTrailClass.getDescription()!,
       duration: 0,
       createdAt: defaultTrailClass.getCreatedAt()!,
-      updatedAt: defaultTrailClass.getUpdatedAt()!, 
+      updatedAt: defaultTrailClass.getUpdatedAt()!,
       status: defaultTrailClass.getStatus()!,
-      trailClassStorageKey: defaultTrailClass.getTrailClassStorageKey()!
     }
 
     expect(() => trailClassDomainService.restoreTrailClass(input)).toThrow()
@@ -99,14 +100,14 @@ describe('TrailClassDomainService', () => {
 
   it('(updateTrailClassInfo) - Deve ser possível atualizar as informações de uma aula', () => {
     const input: UpdateTrailClassDomainServiceInput = {
-      idTrailClass: defaultTrailClass.getId()!,
+      trailClass: defaultTrailClass,
       title: 'Testando alteração de título...',
       duration: 15,
       description: 'Testando alteração de descrição, descrição aleatória, teste, teste e teste.',
       subtitle: 'Testando alteração de subtítulo...'
     }
 
-    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input, defaultTrail)
+    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input)
     expect(updatedTrailClass.getTitle()).toBe('Testando alteração de título...')
     expect(updatedTrailClass.getDuration()).toBe(15)
     expect(updatedTrailClass.getDescription()).toBe('Testando alteração de descrição, descrição aleatória, teste, teste e teste.')
@@ -115,83 +116,124 @@ describe('TrailClassDomainService', () => {
 
   it('(updateTrailClassInfo) - Deve ser possível atualizar somente o título de uma aula', () => {
     const input: UpdateTrailClassDomainServiceInput = {
-      idTrailClass: defaultTrailClass.getId()!,
+      trailClass: defaultTrailClass,
       title: 'Testando alteração de título...'
     }
 
-    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input, defaultTrail)
+    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input)
     expect(updatedTrailClass.getTitle()).toBe('Testando alteração de título...')
   })
 
   it('(updateTrailClassInfo) - Deve ser possível atualizar somente o subtítulo de uma aula', () => {
     const input: UpdateTrailClassDomainServiceInput = {
-      idTrailClass: defaultTrailClass.getId()!,
+      trailClass: defaultTrailClass,
       subtitle: 'Testando alteração de teste do subtítulo...'
     }
 
-    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input, defaultTrail)
+    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input)
     expect(updatedTrailClass.getSubtitle()).toBe('Testando alteração de teste do subtítulo...')
   })
 
   it('(updateTrailClassInfo) - Deve ser possível atualizar somente o subtítulo de uma aula', () => {
     const input: UpdateTrailClassDomainServiceInput = {
-      idTrailClass: defaultTrailClass.getId()!,
+      trailClass: defaultTrailClass,
       subtitle: 'Testando alteração de teste do subtítulo...'
     }
 
-    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input, defaultTrail)
+    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input)
     expect(updatedTrailClass.getSubtitle()).toBe('Testando alteração de teste do subtítulo...')
   })
 
   it('(updateTrailClassInfo) - Deve ser possível atualizar somente a descrição de uma aula', () => {
     const input: UpdateTrailClassDomainServiceInput = {
-      idTrailClass: defaultTrailClass.getId()!,
+      trailClass: defaultTrailClass,
       description: 'Testando alteração de teste de descrição...'
-    }   
+    }
 
-    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input, defaultTrail)
+    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input)
     expect(updatedTrailClass.getDescription()).toBe('Testando alteração de teste de descrição...')
   })
 
-  
+
   it('(updateTrailClassInfo) - Deve ser possível atualizar somente a duração de uma aula', () => {
     const input: UpdateTrailClassDomainServiceInput = {
-      idTrailClass: defaultTrailClass.getId()!,
+      trailClass: defaultTrailClass,
       duration: 30
-    }   
+    }
 
-    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input, defaultTrail)
+    const updatedTrailClass = trailClassDomainService.updateTrailClassInfo(input)
     expect(updatedTrailClass.getDuration()).toBe(30)
   })
 
   it('(updateTrailClassInfo) - Não deve ser possível atualizar a duração de uma aula com parâmetros inválidos', () => {
     const invalidDurationInput: UpdateTrailClassDomainServiceInput = {
-      idTrailClass: defaultTrailClass.getId()!,
+      trailClass: defaultTrailClass,
       duration: 2245
-    }   
+    }
 
-    expect(() => trailClassDomainService.updateTrailClassInfo(invalidDurationInput, defaultTrail)).toThrow()
-    
+    expect(() => trailClassDomainService.updateTrailClassInfo(invalidDurationInput)).toThrow()
+
     const invalidTitleAndSubtitleInput: UpdateTrailClassDomainServiceInput = {
-      idTrailClass: defaultTrailClass.getId()!,
+      trailClass: defaultTrailClass,
       title: '',
       subtitle: '',
       duration: 0
     }
 
-    expect(() => trailClassDomainService.updateTrailClassInfo(invalidTitleAndSubtitleInput, defaultTrail)).toThrow()
-    console.log(defaultTrailClass.getDuration())
+    expect(() => trailClassDomainService.updateTrailClassInfo(invalidTitleAndSubtitleInput)).toThrow()
   })
 
-  it('(updateTrailClassInfo) - Não deve ser possível atualizar uma aula que não esteja presente na trilha', () => {
-    const input: UpdateTrailClassDomainServiceInput = {
-      idTrailClass: "0799d17e-7e55-4d74-99d7-ab07de38ad7e",
-      duration: 30
-    }   
 
-    expect(() => trailClassDomainService.updateTrailClassInfo(input, defaultTrail)).toThrow(TrailClassNotFoundOnTrailDomainException)
+  it('(publishTrailClass) - Deve ser possível publicar uma aula', () => {
+    const updatedTrailClassWithFilledArchiveContent = trailClassDomainService.updateContent(
+      defaultTrailClass,
+      new ContentArchiveValueObject(
+        `trilhas/trail-${defaultTrailClass.getIdTrail()}/trailClass-${defaultTrailClass.getId()}/`,
+        "filled",
+        "pptx"
+      )
+    )
+
+    const publishedTrailClass = trailClassDomainService.publishTrailClass(updatedTrailClassWithFilledArchiveContent)
+
+    expect(publishedTrailClass.getStatus()).toBe('published')
   })
 
-    
+  it('(updateContent) - Deve lançar uma exceção se tentar atualizar o conteúdo com um tipo de conteúdo não suportado', () => {
+    const unsupportedContent = { type: 'unsupported' } as any
+    expect(() => trailClassDomainService.updateContent(defaultTrailClass, unsupportedContent)).toThrow(
+      new InvalidTrailClassPropetyDomainException(
+        "trail-class-base-entity.ts",
+        "404",
+        "content",
+        "O tipo de conteúdo não é suportado."
+      )
+    )
+  })
+
+  it('(updateContent) - Deve lançar uma exceção se tentar atualizar o conteúdo de uma aula publicada', () => {
+    expect(() => trailClassDomainService.updateContent(defaultTrailClass, new ContentArticleValueObject('Novo conteúdo'))).toThrow(
+      new InvalidTrailClassPropetyDomainException(
+        "trail-class-base-entity.ts",
+        "241",
+        "content",
+        `Você não não pode alterar o conteúdo de uma aula já públicada!`
+      )
+    )
+
+  })
+
+  it('(updateContent) - Deve lançar uma exceção se tentar atualizar o conteúdo com um tipo de conteúdo vazio', () => {
+    const emptyContent = new ContentEmptyValueObject()
+    expect(() => trailClassDomainService.updateContent(defaultTrailClass, emptyContent)).toThrow(
+      new InvalidTrailClassPropetyDomainException(
+        "trail-class-base-entity.ts",
+        "241",
+        "content",
+        `Você não não pode alterar o conteúdo de uma aula já públicada!`
+      )
+    )
+  })
+
 
 })  

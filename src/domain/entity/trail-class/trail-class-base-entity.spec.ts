@@ -1,9 +1,8 @@
 import { InvalidTrailClassPropetyDomainException } from "@/domain/domain-exception/invalid-trail-class-propety-domain-exception"
 import { TrailClassBaseEntity } from "./trail-class-base-entity"
-import { Content } from "../value-objects/content-value-object"
-import { Release } from "../value-objects/release-value-object"
+import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object"
+import { ContentEmptyValueObject } from "../value-objects/content-empty-value-object"
 
- 
 
 describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {
 
@@ -315,453 +314,20 @@ describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {
         )
     })
 
-    it("(TrailClassStorageKey) - Não deve alterar a key da aula caso a key não for válida", () => {
+    it("(content) - Uma aula publicada não pode receber um conteúdo vazio", () => {
         trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
         trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
 
-        const emptyKey = ""
-        expect(() => trailClassBaseEntity.setTrailClassStorageKey(emptyKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                "o prexifo da key é inválido."
-            )
-        )
-
-        const invalidPatternKey = "12342542"
-        expect(() => trailClassBaseEntity.setTrailClassStorageKey(invalidPatternKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                "o prexifo da key é inválido."
-            )
-        )
-
-        const keyWithInvalidIdTrailClass = "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/content.jpg"
-        expect(() => trailClassBaseEntity.setTrailClassStorageKey(keyWithInvalidIdTrailClass)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                "O id da aula presente na key da aula não é igual ao id da aula."
-            )
-        )
-
-        const keyWithInvalidIdTrail = "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/trailClass-67e32e4c-568a-4779-b089-923148d32a97/content.jpg"
-        expect(() => trailClassBaseEntity.setTrailClassStorageKey(keyWithInvalidIdTrail)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                "o prexifo da key é inválido."
-            )
-        )
-
-        const keyWithInvalidPrefix = "tracks/trail-class-0799d17e-7e55-4d74-99d7-ab07de38ad7e"
-        expect(() => trailClassBaseEntity.setTrailClassStorageKey(keyWithInvalidPrefix)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                "o prexifo da key é inválido."
-            )
-        )
-
-        const keyWithInvalidFormat = "trilhas/trail-class-0799d17e-7e55-4d74-99d7-ab07de38ad7ex"
-        expect(() => trailClassBaseEntity.setTrailClassStorageKey(keyWithInvalidFormat)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                "o prexifo da key é inválido."
-            )
-        )
-    })
-
-    it("(TrailClassStorageKey) - O prexifo da key precisa ser válido", () => {
-        trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const emptyKey = ""
-        expect(() => trailClassBaseEntity.setTrailClassStorageKey(emptyKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                "o prexifo da key é inválido."
-            )
-        )
-    })
-
-    it("(TrailClassStorageKey) - O id da aula presente na key da aula precisa ser igual ao id da aula.", () => {
-        trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const keyWithInvalidIdTrailClass = "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/content.jpg"
-        expect(() => trailClassBaseEntity.setTrailClassStorageKey(keyWithInvalidIdTrailClass)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                "O id da aula presente na key da aula não é igual ao id da aula."
-            )
-        )
-
-    })
-
-    it("(TrailClassStorageKey) - O id da trilha presente na key da aula precisa ser igual ao id da trilha na aula.", () => {
-        trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const keyWithInvalidIdTrail = "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/trailClass-67e32e4c-568a-4779-b089-923148d32a97/content.jpg"
-        expect(() => trailClassBaseEntity.setTrailClassStorageKey(keyWithInvalidIdTrail)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "trailClassStorageKey",
-                "o prexifo da key é inválido."
-            )
-        )
-    })
-
-    it("(TrailClassStorageKey) - Deve alterar a key da aula, caso a key seja válida", () => {
-
-        trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-        const validKey = "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/"
-
-        trailClassBaseEntity.setTrailClassStorageKey(validKey)
-        expect(trailClassBaseEntity.getTrailClassStorageKey()).toEqual(validKey)
-
-        const validKeyWithContentCreated = "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/content.pdf"
-        trailClassBaseEntity.setTrailClassStorageKey(validKeyWithContentCreated)
-        expect(trailClassBaseEntity.getTrailClassStorageKey()).toEqual(validKeyWithContentCreated)
-    })
-
-
-    it("(content) - Não deve alterar o conteúdo, caso ele não seja válido", () => {
-        trailClassBaseEntity.setId("0799d17e-7e55-4d74-99d7-ab07de38ad7e")
-
-        const invalidContent = new Content(
-            "conteudo/com/a/keyinvalidaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(invalidContent)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `A key do conteúdo é muito curta.`
-            )
-        )
-
-        const contentWithEmptyKey = new Content(
-            "",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(contentWithEmptyKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `Não é possível definir o conteúdo de uma aula, com a key do conteúdo vazia.`
-            )
-        )
-
-        const contentWithInvalidIdTrailOnKey = new Content(
-            "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(contentWithInvalidIdTrailOnKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `O idTrail presente na key do conteúdo não é igual ao idTrail da aula.`
-            )
-        )
-
-        const contentWithInvalidIdTrailClassOnKey = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(contentWithInvalidIdTrailClassOnKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `O id da aula presente na key do conteúdo não é igual ao id da aula.`
-            )
-        )
-
-        const contentWithInvalidIdTrailOnKeyAndIdTrailClassOnKey = new Content(
-            "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(contentWithInvalidIdTrailOnKeyAndIdTrailClassOnKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `O idTrail presente na key do conteúdo não é igual ao idTrail da aula.`
-            )
-        )
-
-        trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const testingValidContentFirst = new Content(
+        const testingValidContentFirst = new ContentArchiveValueObject(
             "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
             "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+            "pptx"
         )
 
         trailClassBaseEntity.setContent(testingValidContentFirst)
         trailClassBaseEntity.setStatus("published")
 
-        const invalidContentForPublishedTrailClass = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "empty",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(invalidContentForPublishedTrailClass)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `Não é possível definir o conteúdo de uma aula publicada, com o status do conteúdo como 'empty'.`
-            )
-        )
-    })
-
-    it("(content) - A key do conteúdo não pode ser inválida.", () => {
-        trailClassBaseEntity.setId("0799d17e-7e55-4d74-99d7-ab07de38ad7e")
-
-        const invalidContent = new Content(
-            "conteudo/com/a/keyinvalidaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(invalidContent)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `A key do conteúdo é muito curta.`
-            )
-        )
-    })
-
-    it("(content) - A key do conteúdo não pode ser vazia", () => {
-        trailClassBaseEntity.setId("0799d17e-7e55-4d74-99d7-ab07de38ad7e")
-
-        const contentWithEmptyKey = new Content(
-            "",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(contentWithEmptyKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `Não é possível definir o conteúdo de uma aula, com a key do conteúdo vazia.`
-            )
-        )
-    })
-
-
-    it("(content) - o id da trilha presente na key do contéudo da aula precisa ser igual ao id da trilha presente na aula.", () => {
-        trailClassBaseEntity.setId("0799d17e-7e55-4d74-99d7-ab07de38ad7e")
-
-        const contentWithInvalidIdTrailOnKey = new Content(
-            "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(contentWithInvalidIdTrailOnKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `O idTrail presente na key do conteúdo não é igual ao idTrail da aula.`
-            )
-        )
-    })
-
-    it("(content) - O id da aula presente na key do conteúdo precisa ser igual ao id da aula presente na aula", () => {
-        trailClassBaseEntity.setId("0799d17e-7e55-4d74-99d7-ab07de38ad7e")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const contentWithInvalidIdTrailClassOnKey = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(contentWithInvalidIdTrailClassOnKey)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `O id da aula presente na key do conteúdo não é igual ao id da aula.`
-            )
-        )
-    })
-
-    it("(content) - Deve alterar o conteúdo, caso ele seja válido", () => {
-        trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const validContent = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-        trailClassBaseEntity.setContent(validContent)
-        expect(trailClassBaseEntity.getContent()).toEqual(validContent)
-
-        const validContentWithContentCreated = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/content.pdf",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-        trailClassBaseEntity.setContent(validContentWithContentCreated)
-        expect(trailClassBaseEntity.getContent()).toEqual(validContentWithContentCreated)
-    })
-
-    it("(content) - Uma aula publicada não pode receber um conteúdo com status 'empty'.", () => {
-        trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const testingValidContentFirst = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        trailClassBaseEntity.setContent(testingValidContentFirst)
-        trailClassBaseEntity.setStatus("published")
-
-        const invalidContentForPublishedTrailClass = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "empty",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(invalidContentForPublishedTrailClass)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `Não é possível definir o conteúdo de uma aula publicada, com o status do conteúdo como 'empty'.`
-            )
-        )
-    })
-
-
-    it("(content) - Uma aula publicada não pode receber um conteúdo com tipo 'empty'.", () => {
-        trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const testingValidContentFirst = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        trailClassBaseEntity.setContent(testingValidContentFirst)
-        trailClassBaseEntity.setStatus("published")
-
-        const invalidContentForPublishedTrailClass = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "empty",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
+        const invalidContentForPublishedTrailClass = new ContentEmptyValueObject()
 
         expect(() => trailClassBaseEntity.setContent(invalidContentForPublishedTrailClass)).toThrow(
             new InvalidTrailClassPropetyDomainException(
@@ -773,32 +339,24 @@ describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {
         )
     })
 
-    it("(content) - Uma aula publicada não pode receber um conteúdo com o idTrail inválido", () => {
 
+    it("(content) - Uma aula publicada não pode receber um conteúdo com o upload ainda em andamento", () => {
         trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
         trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
 
-        const testingValidContentFirst = new Content(
+        const testingValidContentFirst = new ContentArchiveValueObject(
             "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
             "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+            "pptx"
         )
 
         trailClassBaseEntity.setContent(testingValidContentFirst)
         trailClassBaseEntity.setStatus("published")
 
-        const invalidContentForPublishedTrailClass = new Content(
-            "trilhas/trail-67e32e4c-568a-4779-b089-923148d32a97/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "empty",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+        const invalidContentForPublishedTrailClass = new ContentArchiveValueObject(
+            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
+            "in-upload",
+            "pptx"
         )
 
         expect(() => trailClassBaseEntity.setContent(invalidContentForPublishedTrailClass)).toThrow(
@@ -806,48 +364,12 @@ describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {
                 "trail-class-base-entity.ts",
                 "241",
                 "content",
-                `O idTrail presente na key do conteúdo não é igual ao idTrail da aula.`
+                `Não é possível definir o conteúdo de uma aula publicada, com o status do conteúdo como 'in-upload'.`
             )
         )
     })
 
-    it("(content) - Uma aula publicada não pode receber um conteúdo com o id da aula inválido", () => {
 
-        trailClassBaseEntity.setId("67e32e4c-568a-4779-b089-923148d32a97")
-        trailClassBaseEntity.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-
-        const testingValidContentFirst = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        trailClassBaseEntity.setContent(testingValidContentFirst)
-        trailClassBaseEntity.setStatus("published")
-
-        const invalidContentForPublishedTrailClass = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-            "empty",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
-
-        expect(() => trailClassBaseEntity.setContent(invalidContentForPublishedTrailClass)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `O id da aula presente na key do conteúdo não é igual ao id da aula.`
-            )
-        )
-    })
 
     it("(status) - Uma aula não pode ter o status 'publicada' com o conteúdo inválido", () => {
 
@@ -856,15 +378,7 @@ describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {
         trailClass.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
 
         trailClass.setStatus("not-published")
-        const contentEmpty = new Content(
-            "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "empty",
-            {
-                id: "id",
-                status: "none",
-            }
-        )
+        const contentEmpty = new ContentEmptyValueObject()
 
         trailClass.setContent(contentEmpty)
 
@@ -886,21 +400,16 @@ describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {
         trailClass.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
         trailClass.setStatus("not-published")
 
-        const contentFilled = new Content(
+        const contentFilled = new ContentArchiveValueObject(
             "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
             "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+            "pptx"
         )
 
         trailClass.setContent(contentFilled)
         trailClass.setStatus("published")
 
         expect(trailClass.getStatus()).toBe("published")
-
     })
 
 
@@ -909,15 +418,12 @@ describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {
         trailClass.setId("67e32e4c-568a-4779-b089-923148d32a97")
         trailClass.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
 
-        const contentFilled = new Content(
+        const contentFilled = new ContentArchiveValueObject(
             "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
-            "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+            "in-upload",
+            "pptx"
         )
+
 
         trailClass.setContent(contentFilled)
         trailClass.setStatus("not-published")
@@ -930,15 +436,12 @@ describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {
         trailClass.setId("67e32e4c-568a-4779-b089-923148d32a97")
         trailClass.setIdTrail("07e4779b-8ab7-4d95-9905-d88c9aef924c")
 
-        const contentFilled = new Content(
+        const contentFilled = new ContentArchiveValueObject(
             "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-67e32e4c-568a-4779-b089-923148d32a97/",
-            "archive",
             "filled",
-            {
-                id: "id",
-                status: "none",
-            }
+            "pptx"
         )
+
 
         trailClass.setContent(contentFilled)
         trailClass.setStatus("published")

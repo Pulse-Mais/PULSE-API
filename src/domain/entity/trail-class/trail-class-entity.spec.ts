@@ -2,14 +2,15 @@ import { InvalidTrailClassPropetyDomainException } from "@/domain/domain-excepti
 import { TrailClass } from "./trail-class-entity"
 import { CreateTrailClassInput, RestoreTrailClassInput } from "./trail-class-types"
 import { ContentNotFilledDomainException } from "@/domain/domain-exception/content-not-filled-domain-exception"
-import exp from "constants"
 import { ClassAlreadyPublishedDomainException } from "@/domain/domain-exception/class-already-published-domain-exception"
+import { ContentEmptyValueObject } from "../value-objects/content-empty-value-object"
+import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object"
+
 
 describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
     const input: CreateTrailClassInput = {
         idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-        trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
         title: "Teste",
         description: "teste",
         subtitle: "teste",
@@ -22,7 +23,6 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const input: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             description: "teste",
             subtitle: "teste",
@@ -38,17 +38,12 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(trailClass.getSubtitle()).toEqual("teste")
         expect(trailClass.getDuration()).toEqual(10)
         expect(trailClass.getIdTrail()).toEqual("07e4779b-8ab7-4d95-9905-d88c9aef924c")
-        expect(trailClass.getTrailClassStorageKey()).toEqual(
-            `trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`
-        )
-
     })
 
     it("(create [idTrail]]) - Não deve ser possível criar uma aula com o idTrail inválido", () => {
 
         const input: CreateTrailClassInput = {
             idTrail: "aaaaaaaaaa",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             description: "teste",
             subtitle: "teste",
@@ -65,33 +60,12 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
     })
 
-    it("(create [trailStorageKey]) - Não deve ser possível criar uma aula com o trailStorageKey inválido", () => {
-
-        const input: CreateTrailClassInput = {
-            idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/",
-            title: "Teste",
-            description: "teste",
-            subtitle: "teste",
-            duration: 10,
-        }
-
-        expect(() => TrailClass.create(input)).toThrow(
-            new InvalidTrailClassPropetyDomainException(
-                "trail-class-entity.ts",
-                "35",
-                "trailClassStorageKey",
-                "o prexifo da key é inválido."
-            )
-        )
-
-    })
 
     it("(create [title]) - Não deve ser possível criar uma aula com o título vazio", () => {
 
         const inputWithEmptyTitle: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "",
             description: "teste",
             subtitle: "teste",
@@ -113,7 +87,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithSmallTitle: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "titu",
             description: "teste",
             subtitle: "teste",
@@ -135,7 +109,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithBigTitle: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "titulo muitooooooooooooooooooooooooooo grandeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             description: "teste",
             subtitle: "teste",
@@ -157,7 +131,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithNumericTitle: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "12342542",
             description: "teste",
             subtitle: "teste",
@@ -179,7 +153,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithEmptySubtitle: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "Teste",
             subtitle: "",
             description: "teste",
@@ -201,7 +175,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithSmallSubtitle: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "Teste",
             subtitle: "test",
             description: "teste",
@@ -223,7 +197,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithBigSubtitle: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "titulo normal, tranquilo.",
             subtitle: "subtitulo muitooooooooooooooooooooooooooo grandeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             description: "teste",
@@ -246,7 +220,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithNumericSubtitle: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "Sem numeros.",
             subtitle: "12342542",
             description: "teste",
@@ -268,7 +242,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithEmptyDescription: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "Sem numeros.",
             subtitle: "subtítulo válido.",
             description: "",
@@ -289,7 +263,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithInvalidCharactersDescription: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "Sem numeros.",
             subtitle: "subtítulo válido.",
             description: "////////////aaaaa#$%&",
@@ -310,7 +284,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const inputWithLongNumericSequenceDescription: CreateTrailClassInput = {
             idTrail: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
+
             title: "Sem numeros.",
             subtitle: "subtítulo válido.",
             description: "1234254210414014010401",
@@ -332,21 +306,12 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         const trailClass = TrailClass.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
             idTrail: "10e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailClassStorageKey: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             subtitle: "teste",
             description: "teste",
             duration: 10,
             status: "not-published",
-            content: {
-                key: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-                type: "empty",
-                status: "empty",
-                upload: {
-                    id: "id",
-                    status: "none",
-                }
-            },
+            content: new ContentEmptyValueObject(),
             createdAt: new Date(),
             updatedAt: new Date(),
         })
@@ -357,30 +322,18 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(trailClass.getSubtitle()).toEqual("teste")
         expect(trailClass.getDuration()).toEqual(10)
         expect(trailClass.getIdTrail()).toEqual("10e4779b-8ab7-4d95-9905-d88c9aef924c")
-        expect(trailClass.getTrailClassStorageKey()).toEqual(
-            `trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`
-        )
     })
 
     it("(restore [id]) - Não deve ser possível restaurar uma aula se o id não for válido", () => {
         expect(() => TrailClass.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c22",
             idTrail: "10e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailClassStorageKey: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             subtitle: "teste",
             description: "teste",
             duration: 10,
             status: "not-published",
-            content: {
-                key: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-                type: "empty",
-                status: "empty",
-                upload: {
-                    id: "id",
-                    status: "none",
-                }
-            },
+            content: new ContentEmptyValueObject(),
             createdAt: new Date(),
             updatedAt: new Date(),
         })).toThrow(
@@ -396,21 +349,12 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(() => TrailClass.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
             idTrail: "10e4779b-8ab7-4d95-9905-d88c9aef924c22",
-            trailClassStorageKey: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             subtitle: "teste",
             description: "teste",
             duration: 10,
             status: "not-published",
-            content: {
-                key: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-                type: "empty",
-                status: "empty",
-                upload: {
-                    id: "id",
-                    status: "none",
-                }
-            },
+            content: new ContentEmptyValueObject(),
             createdAt: new Date(),
             updatedAt: new Date(),
         })).toThrow(
@@ -426,21 +370,12 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(() => TrailClass.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
             idTrail: "10e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailClassStorageKey: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "",
             subtitle: "teste",
             description: "teste",
             duration: 10,
             status: "not-published",
-            content: {
-                key: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-                type: "empty",
-                status: "empty",
-                upload: {
-                    id: "id",
-                    status: "none",
-                }
-            },
+            content: new ContentEmptyValueObject(),
             createdAt: new Date(),
             updatedAt: new Date(),
         })).toThrow(
@@ -457,21 +392,12 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(() => TrailClass.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
             idTrail: "10e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailClassStorageKey: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             subtitle: "",
             description: "teste",
             duration: 10,
             status: "not-published",
-            content: {
-                key: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-                type: "empty",
-                status: "empty",
-                upload: {
-                    id: "id",
-                    status: "none",
-                }
-            },
+            content: new ContentEmptyValueObject(),
             createdAt: new Date(),
             updatedAt: new Date(),
         })).toThrow(
@@ -488,21 +414,12 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(() => TrailClass.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
             idTrail: "10e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailClassStorageKey: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             subtitle: "teste",
             description: "",
             duration: 10,
             status: "not-published",
-            content: {
-                key: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-                type: "empty",
-                status: "empty",
-                upload: {
-                    id: "id",
-                    status: "none",
-                }
-            },
+            content: new ContentEmptyValueObject(),
             createdAt: new Date(),
             updatedAt: new Date(),
         })).toThrow(
@@ -519,21 +436,12 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(() => TrailClass.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
             idTrail: "10e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailClassStorageKey: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             subtitle: "teste",
             description: "teste",
             duration: 10,
             status: "not-published",
-            content: {
-                key: "",
-                type: "empty",
-                status: "empty",
-                upload: {
-                    id: "id",
-                    status: "none",
-                }
-            },
+            content: new ContentArchiveValueObject("a", "in-upload", "pptx"),
             createdAt: new Date(),
             updatedAt: new Date(),
         })).toThrow(
@@ -541,34 +449,23 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
                 "trail-class-entity.ts",
                 "35",
                 "content",
-                "Não é possível definir o conteúdo de uma aula, com a key do conteúdo vazia."
+                "o prexifo da key é inválido."
             )
         )
-
-
     })
 
 
-    it("(restore [status]) - Não deve ser possível restaurar uma aula com status 'published' com diferente de 'filled'", () => {
+    it("(restore [status]) - Não deve ser possível restaurar uma aula com status 'published' com o conteúdo vazio", () => {
 
         expect(() => TrailClass.restore({
             id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
             idTrail: "10e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailClassStorageKey: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             subtitle: "teste",
             description: "teste",
             duration: 10,
             status: "published",
-            content: {
-                key: "trilhas/trail-10e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-07e4779b-8ab7-4d95-9905-d88c9aef924c/",
-                type: "empty",
-                status: "empty",
-                upload: {
-                    id: "id",
-                    status: "none",
-                }
-            },
+            content: new ContentEmptyValueObject(),
             createdAt: new Date(),
             updatedAt: new Date(),
         })).toThrow(
@@ -581,133 +478,236 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         )
     })
 
-    it("(updateContent) - Deve ser possível alterar o conteúdo de uma aula não publicada", () => {
+    it("(restore [status]) - Não deve ser possível restaurar uma aula com status 'published' com o conteúdo em upload", () => {
 
-        const input: CreateTrailClassInput = {
-            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/",
+        expect(() => TrailClass.restore({
+            id: "07e4779b-8ab7-4d95-9905-d88c9aef924c",
+            idTrail: "10e4779b-8ab7-4d95-9905-d88c9aef924c",
             title: "Teste",
-            description: "teste",
             subtitle: "teste",
-            duration: 10,
-        }
-
-        const trailClass = TrailClass.create(input)
-
-        expect(trailClass).toBeTruthy()
-        expect(trailClass).toBeInstanceOf(TrailClass)
-        expect(trailClass.getTitle()).toEqual("Teste")
-        expect(trailClass.getDescription()).toEqual("teste")
-        expect(trailClass.getSubtitle()).toEqual("teste")
-        expect(trailClass.getIdTrail()).toEqual("50e4779b-8ab7-4d95-9905-d88c9aef924c")
-        expect(trailClass.getTrailClassStorageKey()).toEqual(
-            `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`
-        )
-
-        expect(trailClass.getContent()).toEqual({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "empty",
-            status: "empty",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-
-        trailClass.updateContent({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "archive",
-            status: "filled",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-
-        expect(trailClass.getContent()).toEqual({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "archive",
-            status: "filled",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-    })
-
-    it("(updateContent) - Não deve ser possível alterar o conteúdo de uma aula já publicada", () => {
-
-        const input: CreateTrailClassInput = {
-            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/",
-            title: "Teste",
             description: "teste",
-            subtitle: "teste",
             duration: 10,
-        }
-
-        const trailClass = TrailClass.create(input)
-
-        expect(trailClass).toBeTruthy()
-        expect(trailClass).toBeInstanceOf(TrailClass)
-        expect(trailClass.getTitle()).toEqual("Teste")
-        expect(trailClass.getDescription()).toEqual("teste")
-        expect(trailClass.getSubtitle()).toEqual("teste")
-        expect(trailClass.getIdTrail()).toEqual("50e4779b-8ab7-4d95-9905-d88c9aef924c")
-        expect(trailClass.getTrailClassStorageKey()).toEqual(
-            `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`
-        )
-
-        expect(trailClass.getContent()).toEqual({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "empty",
-            status: "empty",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-
-        trailClass.updateContent({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "archive",
-            status: "filled",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-
-        expect(trailClass.getContent()).toEqual({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "archive",
-            status: "filled",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-
-        trailClass.publish()
-        expect(trailClass.getStatus()).toEqual("published")
-
-
-        expect(() => trailClass.updateContent({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "archive",
-            status: "filled",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
+            status: "published",
+            content: new ContentArchiveValueObject("a", "in-upload", "pptx"),
+            createdAt: new Date(),
+            updatedAt: new Date(),
         })).toThrow(
-            new ClassAlreadyPublishedDomainException(
-                "trail-class-entity",
-                "75",
-                "Você não não pode alterar o conteúdo de uma aula já públicada!"
+            new InvalidTrailClassPropetyDomainException(
+                "trail-class-entity.ts",
+                "35",
+                "status",
+                `status inválido. O status não pode ser "published" se o conteúdo não for válido`
             )
         )
     })
+
+    it("(setArchiveTrailClassContent) - Deve ser possível alterar o conteúdo de uma aula não publicada, para conteúdo do tipo arquivo", () => {
+        const input: CreateTrailClassInput = {
+            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
+            title: "Teste",
+            description: "teste",
+            subtitle: "teste",
+            duration: 10,
+        }
+
+        const trailClass = TrailClass.create(input)
+
+        expect(trailClass).toBeTruthy()
+        expect(trailClass).toBeInstanceOf(TrailClass)
+        expect(trailClass.getTitle()).toEqual("Teste")
+        expect(trailClass.getDescription()).toEqual("teste")
+        expect(trailClass.getSubtitle()).toEqual("teste")
+        expect(trailClass.getIdTrail()).toEqual("50e4779b-8ab7-4d95-9905-d88c9aef924c")
+        expect(trailClass.getContent()).toBeTruthy()
+        expect(trailClass.getContent()).toBeInstanceOf(ContentEmptyValueObject)
+        expect(trailClass.getContent()).toEqual(new ContentEmptyValueObject())
+
+        trailClass.setArchiveTrailClassContent(new ContentArchiveValueObject(`trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`, "in-upload", "pptx"))
+
+        expect(trailClass.getContent()).toBeTruthy()
+        expect(trailClass.getContent()).toBeInstanceOf(ContentArchiveValueObject)
+        expect(trailClass.getContent()).toEqual(new ContentArchiveValueObject(`trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`, "in-upload", "pptx"))
+
+        const content = trailClass.getContent()! as ContentArchiveValueObject
+        expect(content.key).toEqual(`trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`)
+    })
+
+    it("(setArchiveTrailClassContent) - Deve lançar uma exceção se o prefixo da key for inválido", () => {
+        const input: CreateTrailClassInput = {
+            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
+            title: "Teste",
+            description: "teste",
+            subtitle: "teste",
+            duration: 10,
+        }
+
+        const trailClass = TrailClass.create(input)
+        const invalidContent = new ContentArchiveValueObject(`invalidPrefix/trailClass-${trailClass.getId()}/`, "in-upload", "pptx")
+
+        expect(() => trailClass.setArchiveTrailClassContent(invalidContent)).toThrow(
+            new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "324",
+                "content",
+                `o prexifo da key é inválido.`
+            )
+        )
+    })
+
+    it("(setArchiveTrailClassContent) - Deve lançar uma exceção se o tamanho da key for inválido", () => {
+        const input: CreateTrailClassInput = {
+            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
+            title: "Teste",
+            description: "teste",
+            subtitle: "teste",
+            duration: 10,
+        }
+
+        const trailClass = TrailClass.create(input)
+        const invalidContent = new ContentArchiveValueObject(`trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-/shortkey`, "in-upload", "pptx")
+
+        expect(() => trailClass.setArchiveTrailClassContent(invalidContent)).toThrow(
+            new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "241",
+                "content",
+                `O tamanho da key da aula é inválido.`
+            )
+        )
+    })
+
+    it("(setArchiveTrailClassContent) - Deve lançar uma exceção se o formato do id da trilha for inválido", () => {
+        const input: CreateTrailClassInput = {
+            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
+            title: "Teste",
+            description: "teste",
+            subtitle: "teste",
+            duration: 10,
+        }
+
+        const trailClass = TrailClass.create(input)
+        const invalidIdTrail = "00e4779b-8ab7-aaaaaaaa9905-d80000ef924c"
+        const invalidContent = new ContentArchiveValueObject(`trilhas/trail-${invalidIdTrail}/trailClass-${trailClass.getId()}/`, "in-upload", "pptx")
+
+        expect(() => trailClass.setArchiveTrailClassContent(invalidContent)).toThrow(
+            new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "241",
+                "content",
+                `o prexifo da key é inválido.`
+            )
+        )
+    })
+
+    it("(setArchiveTrailClassContent) - Deve lançar uma exceção se o formato do id da aula for inválido", () => {
+        const input: CreateTrailClassInput = {
+            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
+            title: "Teste",
+            description: "teste",
+            subtitle: "teste",
+            duration: 10,
+        }
+
+        const trailClass = TrailClass.create(input)
+        const invalidContent = new ContentArchiveValueObject(`trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-0000009b-8ab7-4d95-00000-d88c9aef924c/`, "in-upload", "pptx")
+
+        expect(() => trailClass.setArchiveTrailClassContent(invalidContent)).toThrow(
+            new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "241",
+                "content",
+                `O formato do id da aula presente da key da aula é inválido.`
+            )
+        )
+    })
+
+    it("(setArchiveTrailClassContent) - Deve lançar uma exceção se o id da trilha na key não corresponder ao id da trilha da aula", () => {
+        const input: CreateTrailClassInput = {
+            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
+            title: "Teste",
+            description: "teste",
+            subtitle: "teste",
+            duration: 10,
+        }
+
+        const trailClass = TrailClass.create(input)
+        const invalidIdTrail = "00e4779b-8ab7-4d95-9905-d88c9aef924c"
+        const invalidContent = new ContentArchiveValueObject(`trilhas/trail-${invalidIdTrail}/trailClass-${trailClass.getId()}/`, "in-upload", "pptx")
+
+        expect(() => trailClass.setArchiveTrailClassContent(invalidContent)).toThrow(
+            new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "241",
+                "content",
+                `o prexifo da key é inválido.`
+            )
+        )
+    })
+
+    it("(setArchiveTrailClassContent) - Deve lançar uma exceção se o id da aula na key não corresponder ao id da aula", () => {
+        const input: CreateTrailClassInput = {
+            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
+            title: "Teste",
+            description: "teste",
+            subtitle: "teste",
+            duration: 10,
+        }
+
+        const trailClass = TrailClass.create(input)
+        const invalidIdTrailClass = "50e4779b-8ab7-4d95-9905-d88c9aef924c"
+        const invalidContent = new ContentArchiveValueObject(`trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${invalidIdTrailClass}/`, "in-upload", "pptx")
+
+        expect(() => trailClass.setArchiveTrailClassContent(invalidContent)).toThrow(
+            new InvalidTrailClassPropetyDomainException(
+                "trail-class-base-entity.ts",
+                "241",
+                "content",
+                `O id da aula presente na key da aula não é igual ao id da aula.`
+            )
+        )
+    })
+
+    it("(cleanTrailClassContent) - Deve ser possível limpar o conteúdo de uma aula não publicada", () => {
+
+        const input: CreateTrailClassInput = {
+            idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
+            title: "Teste",
+            description: "teste",
+            subtitle: "teste",
+            duration: 10,
+        }
+
+        const trailClass = TrailClass.create(input)
+
+        expect(trailClass).toBeTruthy()
+        expect(trailClass).toBeInstanceOf(TrailClass)
+        expect(trailClass.getTitle()).toEqual("Teste")
+        expect(trailClass.getDescription()).toEqual("teste")
+        expect(trailClass.getSubtitle()).toEqual("teste")
+        expect(trailClass.getIdTrail()).toEqual("50e4779b-8ab7-4d95-9905-d88c9aef924c")
+
+        expect(trailClass.getContent()).toEqual(new ContentEmptyValueObject())
+
+        trailClass.setArchiveTrailClassContent(new ContentArchiveValueObject(`trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`, "in-upload", "pptx"))
+        expect(trailClass.getContent()).toEqual(new ContentArchiveValueObject(`trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`, "in-upload", "pptx"))
+
+        trailClass.cleanTrailClassContent()
+        expect(trailClass.getContent()).toEqual(new ContentEmptyValueObject())
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     it("(updateTitle) - Deve alterar o título caso seja válido", () => {
@@ -723,11 +723,11 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         trailClassDefault.updateTitle("Diz ai qual é o planooo, que eu vou chegar voandooo!")
         expect(trailClassDefault.getTitle()).toEqual("Diz ai qual é o planooo, que eu vou chegar voandooo!")
- 
+
     })
 
     it("(updateTitle) - Não deve alterar o título caso não seja válido", () => {
-         
+
         expect(() => trailClassDefault.updateTitle("////////////aaaaa#$%&")).toThrow(
             new InvalidTrailClassPropetyDomainException(
                 "trail-class-entity.ts",
@@ -779,7 +779,7 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         trailClassDefault.updateSubtitle("Diz ai qual é o planooo, que eu vou chegar voandooo!")
         expect(trailClassDefault.getSubtitle()).toEqual("Diz ai qual é o planooo, que eu vou chegar voandooo!")
- 
+
     })
 
 
@@ -821,14 +821,14 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
                 `O subtítulo deve ter entre 5 e 70 caracteres.`
             )
         )
- 
+
     })
 
     it("(updateDescription) - Deve alterar a descrição caso seja válida", () => {
 
         trailClassDefault.updateDescription("Eleve sua habilidade financeira com nosso curso de Inteligência Financeira. Ideal para iniciantes ou para aqueles que procuram aprimorar seus conhecimentos, este curso oferece estratégias para gerenciar melhor suas finanças pessoais. Você aprenderá sobre orçamento, investimentos, gestão de dívidas e planejamento financeiro para alcançar a segurança financeira. Transforme sua relação com o dinheiro e tome decisões financeiras mais inteligentes.")
         expect(trailClassDefault.getDescription()).toEqual("Eleve sua habilidade financeira com nosso curso de Inteligência Financeira. Ideal para iniciantes ou para aqueles que procuram aprimorar seus conhecimentos, este curso oferece estratégias para gerenciar melhor suas finanças pessoais. Você aprenderá sobre orçamento, investimentos, gestão de dívidas e planejamento financeiro para alcançar a segurança financeira. Transforme sua relação com o dinheiro e tome decisões financeiras mais inteligentes.")
-        
+
     })
 
     it("(updateDescription) - Não deve alterar a descrição caso não seja válida", () => {
@@ -891,7 +891,6 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
 
         const input: CreateTrailClassInput = {
             idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             description: "teste",
             subtitle: "teste",
@@ -906,28 +905,16 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(trailClass.getDescription()).toEqual("teste")
         expect(trailClass.getSubtitle()).toEqual("teste")
         expect(trailClass.getIdTrail()).toEqual("50e4779b-8ab7-4d95-9905-d88c9aef924c")
-        expect(trailClass.getTrailClassStorageKey()).toEqual(
-            `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`
-        )
 
-        expect(trailClass.getContent()).toEqual({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "empty",
-            status: "empty",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
+
+        expect(trailClass.getContent()).toEqual(new ContentEmptyValueObject())
 
         expect(() => trailClass.publish()).toThrow(ContentNotFilledDomainException)
     })
 
     it("(publish) - Deve ser possível publicar uma aula com conteúdo válido", () => {
-
         const input: CreateTrailClassInput = {
             idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             description: "teste",
             subtitle: "teste",
@@ -942,49 +929,30 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(trailClass.getDescription()).toEqual("teste")
         expect(trailClass.getSubtitle()).toEqual("teste")
         expect(trailClass.getIdTrail()).toEqual("50e4779b-8ab7-4d95-9905-d88c9aef924c")
-        expect(trailClass.getTrailClassStorageKey()).toEqual(
-            `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`
+        expect(trailClass.getContent()).toEqual(new ContentEmptyValueObject())
+
+        trailClass.setArchiveTrailClassContent(
+            new ContentArchiveValueObject(
+                `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
+                "filled",
+                "pptx"
+            )
         )
 
-        expect(trailClass.getContent()).toEqual({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "empty",
-            status: "empty",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-
-        trailClass.updateContent({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "archive",
-            status: "filled",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-
-        expect(trailClass.getContent()).toEqual({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "archive",
-            status: "filled",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
+        expect(trailClass.getContent()).toEqual(
+            new ContentArchiveValueObject(
+                `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
+                "filled",
+                "pptx"
+            ))
 
         trailClass.publish()
         expect(trailClass.getStatus()).toEqual("published")
     })
 
     it("(publish) - Não deve ser possível publicar uma já publicada", () => {
-
         const input: CreateTrailClassInput = {
             idTrail: "50e4779b-8ab7-4d95-9905-d88c9aef924c",
-            trailStorageKey: "trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/",
             title: "Teste",
             description: "teste",
             subtitle: "teste",
@@ -999,43 +967,25 @@ describe("(UnityTest) - TrailClassDomainEntity \n\n", () => {
         expect(trailClass.getDescription()).toEqual("teste")
         expect(trailClass.getSubtitle()).toEqual("teste")
         expect(trailClass.getIdTrail()).toEqual("50e4779b-8ab7-4d95-9905-d88c9aef924c")
-        expect(trailClass.getTrailClassStorageKey()).toEqual(
-            `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`
+        expect(trailClass.getContent()).toEqual(new ContentEmptyValueObject())
+
+        trailClass.setArchiveTrailClassContent(
+            new ContentArchiveValueObject(
+                `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
+                "filled",
+                "pptx"
+            )
         )
 
-        expect(trailClass.getContent()).toEqual({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "empty",
-            status: "empty",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-
-        trailClass.updateContent({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "archive",
-            status: "filled",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
-
-        expect(trailClass.getContent()).toEqual({
-            key: `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
-            type: "archive",
-            status: "filled",
-            upload: {
-                id: "empty",
-                status: "none",
-            }
-        })
+        expect(trailClass.getContent()).toEqual(
+            new ContentArchiveValueObject(
+                `trilhas/trail-50e4779b-8ab7-4d95-9905-d88c9aef924c/trailClass-${trailClass.getId()}/`,
+                "filled",
+                "pptx"
+            ))
 
         trailClass.publish()
         expect(trailClass.getStatus()).toEqual("published")
-
         expect(() => trailClass.publish()).toThrow(ClassAlreadyPublishedDomainException)
     })
 

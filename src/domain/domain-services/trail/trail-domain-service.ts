@@ -9,7 +9,7 @@ import {
 } from './index'
 
 export class TrailDomainService {
-  constructor() {}
+  constructor() { }
 
   createTrail(input: CreateTrailInputDomainService): Trail {
     return Trail.create(input)
