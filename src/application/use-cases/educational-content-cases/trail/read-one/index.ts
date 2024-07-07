@@ -5,5 +5,4 @@ export { ReadOneTrailUseCaseOutputDTO } from "./dto/read-one-trail-use-case-outp
 export { TrailNotFoundApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-not-found-app-exception"
 export { mockTrailRepository } from './../../../../../../test/mocks/mock-trail-repository';
 export { mockStorageService } from './../../../../../../test/mocks/mock-storage-service';
-export { describe, it, expect, vi } from 'vitest';
 export { ReadOneTrailUseCase } from './read-one-trail-use-case'

@@ -4,8 +4,7 @@ import {
     ReadOneTrailUseCaseOutputDTO,
     TrailNotFoundApplicationException,
     mockTrailRepository,
-    ReadOneTrailUseCase,
-    describe, it, expect, vi,
+    ReadOneTrailUseCase
 } from "./index"
 
 describe("UnitTests - ReadOneTrailUseCase", () => {
