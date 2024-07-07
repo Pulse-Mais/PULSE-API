@@ -7,12 +7,11 @@ export class TrailNotFoundApplicationException extends Error {
     public readonly name = 'TrailNotFoundaApplicationException'
 
     constructor(filename: string, line: string) {
-        super(`A trilha específicada não foi encontrada!`);
+        super(`A trilha específicada não foi encontrada no serviço de armazenamento!`);
         this.logger = new Logger("application", filename, line)
         this.logger.error({
             line: Number(line),
-            message: "A trilha específicada não foi encontrada!"
+            message: "A trilha específicada não foi encontrada no serviço de armazenamento!",
         })
     }
-
 }

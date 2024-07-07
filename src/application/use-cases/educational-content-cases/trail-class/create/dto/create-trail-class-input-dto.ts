@@ -3,7 +3,6 @@ export interface CreateTrailClassInputDTO {
     title: string
     subtitle: string
     description: string
-    trailStorageKey: string
 }
 
 
