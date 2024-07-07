@@ -25,3 +25,10 @@ export interface GetTrailClassDomainServiceInput {
     trail: Trail
     idTrailClass: string
 }
+
+export interface UpdateTrailDomainServiceInput {
+    trail: Trail
+    title?: string
+    subtitle?: string
+    description?: string
+}

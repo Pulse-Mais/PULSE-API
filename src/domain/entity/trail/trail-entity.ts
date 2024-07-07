@@ -11,14 +11,14 @@ export class Trail extends TrailBaseEntity {
     private constructor() {
         super();
     }
-    
+
     public publish() {
 
         const publishedTrailClasses = this.getTrailClasses().filter(c => c.getStatus() === "published")
         const hasEnoughTrailClassesToPublish = publishedTrailClasses.length > 0
 
-        if (hasEnoughTrailClassesToPublish === false)  {
-            throw new TrailDoesNotHaveEnoughClassesForPublicationDomainException("trail-entity.ts", "100")  
+        if (hasEnoughTrailClassesToPublish === false) {
+            throw new TrailDoesNotHaveEnoughClassesForPublicationDomainException("trail-entity.ts", "100")
         }
 
         const isTrailAlreadyPublished = this.getStatus() !== "not-published"
@@ -33,7 +33,7 @@ export class Trail extends TrailBaseEntity {
     public addTrailClass(trailClass: TrailClass) {
 
         if (this.getTrailClassById(`${trailClass.getId()}`)) {
-            throw new TrailClassAlreadyAddedOnTrailDomainException("trail-entity.ts", "24")  
+            throw new TrailClassAlreadyAddedOnTrailDomainException("trail-entity.ts", "24")
         }
 
         const trailClassIdTrail = trailClass.getIdTrail()
@@ -46,7 +46,7 @@ export class Trail extends TrailBaseEntity {
     }
 
     public getTrailClassById(idTrailClass: string) {
-        
+
         if (!idTrailClass) throw new Error("falta id trailclassses")
 
         const course = this.getTrailClasses().find(course => course.getId() === idTrailClass)
@@ -56,9 +56,31 @@ export class Trail extends TrailBaseEntity {
         return course
     }
 
+    public updateTitle(newTitle: string) {
+        if (newTitle !== this.getTitle()) {
+            this.setTitle(newTitle)
+            this.setUpdatedAt(new Date())
+        }
+    }
+
+    public updateSubtitle(newSubtitle: string) {
+        if (newSubtitle !== this.getSubtitle()) {
+            this.setSubtitle(newSubtitle)
+            this.setUpdatedAt(new Date())
+        }
+    }
+
+    public updateDescription(newDescription: string) {
+
+        if (newDescription !== this.getDescription()) {
+            this.setDescription(newDescription)
+            this.setUpdatedAt(new Date())
+        }
+    }
+
     static create(input: CreateTrailInput): Trail {
         const trail = new Trail()
- 
+
         trail.setId(crypto.randomUUID())
         trail.setTrailClasses([])
         trail.setStatus("not-published")
@@ -67,13 +89,13 @@ export class Trail extends TrailBaseEntity {
         trail.setDescription(input.description)
         trail.setCreatedAt(new Date())
         trail.setUpdatedAt(new Date())
-       
+
         return trail
     }
 
 
     static restore(input: RestoreTrailInput): Trail {
-        const trail = new Trail() 
+        const trail = new Trail()
 
         trail.setId(input.id);
         trail.setTrailClasses(input.trailClasses);
@@ -83,7 +105,7 @@ export class Trail extends TrailBaseEntity {
         trail.setDescription(input.description);
         trail.setCreatedAt(input.createdAt);
         trail.setUpdatedAt(input.updatedAt);
-        
+
         return trail
     }
 }

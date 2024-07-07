@@ -1,3 +1,5 @@
+import { TrailInvalidUpdateDomainException } from '@/domain/domain-exception/trail-invalid-update-domain-expection'
+import { UpdateTrailDomainServiceInput } from './@types/trail-domain-service-types'
 import {
   Trail,
   CreateTrailInputDomainService,
@@ -26,6 +28,7 @@ export class TrailDomainService {
 
   getTrailClass(input: GetTrailClassDomainServiceInput) {
     const { trail, idTrailClass } = input
+
     if (!trail) {
       throw new InvalidTrailDomainException(
         'trailClass-domain-service.ts',
@@ -41,5 +44,33 @@ export class TrailDomainService {
         '97',
       )
     }
+  }
+
+  updateTrailInfo(input: UpdateTrailDomainServiceInput) {
+    const trail = input.trail
+
+    if (!trail) {
+      throw new Error("Aula recebida é inválida, criar exception, 62 domain-service.");
+    }
+
+    if (input.title) {
+      trail.updateTitle(input.title);
+    }
+
+    if (input.subtitle) {
+      trail.updateSubtitle(input.subtitle);
+    }
+
+    if (input.description) {
+      trail.updateDescription(input.description);
+    }
+
+
+    if (!input.title && !input.subtitle && !input.description) {
+      throw new TrailInvalidUpdateDomainException("trail-domain-service.ts", "75");
+    }
+
+    return trail
+
   }
 } 

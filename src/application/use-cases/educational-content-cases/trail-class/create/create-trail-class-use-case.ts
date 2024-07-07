@@ -5,38 +5,27 @@ import {
     ITrailClassRepository,
     ITrailRepository,
     TrailNotFoundApplicationException,
-    TrailStorageKeyEmptyApplicationException,
     TrailFolderNotAvaibilityApplicationException,
     TrailClassStorageKeyEmptyApplicationException,
     TrailClassPartionNotCreatedApplicationException,
     TrailClassNotSavedOnRepositoryApplicationException,
-    IStorageService,
-    GenericUseCase,
     CreateTrailClassInputDTO,
     CreateTrailClassOutputDTO
-} from "./index"; 
+} from "./index";
 
 
-export class CreateTrailClassUseCase extends GenericUseCase {
+export class CreateTrailClassUseCase {
 
     constructor(
         private readonly trailClassRepository: ITrailClassRepository,
         private readonly trailRepository: ITrailRepository,
-        private readonly storageService: IStorageService
-    ) {
-        super(
-            "create-class-use-case.ts",
-            "src/application/use-cases/create-class-use-case.ts"
-        );
-    }
+    ) { }
 
     async execute(input: CreateTrailClassInputDTO): Promise<CreateTrailClassOutputDTO> {
-      
+
         const trail: Trail | null = await this.trailRepository.findById(input.idTrail);
         if (!trail) throw new TrailNotFoundApplicationException(this.filename, "36");
 
-        const trailStorageKey: string | undefined = trail.getStorageKey()
-        if (!trailStorageKey) throw new TrailStorageKeyEmptyApplicationException(this.filename, "39");
 
         const folderIsAvaibility: boolean = await this.storageService.verifyFolderAvailability(trailStorageKey)
         if (!folderIsAvaibility) {
@@ -63,22 +52,22 @@ export class CreateTrailClassUseCase extends GenericUseCase {
 
         const outputId = saved.getId();
         if (!outputId) throw new Error("ID is undefined");
-        
+
         const storageKey = saved.getTrailClassStorageKey();
         if (storageKey === undefined) throw new Error("Storage Key is undefined");
-        
+
         const status = saved.getStatus();
         if (status === undefined) throw new Error("Status is undefined");
-        
+
         const title = saved.getTitle();
         if (title === undefined) throw new Error("Title is undefined");
-        
+
         const subtitle = saved.getSubtitle();
         if (subtitle === undefined) throw new Error("Subtitle is undefined");
-        
+
         const description = saved.getDescription();
         if (description === undefined) throw new Error("Description is undefined");
-        
+
         const output: CreateTrailClassOutputDTO = {
             idTrail: outputId,
             storageKey: storageKey,
@@ -87,7 +76,7 @@ export class CreateTrailClassUseCase extends GenericUseCase {
             subtitle: subtitle,
             description: description,
         };
-        
+
         return output
     }
 
