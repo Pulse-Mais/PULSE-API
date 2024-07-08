@@ -1,5 +1,0 @@
-
-
-describe("Lambda event tester", () => {
-    
-})

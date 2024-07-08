@@ -26,12 +26,12 @@ describe("UnitTests - CreateTrailUseCase", () => {
 
     it("Deve criar a trilha", async () => {
         const createTrailUseCase = new CreateTrailUseCase(mockTrailRepository)
-        const trail = await createTrailUseCase.execute(defautlInputDTO)
+        const output = await createTrailUseCase.execute(defautlInputDTO)
 
+        const trail = output.trail  
         expect(trail).toBeInstanceOf(Trail);
 
         expect(mockTrailRepository.save).toHaveBeenCalled()
-        expect(mockStorageService.createTrailFolder).toHaveBeenCalled()
     })
 
     it("Deve retornar a exceção 'TrailClassNotSavedOnRepositoryApplicationException' caso a trilha não seja salva do banco", async () => {
