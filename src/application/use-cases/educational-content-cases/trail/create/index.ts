@@ -10,5 +10,3 @@ export { TrailClassNotSavedOnRepositoryApplicationException } from "@/applicatio
 export { InvalidContentKeyDomainException } from "@/domain/domain-exception/invalid-content-key-domain-exception";
 export { CreateTrailOutputDTO } from "./dto/create-trail-output-dto";
 export { mockTrailRepository } from './../../../../../../test/mocks/mock-trail-repository';
-export { mockStorageService } from './../../../../../../test/mocks/mock-storage-service';
-export { describe, it, expect, vi } from 'vitest';

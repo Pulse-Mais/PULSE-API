@@ -3,9 +3,7 @@ import {
     CreateTrailInputDTO,
     TrailClassNotSavedOnRepositoryApplicationException,
     mockTrailRepository,
-    mockStorageService,
     CreateTrailUseCase,
-    describe, it, expect, vi
 } from "./index"
 
 describe("UnitTests - CreateTrailUseCase", () => {
