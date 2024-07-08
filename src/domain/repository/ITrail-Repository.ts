@@ -8,6 +8,7 @@ export interface ITrailRepository {
     list: () => Promise<Trail[]>
     listPublished: () => Promise<Trail[]>   
     listNotPublished: () => Promise<Trail[]>
+    delete: (id: string) => Promise<boolean>
     
     
 }
