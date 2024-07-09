@@ -52,3 +52,4 @@ Os testes unitários garantem que o `DeleteTrailUseCase` funcione conforme esper
 ## Conclusão
 
 A classe `DeleteTrailUseCase` é responsável pela deleção de uma trilha específica, garantindo a busca, validação e deleção adequada da trilha. Os testes unitários asseguram que o comportamento da classe esteja conforme esperado em diferentes cenários, incluindo a deleção bem-sucedida, a trilha não encontrada e a falha na deleção no repositório.
+****
