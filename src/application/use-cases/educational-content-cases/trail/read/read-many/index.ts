@@ -1,5 +1,5 @@
 export { Trail } from "@/domain/entity/trail/trail-entity"
 export { ReadManyTrailsUseCaseOutputDTO } from "./dto/read-many-trails-use-case-output-dto"
 export { ITrailRepository } from "@/domain/repository/ITrail-Repository"
-export { mockTrailRepository } from "../../../../../../test/mocks/mock-trail-repository"
+export { mockTrailRepository } from "../../../../../../../test/mocks/mock-trail-repository"
 export { ReadManyTrailsUseCase } from "./read-many-trails-use-case"
