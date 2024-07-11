@@ -31,6 +31,8 @@ jobs:
     steps: 
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
