@@ -4,11 +4,11 @@ export { Trail } from "@/domain/entity/trail/trail-entity";
 export { TrailClass } from "@/domain/entity/trail-class/trail-class-entity";
 
 
-export { TrailClassDomainService } from "../../../../../domain/domain-services/trail-class-domain-service";
+export { TrailClassDomainService } from "@/domain/domain-services/trail-class/trail-class-domain-service";
 
 
-export { ITrailClassRepository } from "../../../../../domain/repository/ITrail-class-Repository";
-export { ITrailRepository } from "../../../../../domain/repository/ITrail-Repository";
+export { ITrailClassRepository } from "@/domain/repository/ITrail-class-Repository";
+export { ITrailRepository } from "@/domain/repository/ITrail-Repository";
 
 
 export { TrailNotFoundApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-not-found-app-exception";
