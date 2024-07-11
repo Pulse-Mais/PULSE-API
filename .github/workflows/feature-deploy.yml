@@ -2,7 +2,7 @@ name: Feature_Deploy
 on: 
   push: 
     branches: 
-      - 'feature/**'
+      - 'feature**'
 jobs: 
   Build_and_test: 
     name: Build and test
