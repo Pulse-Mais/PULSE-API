@@ -74,15 +74,6 @@ describe("CreateTrailClassUseCase", () => {
 
         const createTrailClassUseCase = new CreateTrailClassUseCase(mockTrailClassRepository, mockTrailRepository)
 
-        const InvalidIdTrailClassInputDTO: CreateTrailClassInputDTO = {
-            idTrail: "invalid",
-            title: "Título",
-            subtitle: "Subtítulo",
-            description: "Descrição",
-            duration: 20
-            
-        }
-
         const InvalidTitleTrailClassInputDTO: CreateTrailClassInputDTO = {
             idTrail: "0799d17e-7e55-4d74-99d7-ab07de38ad7e",
             title: "1949141901---225-15]]248/",
@@ -107,14 +98,6 @@ describe("CreateTrailClassUseCase", () => {
             duration: 20
         }
 
-        const InvalidTrailStorageKeyTrailClassInputDTO: CreateTrailClassInputDTO = {
-            idTrail: "0799d17e-7e55-4d74-99d7-ab07de38ad7e",
-            title: "Título",
-            subtitle: "Subtítulo",
-            description: "Descrição",
-            duration: 20
-        }
-
         const allInvalidTrailClassInputDTO: CreateTrailClassInputDTO = {
             idTrail: "aaaaaaaaa",
             title: "titulo valido",
@@ -126,7 +109,6 @@ describe("CreateTrailClassUseCase", () => {
         expect(async () => await createTrailClassUseCase.execute(InvalidTitleTrailClassInputDTO)).rejects.toThrow()
         expect(async () => await createTrailClassUseCase.execute(InvalidSubtitleTrailClassInputDTO)).rejects.toThrow()
         expect(async () => await createTrailClassUseCase.execute(InvalidDescriptionTrailClassInputDTO)).rejects.toThrow()
-        expect(async () => await createTrailClassUseCase.execute(InvalidTrailStorageKeyTrailClassInputDTO)).rejects.toThrow()
         expect(async () => await createTrailClassUseCase.execute(allInvalidTrailClassInputDTO)).rejects.toThrow()
     })
 
