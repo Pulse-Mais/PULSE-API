@@ -1,35 +1,38 @@
 name: Feature_Deploy
 on: 
-   push: 
+  push: 
     branches: 
-        - 'feature**'
+      - 'feature/**'
 jobs: 
-    Build_and_test: 
-      name: Build and test. 
-      runs-on: ubuntu-latest
+  Build_and_test: 
+    name: Build and test
+    runs-on: ubuntu-latest
     
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        - name: Configure node
-          uses: actions/setup-node@v2
-          with:
-            node-version: '18'
+      - name: Configure node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
   
-        - name: Install dependencies
-          run: npm install
+      - name: Install dependencies
+        run: npm install
   
-        - name: Run tests
-          run: npm test
+      - name: Run tests
+        run: npm test
 
-    Pull_Request: 
-        name: Create Pull Request. 
-        runs-on: ubuntu-latest
-        needs: Build_and_test
+  Pull_Request: 
+    name: Create Pull Request
+    runs-on: ubuntu-latest
+    needs: Build_and_test
 
-        steps: 
-           - name: Create Pull Request
-             uses: peter-evans/create-pull-request@v6
-             with: 
-                branch: develop
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with: 
+          branch: develop
