@@ -3,6 +3,7 @@ export interface CreateTrailClassInputDTO {
     title: string
     subtitle: string
     description: string
+    duration: number
 }
 
 

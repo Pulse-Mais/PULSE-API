@@ -1,3 +1,4 @@
+import { InvalidTrailPropetyDomainException } from "@/domain/domain-exception/invalid-trail-propety-domain-exception";
 import {
     Trail,
     TrailClass,
@@ -24,37 +25,30 @@ export class CreateTrailClassUseCase {
     async execute(input: CreateTrailClassInputDTO): Promise<CreateTrailClassOutputDTO> {
 
         const trail: Trail | null = await this.trailRepository.findById(input.idTrail);
-        if (!trail) throw new TrailNotFoundApplicationException(this.filename, "36");
-
-
-        const folderIsAvaibility: boolean = await this.storageService.verifyFolderAvailability(trailStorageKey)
-        if (!folderIsAvaibility) {
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-            throw new TrailFolderNotAvaibilityApplicationException(this.filename, "42");
+        if (!trail) {
+            throw new TrailNotFoundApplicationException("create-trail-class-use-case", "36");
         }
 
+        const idTrail: string | undefined = trail.getId()
+        if (!idTrail) {
+            throw new InvalidTrailPropetyDomainException("create-trail-class-use-case", "36", "idTrail")
+        }
+
+
         const trailClass: TrailClass = new TrailClassDomainService().createTrailClass({
-            trail,
+            idTrail,
             title: input.title,
             subtitle: input.subtitle,
-            description: input.description
+            description: input.description,
+            duration: input.duration
         });
 
 
-        const trailClassStorageKey = trailClass.getTrailClassStorageKey();
-        if (!trailClassStorageKey) throw new TrailClassStorageKeyEmptyApplicationException(this.filename, "52");
-
-        const trailClassFolderWasCreated = await this.storageService.createClassFolder(trailClassStorageKey);
-        if (!trailClassFolderWasCreated) throw new TrailClassPartionNotCreatedApplicationException(this.filename, "55");
-
         const saved = await this.trailClassRepository.save(trailClass);
-        if (!saved) throw new TrailClassNotSavedOnRepositoryApplicationException(this.filename, "58");
+        if (!saved) throw new TrailClassNotSavedOnRepositoryApplicationException("aaaaaaaaaaaaaa", "58");
 
         const outputId = saved.getId();
         if (!outputId) throw new Error("ID is undefined");
-
-        const storageKey = saved.getTrailClassStorageKey();
-        if (storageKey === undefined) throw new Error("Storage Key is undefined");
 
         const status = saved.getStatus();
         if (status === undefined) throw new Error("Status is undefined");
@@ -70,7 +64,6 @@ export class CreateTrailClassUseCase {
 
         const output: CreateTrailClassOutputDTO = {
             idTrail: outputId,
-            storageKey: storageKey,
             status: status,
             title: title,
             subtitle: subtitle,
