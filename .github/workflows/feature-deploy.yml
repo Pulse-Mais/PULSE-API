@@ -23,23 +23,22 @@ jobs:
       - name: Run tests
         run: npm test
 
-  Pull_Request: 
-    name: Create Pull Request
-    runs-on: ubuntu-latest
-    needs: Build_and_test
+# por enquanto, vou manter sem.
+  # Pull_Request: 
+  #   name: Create Pull Request
+  #   runs-on: ubuntu-latest
+  #   needs: Build_and_test
 
-    steps: 
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
+  #   steps: 
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with: 
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'Pull-Request automático'
-          branch: ${{ github.head_ref }}
-          base: develop
-          title: 'Pull-Request automático'
-          body: 'Esse PR atualiza a branch develop com as últimas features implementadas automáticamente.'
+  #     - name: Create Pull Request
+  #       uses: peter-evans/create-pull-request@v6
+  #       with: 
+  #         token: 
+  #         commit-message: 'Pull-Request automático'
+  #         branch: 
+  #         base: develop
+  #         title: 'Pull-Request automático'
+  #         body: 'Esse PR atualiza a branch develop com as últimas features implementadas automáticamente.'
