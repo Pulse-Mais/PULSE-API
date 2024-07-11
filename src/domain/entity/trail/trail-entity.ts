@@ -5,7 +5,7 @@ import { CreateTrailInput, RestoreTrailInput } from "./trail-types";
 import { TrailClassIsNotPartOfTheTrailDomainException } from "@/domain/domain-exception/trail-class-is-not-part-of-the-trail-domain-exception";
 import { TrailDoesNotHaveEnoughClassesForPublicationDomainException } from "@/domain/domain-exception/trail-does-not-have-enough-classes-for-publication-domain-exception";
 import { TrailAlreadyPublishedDomainException } from "@/domain/domain-exception/trail-already-published-domain-exception";
-import { cryptoModule } from "@/server";
+import crypto from 'crypto';
  
 
 export class Trail extends TrailBaseEntity {
@@ -83,7 +83,7 @@ export class Trail extends TrailBaseEntity {
     static create(input: CreateTrailInput): Trail {
         const trail = new Trail()
 
-        trail.setId(cryptoModule.randomUUID())
+        trail.setId(crypto.randomUUID())
         trail.setTrailClasses([])
         trail.setStatus("not-published")
         trail.setTitle(input.title)
