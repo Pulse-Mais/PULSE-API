@@ -37,7 +37,7 @@ jobs:
         with: 
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Pull-Request automático'
-          branch: develop
+          branch: ${{ github.head_ref }}
           base: develop
           title: 'Pull-Request automático'
           body: 'Esse PR atualiza a branch develop com as últimas features implementadas automáticamente.'
