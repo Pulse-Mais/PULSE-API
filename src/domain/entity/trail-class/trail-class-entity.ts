@@ -7,6 +7,7 @@ import { ContentEmptyValueObject } from "../value-objects/content-empty-value-ob
 import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object";
 import { ContentArticleValueObject } from "../value-objects/content-article-value-object";
 import { ContentVideoValueObject } from "../value-objects/content-video-value-object";
+import { cryptoModule } from "@/server";
 
 export class TrailClass extends TrailClassBaseEntity {
 
@@ -18,7 +19,7 @@ export class TrailClass extends TrailClassBaseEntity {
 
         const trailClass = new TrailClass()
 
-        trailClass.setId(crypto.randomUUID())
+        trailClass.setId(cryptoModule.randomUUID())
         trailClass.setIdTrail(input.idTrail)
         trailClass.setTitle(input.title)
         trailClass.setSubtitle(input.subtitle)

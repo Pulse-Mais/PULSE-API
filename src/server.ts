@@ -3,8 +3,11 @@ import 'dotenv/config';
 import fastify from 'fastify';
 import cors from '@fastify/cors';
 import { ControlLayer } from './control-layer';
+import crypto from 'crypto';
+
 
 const server = fastify();
+export const cryptoModule = crypto
 
 server.register(cors, { 
   origin: true  
