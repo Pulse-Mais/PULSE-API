@@ -1,29 +1,28 @@
-import { TrailNotFoundApplicationException } from './../../../../application-exceptions/use-cases-application-exceptions/trail-not-found-app-exception';
-import { CreateTrailOutputDTO } from './../../trail/create/dto/create-trail-output-dto';
-import { CreateTrailClassOutputDTO } from './dto/create-trail-class-output-dto';
-import { mockTrailClassRepository } from './../../../../../../test/mocks/mock-trail-class-repository';
-import { CreateTrailClassUseCase } from "./create-trail-class-use-case"
-import { mockTrailRepository } from "../../../../../../test/mocks/mock-trail-repository"
-import { CreateTrailClassInputDTO } from './dto/create-trail-class-input-dto';
-import { TrailClass } from '@/domain/entity/trail-class/trail-class-entity';
-import { Trail } from '@/domain/entity/trail/trail-entity';
-import { CreateTrailInputDTO } from '../../trail/create/dto/create-trail-input-dto';
- 
-
+import {
+    TrailNotFoundApplicationException,
+    CreateTrailClassUseCase,
+    CreateTrailClassInputDTO,
+    CreateTrailClassOutputDTO,
+    InvalidTrailPropetyDomainException,
+    TrailClassNotSavedOnRepositoryApplicationException,
+    TrailClass,
+    Trail,
+    mockTrailRepository,
+    mockTrailClassRepository
+} from "./index"
 
 describe("CreateTrailClassUseCase", () => {
 
-    const defautlTrailInputDTO: CreateTrailInputDTO = {
+    const defaultTrailInputDTO = {
         title: "Válido Title",
         subtitle: "Trail Subtitle",
         description: "Trail Description"
     }
 
-    const defaultTrailCreated: Trail = Trail.create(defautlTrailInputDTO)
-
+    const defaultTrailCreated = Trail.create(defaultTrailInputDTO)
     defaultTrailCreated.setId("0799d17e-7e55-4d74-99d7-ab07de38ad7e")
 
-    const defautlTrailClassInputDTO: CreateTrailClassInputDTO = {
+    const defaultTrailClassInputDTO = {
         idTrail: "0799d17e-7e55-4d74-99d7-ab07de38ad7e",
         title: "Título",
         subtitle: "Subtítulo",
@@ -31,47 +30,56 @@ describe("CreateTrailClassUseCase", () => {
         duration: 20
     }
 
-    const defaultTrailClassCreated: TrailClass = TrailClass.create(defautlTrailClassInputDTO)
-
+    const defaultTrailClassCreated = TrailClass.create(defaultTrailClassInputDTO)
     defaultTrailCreated.setTrailClasses([defaultTrailClassCreated])
 
     beforeEach(() => {
-  
-    
         mockTrailRepository.findById = vi.fn().mockResolvedValue(defaultTrailCreated)
         mockTrailClassRepository.save = vi.fn().mockResolvedValue(defaultTrailClassCreated)
     })
 
-
-
-
     it("Deve criar a aula", async () => {
-
         const createTrailClassUseCase = new CreateTrailClassUseCase(mockTrailClassRepository, mockTrailRepository)
+        const output: CreateTrailClassOutputDTO = await createTrailClassUseCase.execute(defaultTrailClassInputDTO)
 
-        const trailClassCreated = await createTrailClassUseCase.execute(defautlTrailClassInputDTO)
-
-        expect(trailClassCreated).toBeTruthy()
+        expect(output).toBeTruthy()
+        expect(output.trailClass).toEqual(defaultTrailClassCreated)
         expect(mockTrailClassRepository.save).toHaveBeenCalledTimes(1)
-        
     })
 
-
     it("Não deve criar a aula, caso não encontre a Trilha no banco", async () => {
-
         mockTrailRepository.findById = vi.fn().mockResolvedValue(null)
         const createTrailClassUseCase = new CreateTrailClassUseCase(mockTrailClassRepository, mockTrailRepository)
 
-        expect(async () => await createTrailClassUseCase.execute(defautlTrailClassInputDTO)).rejects.toThrow(TrailNotFoundApplicationException)
+        await expect(createTrailClassUseCase.execute(defaultTrailClassInputDTO)).rejects.toThrow(TrailNotFoundApplicationException)
         expect(mockTrailRepository.findById).toHaveBeenCalledTimes(1)
         expect(mockTrailClassRepository.save).toHaveBeenCalledTimes(0)
     })
 
+    it("Deve lançar uma exceção se o idTrail não estiver definido", async () => {
+        const invalidTrail = { ...defaultTrailCreated, getId: () => undefined }
+        mockTrailRepository.findById = vi.fn().mockResolvedValue(invalidTrail)
+        const createTrailClassUseCase = new CreateTrailClassUseCase(mockTrailClassRepository, mockTrailRepository)
 
-   
+        await expect(createTrailClassUseCase.execute(defaultTrailClassInputDTO)).rejects.toThrow(
+            new InvalidTrailPropetyDomainException("create-trail-class-use-case", "36", "idTrail")
+        )
+        expect(mockTrailRepository.findById).toHaveBeenCalledTimes(1)
+        expect(mockTrailClassRepository.save).toHaveBeenCalledTimes(0)
+    })
+
+    it("Deve lançar uma exceção quando a aula não for salva no repositório", async () => {
+        mockTrailClassRepository.save = vi.fn().mockResolvedValue(null)
+        const createTrailClassUseCase = new CreateTrailClassUseCase(mockTrailClassRepository, mockTrailRepository)
+
+        await expect(createTrailClassUseCase.execute(defaultTrailClassInputDTO)).rejects.toThrow(
+            new TrailClassNotSavedOnRepositoryApplicationException("aaaaaaaaaaaaaa", "58")
+        )
+        expect(mockTrailRepository.findById).toHaveBeenCalledTimes(1)
+        expect(mockTrailClassRepository.save).toHaveBeenCalledTimes(1)
+    })
 
     it("Não deve criar a aula caso o inputDTO seja inválido", async () => {
-
         const createTrailClassUseCase = new CreateTrailClassUseCase(mockTrailClassRepository, mockTrailRepository)
 
         const InvalidTitleTrailClassInputDTO: CreateTrailClassInputDTO = {
@@ -86,7 +94,7 @@ describe("CreateTrailClassUseCase", () => {
             idTrail: "0799d17e-7e55-4d74-99d7-ab07de38ad7e",
             title: "Título",
             subtitle: "1949141901---225-15]]248/",
-            description: "Descrição", 
+            description: "Descrição",
             duration: 20
         }
 
@@ -106,10 +114,9 @@ describe("CreateTrailClassUseCase", () => {
             duration: 0
         }
 
-        expect(async () => await createTrailClassUseCase.execute(InvalidTitleTrailClassInputDTO)).rejects.toThrow()
-        expect(async () => await createTrailClassUseCase.execute(InvalidSubtitleTrailClassInputDTO)).rejects.toThrow()
-        expect(async () => await createTrailClassUseCase.execute(InvalidDescriptionTrailClassInputDTO)).rejects.toThrow()
-        expect(async () => await createTrailClassUseCase.execute(allInvalidTrailClassInputDTO)).rejects.toThrow()
+        await expect(createTrailClassUseCase.execute(InvalidTitleTrailClassInputDTO)).rejects.toThrow()
+        await expect(createTrailClassUseCase.execute(InvalidSubtitleTrailClassInputDTO)).rejects.toThrow()
+        await expect(createTrailClassUseCase.execute(InvalidDescriptionTrailClassInputDTO)).rejects.toThrow()
+        await expect(createTrailClassUseCase.execute(allInvalidTrailClassInputDTO)).rejects.toThrow()
     })
-
 })

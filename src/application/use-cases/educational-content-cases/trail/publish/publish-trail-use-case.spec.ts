@@ -1,3 +1,4 @@
+import { generatePublishedTrailClass } from "@/utils/generate-published-trail-class-tests"
 import {
     Trail,
     PublishTrailUseCaseInputDTO,
@@ -63,25 +64,4 @@ describe("UnitTests - PublishTrailUseCase", () => {
     })
 })
 
-function generatePublishedTrailClass(idTrail: string): TrailClass {
-    const inputTrailClassPublished: CreateTrailClassInput = {
-        idTrail: idTrail,
-        title: "Teste",
-        description: "teste",
-        subtitle: "teste",
-        duration: 10,
-    }
 
-    const trailClassPublished = TrailClass.create(inputTrailClassPublished)
-
-    trailClassPublished.setArchiveTrailClassContent(
-        new ContentArchiveValueObject(
-            `trilhas/trail-${idTrail}/trailClass-${trailClassPublished.getId()}/`,
-            "filled",
-            "pdf"
-        ))
-
-    trailClassPublished.publish()
-
-    return trailClassPublished
-}

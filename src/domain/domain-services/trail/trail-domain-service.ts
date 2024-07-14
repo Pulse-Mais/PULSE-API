@@ -26,7 +26,7 @@ export class TrailDomainService {
     return trail
   }
 
-  getTrailClass(input: GetTrailClassDomainServiceInput) {
+  getTrailClass(input: GetTrailClassDomainServiceInput): TrailClass {
     const { trail, idTrailClass } = input
 
     if (!trail) {
@@ -44,6 +44,8 @@ export class TrailDomainService {
         '97',
       )
     }
+
+    return trailClass
   }
 
   updateTrailInfo(input: UpdateTrailDomainServiceInput) {

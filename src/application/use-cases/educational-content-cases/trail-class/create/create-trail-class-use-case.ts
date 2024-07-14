@@ -1,17 +1,14 @@
-import { InvalidTrailPropetyDomainException } from "@/domain/domain-exception/invalid-trail-propety-domain-exception";
-import {
+ import {
     Trail,
     TrailClass,
     TrailClassDomainService,
     ITrailClassRepository,
     ITrailRepository,
     TrailNotFoundApplicationException,
-    TrailFolderNotAvaibilityApplicationException,
-    TrailClassStorageKeyEmptyApplicationException,
-    TrailClassPartionNotCreatedApplicationException,
     TrailClassNotSavedOnRepositoryApplicationException,
     CreateTrailClassInputDTO,
-    CreateTrailClassOutputDTO
+    CreateTrailClassOutputDTO,
+    InvalidTrailPropetyDomainException
 } from "./index";
 
 
@@ -34,7 +31,6 @@ export class CreateTrailClassUseCase {
             throw new InvalidTrailPropetyDomainException("create-trail-class-use-case", "36", "idTrail")
         }
 
-
         const trailClass: TrailClass = new TrailClassDomainService().createTrailClass({
             idTrail,
             title: input.title,
@@ -47,33 +43,10 @@ export class CreateTrailClassUseCase {
         const saved = await this.trailClassRepository.save(trailClass);
         if (!saved) throw new TrailClassNotSavedOnRepositoryApplicationException("aaaaaaaaaaaaaa", "58");
 
-        const outputId = saved.getId();
-        if (!outputId) throw new Error("ID is undefined");
-
-        const status = saved.getStatus();
-        if (status === undefined) throw new Error("Status is undefined");
-
-        const title = saved.getTitle();
-        if (title === undefined) throw new Error("Title is undefined");
-
-        const subtitle = saved.getSubtitle();
-        if (subtitle === undefined) throw new Error("Subtitle is undefined");
-
-        const description = saved.getDescription();
-        if (description === undefined) throw new Error("Description is undefined");
-
         const output: CreateTrailClassOutputDTO = {
-            idTrail: outputId,
-            status: status,
-            title: title,
-            subtitle: subtitle,
-            description: description,
+            trailClass: saved
         };
 
         return output
     }
-
 }
-
-
-

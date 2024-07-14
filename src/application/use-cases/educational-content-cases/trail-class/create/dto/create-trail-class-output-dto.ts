@@ -1,10 +1,7 @@
+import { TrailClass } from '@/domain/entity/trail-class/trail-class-entity';
 
 export interface CreateTrailClassOutputDTO  {
-    idTrail: string,
-    status: string,
-    title: string,
-    subtitle: string,
-    description: string,
+    trailClass: TrailClass
 }
 
 

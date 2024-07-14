@@ -1,73 +1,67 @@
 import {
+    Trail,
+    TrailDomainService,
+    InvalidTrailPropetyDomainException,
     TrailClass,
     TrailClassDomainService,
     ITrailClassRepository,
     ITrailRepository,
     TrailNotFoundApplicationException,
     TrailClassNotSavedOnRepositoryApplicationException,
-    GenericUseCase,
     PublishTrailClassOutputDTO,
     PublishTrailClassInputDTO
-} from "./index"; 
+} from "./index";
 
-export class PublishTrailClassUseCase extends GenericUseCase {
 
-    constructor(private readonly trailRepository: ITrailRepository, private readonly trailClassRepository: ITrailClassRepository) {
-        super(
-            "create-class-use-case.ts",
-            "src/application/use-cases/create-class-use-case.ts"
-        );
-    }
+export class PublishTrailClassUseCase {
+
+    constructor(
+        private readonly trailRepository: ITrailRepository,
+        private readonly trailClassRepository: ITrailClassRepository
+    ) { }
 
     async execute(input: PublishTrailClassInputDTO) {
+        const trail: Trail | null = await this.trailRepository.findById(input.idTrail)
+        if (!trail) {
+            throw new TrailNotFoundApplicationException("publish-trail-class-use-case", "30");
+        }
 
-        const trail = await this.trailRepository.findById(input.idTrail)
-        if (!trail) throw new TrailNotFoundApplicationException(this.filename, "30");
+        const trailClass: TrailClass = new TrailDomainService().getTrailClass({
+            trail,
+            idTrailClass: input.idTrailClass
+        })
+        
+        const publishedTrailClass: TrailClass = new TrailClassDomainService().publishTrailClass(trailClass)
 
-        const publishedTrailClass: TrailClass = new TrailClassDomainService().publishTrailClass(trail, input.idTrailClass, input.unlockDate)
+        const savedPublishedTrailClass: TrailClass = await this.trailClassRepository.save(publishedTrailClass);
+        if (!savedPublishedTrailClass) {
+            throw new TrailClassNotSavedOnRepositoryApplicationException("publish-trail-class-use-case", "35");
+        }
 
-        const saved: TrailClass = await this.trailClassRepository.save(publishedTrailClass);
-        if (!saved) throw new TrailClassNotSavedOnRepositoryApplicationException(this.filename, "35");
+        const idTrail: string | undefined = trail.getId()
+        if (!idTrail) {
+            throw new InvalidTrailPropetyDomainException("publish-trail-class-use-case", "38", "idTrail")
+        }
 
-        const idTrailClass = saved.getId();
-        if (!idTrailClass) throw new Error("ID is undefined");
+        const idTrailClass: string | undefined = savedPublishedTrailClass.getId()
+        if (!idTrailClass) {
+            throw new InvalidTrailPropetyDomainException("publish-trail-class-use-case", "43", "idTrailClass")
+        }
 
-        const idTrail = saved.getIdTrail();
-        if (idTrail === undefined) throw new Error("Trail ID is undefined");
-
-        const title = saved.getTitle();
-        if (title === undefined) throw new Error("Title is undefined");
-
-        const storageKey = saved.getTrailClassStorageKey();
-        if (storageKey === undefined) throw new Error("Storage Key is undefined");
-
-        const status = saved.getStatus();
-        if (status === undefined) throw new Error("Status is undefined");
-
-        const content = saved.getContent();
-        if (content === undefined) throw new Error("Content Key is undefined");
-
-        const release = saved.getRelease();
-        if (release === undefined) throw new Error("Release Schedule is undefined");
-
-        if (!(release.schedule instanceof Date)) {
-            throw new Error("The schedule is not a valid Date object.");
+        const title: string | undefined = savedPublishedTrailClass.getTitle()
+        if (!title) {
+            throw new InvalidTrailPropetyDomainException("publish-trail-class-use-case", "48", "title")
+        }
+        const status: "published" | "not-published" | undefined = savedPublishedTrailClass.getStatus()
+        if (!status || status !== "published") {
+            throw new InvalidTrailPropetyDomainException("publish-trail-class-use-case", "52", "status")
         }
 
         const output: PublishTrailClassOutputDTO = {
-            idTrailClass,
             idTrail,
+            idTrailClass,
             title,
-            status,
-            content: {
-                key: content.key,
-                contentStatus: content.status,
-                type: content.type,
-            },
-            release: {
-                schedule: release.schedule,
-                releaseStatus: release.status
-            }
+            status
         };
 
         return output;

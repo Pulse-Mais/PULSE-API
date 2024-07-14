@@ -3,6 +3,7 @@ import { CreateTrailInputDomainService, RestoreTrailInputDomainService } from ".
 import { TrailDomainService } from "./trail-domain-service"
 import { TrailClass } from "@/domain/entity/trail-class/trail-class-entity"
 import { ContentArchiveValueObject } from "../trail-class"
+import { generatePublishedTrailClass } from "@/utils/generate-published-trail-class-tests"
 
 const trailDomainService = new TrailDomainService()
 
@@ -58,7 +59,7 @@ describe("TrailDomainService", () => {
 
     it("Deve ser possível publicar uma trilha", () => {
 
-        const publishedTrailClass = generatePublishedTrailClass()
+        const publishedTrailClass = generatePublishedTrailClass(trailDefault.getId()!)
         trailDefault.addTrailClass(publishedTrailClass)
 
         const trailPublished = trailDomainService.publishTrail(trailDefault)
@@ -68,25 +69,3 @@ describe("TrailDomainService", () => {
 
 })
 
-function generatePublishedTrailClass(): TrailClass {
-    const inputtrailClassPublished: CreateTrailClassInput = {
-        idTrail: `${trailDefault.getId()}`,
-        title: "Teste",
-        description: "teste",
-        subtitle: "teste",
-        duration: 10,
-    }
-
-    const trailClassPublished = TrailClass.create(inputtrailClassPublished)
-
-    trailClassPublished.setArchiveTrailClassContent(
-        new ContentArchiveValueObject(
-            `trilhas/trail-${trailDefault.getId()}/trailClass-${trailClassPublished.getId()}/`,
-            "filled",
-            "pdf"
-        ))
-   
-    trailClassPublished.publish()
-
-    return trailClassPublished
-}

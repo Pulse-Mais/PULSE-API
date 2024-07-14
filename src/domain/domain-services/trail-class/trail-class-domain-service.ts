@@ -64,6 +64,7 @@ export class TrailClassDomainService {
     }
 
     publishTrailClass(trailClass: TrailClass) {
+ 
         trailClass.publish()
         return trailClass
     }

@@ -6,6 +6,7 @@ import { TrailClassIsNotPartOfTheTrailDomainException } from "@/domain/domain-ex
 import { TrailDoesNotHaveEnoughClassesForPublicationDomainException } from "@/domain/domain-exception/trail-does-not-have-enough-classes-for-publication-domain-exception";
 import { TrailAlreadyPublishedDomainException } from "@/domain/domain-exception/trail-already-published-domain-exception";
 import crypto from 'crypto';
+import { InvalidTrailClassPropetyDomainException } from "@/domain/domain-exception/invalid-trail-class-propety-domain-exception";
  
 
 export class Trail extends TrailBaseEntity {
@@ -48,14 +49,11 @@ export class Trail extends TrailBaseEntity {
     }
 
     public getTrailClassById(idTrailClass: string) {
+        const trailClass = this.getTrailClasses().find(trailClass => trailClass.getId() === idTrailClass)
 
-        if (!idTrailClass) throw new Error("falta id trailclassses")
+        if (!trailClass) return null;
 
-        const course = this.getTrailClasses().find(course => course.getId() === idTrailClass)
-
-        if (!course) return null;
-
-        return course
+        return trailClass
     }
 
     public updateTitle(newTitle: string) {

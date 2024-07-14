@@ -75,7 +75,7 @@ export class TrailClass extends TrailClassBaseEntity {
         };
 
         if (status !== "not-published") {
-            throw new ClassAlreadyPublishedDomainException("trail-class-entity", "78")
+            throw new ClassAlreadyPublishedDomainException("trail-class-entity", "78", `${status}`)
         };
 
         const content = this.getContent()
