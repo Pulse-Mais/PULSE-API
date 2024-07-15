@@ -1,7 +1,7 @@
 import { TrailClass, ContentArchiveValueObject } from "@/domain/domain-services/trail-class"
 import { CreateTrailClassInput } from "@/domain/entity/trail-class/trail-class-types"
 
-export function generatePublishedTrailClass(idTrail: string): TrailClass {
+export function generatePublishedTrailClassToTests(idTrail: string): TrailClass {
     const inputTrailClassPublished: CreateTrailClassInput = {
         idTrail: idTrail,
         title: "Teste",

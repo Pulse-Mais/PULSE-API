@@ -1,5 +1,6 @@
+import { ContentEmptyValueObject } from '@/domain/entity/value-objects/content-empty-value-object';
 import { TrailInvalidUpdateDomainException } from '@/domain/domain-exception/trail-invalid-update-domain-expection'
-import { UpdateTrailDomainServiceInput } from './@types/trail-domain-service-types'
+import { GetFilledTrailClassesDomainServiceInput, GetPublishedTrailClassesDomainServiceInput, GetTrailClassesByContentTypeDomainServiceInput, GetTrailClassesDomainServiceInput, GetUnfilledTrailClassesDomainServiceInput, UpdateTrailDomainServiceInput } from './@types/trail-domain-service-types'
 import {
   Trail,
   CreateTrailInputDomainService,
@@ -47,6 +48,115 @@ export class TrailDomainService {
 
     return trailClass
   }
+
+  getTrailClasses(input: GetTrailClassesDomainServiceInput): TrailClass[] {
+    const { trail } = input
+
+    if (!trail) {
+      throw new InvalidTrailDomainException(
+        'trailClass-domain-service.ts',
+        '46',
+        'trail',
+      )
+    }
+
+    return trail.getTrailClasses()
+  }
+
+  getPublishedTrailClasses(input: GetPublishedTrailClassesDomainServiceInput): TrailClass[] {
+    const { trail } = input
+
+    if (!trail) {
+      throw new InvalidTrailDomainException(
+        'trailClass-domain-service.ts',
+        '46',
+        'trail',
+      )
+    }
+
+    const trailClasses = trail.getTrailClasses()
+    const publishedTrailClasses = trailClasses.filter(trailClass => trailClass.getStatus() === "published")
+
+    return publishedTrailClasses
+  }
+
+  getUnpublishedTrailClasses(input: GetPublishedTrailClassesDomainServiceInput): TrailClass[] {
+    const { trail } = input
+
+    if (!trail) {
+      throw new InvalidTrailDomainException(
+        'trailClass-domain-service.ts',
+        '46',
+        'trail',
+      )
+    }
+
+    const trailClasses = trail.getTrailClasses()
+    const unpublishedTrailClasses = trailClasses.filter(trailClass => trailClass.getStatus() === "not-published")
+
+    return unpublishedTrailClasses
+  }
+
+  getFilledTrailClasses(input: GetFilledTrailClassesDomainServiceInput): TrailClass[] {
+    const { trail } = input
+    if (!trail) {
+      throw new InvalidTrailDomainException(
+        'trailClass-domain-service.ts',
+        '46',
+        'trail',
+      )
+    }
+
+    const trailClasses = trail.getTrailClasses()
+    const filledTrailClasses = trailClasses.filter(
+      (trailClass: TrailClass) => !(trailClass.getContent() instanceof ContentEmptyValueObject)
+    )
+
+    return filledTrailClasses
+  }
+
+  getUnfilledTrailClasses(input: GetUnfilledTrailClassesDomainServiceInput): TrailClass[] {
+    const { trail } = input
+
+    if (!trail) {
+      throw new InvalidTrailDomainException(
+        'trailClass-domain-service.ts',
+        '46',
+        'trail',
+      )
+    }
+
+    const trailClasses = trail.getTrailClasses()
+    const unfilledTrailClasses = trailClasses.filter(
+      (trailClass: TrailClass) => trailClass.getContent() instanceof ContentEmptyValueObject
+    )
+
+    return unfilledTrailClasses
+  }
+
+  getTrailClassesByContentType(input: GetTrailClassesByContentTypeDomainServiceInput): TrailClass[] {
+    const { trail, contentType } = input;
+
+    if (!trail) {
+      throw new InvalidTrailDomainException(
+        'trailClass-domain-service.ts',
+        '46',
+        'trail',
+      );
+    }
+
+    const trailClasses: TrailClass[] = trail.getTrailClasses();
+
+    const trailClassesByContentType = trailClasses.filter(
+      (trailClass: TrailClass) => {
+        const content = trailClass.getContent();
+        return content && content.constructor.name === contentType;
+      }
+    );
+
+    return trailClassesByContentType;
+  }
+
 
   updateTrailInfo(input: UpdateTrailDomainServiceInput) {
     const trail = input.trail
