@@ -13,6 +13,5 @@ export interface GetUrlForUploadClassArchiveInputDTO {
     | "docx"
     | "xls"
     | "txt";
-    type: "video" | "archive"
 }
 

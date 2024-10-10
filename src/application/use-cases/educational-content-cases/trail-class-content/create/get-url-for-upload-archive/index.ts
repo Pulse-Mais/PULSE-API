@@ -1,12 +1,12 @@
-export { ITrailClassRepository } from "../../../../../domain/repository/ITrail-class-Repository";
-export { ITrailRepository } from "../../../../../domain/repository/ITrail-Repository";
-export { TrailClassDomainService } from "@/domain/domain-services/trail-class-domain-service";
+export { ITrailClassRepository } from "@/domain/repository/ITrail-class-Repository";
+export { ITrailRepository } from "@/domain/repository/ITrail-Repository";
+export { TrailClassDomainService } from "@/domain/domain-services/trail-class/trail-class-domain-service";
 export { IStorageService } from "@/application/interfaces/IStorage-service";
-export { Content, ContentValueObject } from "../../../../../domain/entity/value-objects/content-value-object";
+export { TrailNotFoundApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-not-found-app-exception";
 export { TrailClassNotFoundOnTrailDomainException } from "@/domain/domain-exception/trail-class-not-found-on-trail-domain-exception";
 export { GenericUseCase } from "@/application/use-cases/gereric-use-case";
 export { TrailClass } from "@/domain/entity/trail-class/trail-class-entity";
 export { InvalidRequestParamsAppException } from "@/application/application-exceptions/controllers-application-exceptions/invalid-request-params-app-exception";
-export { TrailClassNotSavedOnRepositoryApplicationException } from "../../trail-class/create";
+export { TrailClassNotSavedOnRepositoryApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-class-not-saved-on-repository-app-exception";
 export { GetUrlForUploadClassArchiveInputDTO } from "./dto/get-url-for-upload-archive-content-input-dto";
 export { GetUrlForUploadClassArchiveOutputDTO } from "./dto/get-url-for-upload-archive-content-output-dto";

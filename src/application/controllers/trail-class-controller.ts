@@ -13,7 +13,7 @@ import { TrailClass } from "@/domain/entity/trail-class/trail-class-entity";
 import { IStorageService } from "../interfaces/IStorage-service";
 import { GetUrlForUploadArchiveContent } from "../use-cases/educational-content-cases/trail-class-content/get-url-for-upload-archive/get-url-for-upload-archive-content";
 import { TrailClassDomainService } from "../../domain/domain-services/trail-class-domain-service"
-import { GetUrlForUploadVideoContent } from "@/application/use-cases/educational-content-cases/trail-class-content/get-url-for-upload-video/get-url-for-upload-video-content";
+import { GetUrlForUploadVideoContent } from "@/application/use-cases/educational-content-cases/trail-class-content/create/get-url-for-upload-video/get-url-for-upload-video-content";
 import { IVideoService } from "../interfaces/IVideo-service";
 
 import { InvalidRequestParamsAppException } from "../application-exceptions/controllers-application-exceptions/invalid-request-params-app-exception";
@@ -28,8 +28,8 @@ import { UpdateTrailClassInfoInputDTO, UpdateTrailClassInfoOutputDTO } from "../
 import { UnlockTrailClassOutputDTO } from "../use-cases/educational-content-cases/trail-class/unlock";
 import { DeleteTrailClassInputDTO, DeleteTrailClassOutputDTO } from '../use-cases/educational-content-cases/trail-class/delete';
 import { UpdateTrailClassArchiveContentInputDTO, UpdateTrailClassArchiveContentOutputDTO } from '../use-cases/educational-content-cases/trail-class-content/update-archive-content';
-import { GetUrlForUploadClassVideoContentOutputDTO } from '../use-cases/educational-content-cases/trail-class-content/get-url-for-upload-video/dto/get-url-for-upload-video-content-output-dto';
-import { GetUrlForUploadTrailClassVideoContentInputDTO } from '../use-cases/educational-content-cases/trail-class-content/get-url-for-upload-video/dto/get-url-for-upload-video-content-input-dto';
+import { GetUrlForUploadClassVideoContentOutputDTO } from '../use-cases/educational-content-cases/trail-class-content/create/get-url-for-upload-video/dto/get-url-for-upload-video-content-output-dto';
+import { GetUrlForUploadTrailClassVideoContentInputDTO } from '../use-cases/educational-content-cases/trail-class-content/create/get-url-for-upload-video/dto/get-url-for-upload-video-content-input-dto';
 import { UpdateTrailClassVideoContentOutputDTO } from '../use-cases/educational-content-cases/trail-class-content/update-video-content/dto/update-trail-class-video-content-output-dto';
 import { ListTrailClassesInputDTO } from '../use-cases/educational-content-cases/trail-class/read/list-trail-classes-use-case/dto/list-trail-classes-input-DTO';
 import { ListTrailClassesOutputDTO } from '../use-cases/educational-content-cases/trail-class/read/list-trail-classes-use-case/dto/list-trail-classes-output-DTO';

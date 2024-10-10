@@ -41,6 +41,7 @@
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
     "mysql2": "^3.9.7",
+    "pulse-api": "file:",
     "tsconfig-paths": "^4.2.0"
   }
 }
