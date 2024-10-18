@@ -1,15 +1,12 @@
-import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object"
-import { ContentArticleValueObject } from "../value-objects/content-article-value-object"
-import { ContentEmptyValueObject } from "../value-objects/content-empty-value-object"
-import { ContentVideoValueObject } from "../value-objects/content-video-value-object"
+import { ContentBlock } from "../value-objects/trail-content-item-value-object"
 
 
 export interface CreateTrailClassInput {
     idTrail: string
+    type: 'class' | 'activity'
     title: string
     description: string
     duration: number
-    subtitle: string
 }
 
 export interface RestoreTrailClassInput {
@@ -18,11 +15,11 @@ export interface RestoreTrailClassInput {
     idTrail: string
 
     title: string
-    subtitle: string
+ 
     description: string
     duration: number
     
-    content: ContentEmptyValueObject | ContentArticleValueObject | ContentVideoValueObject | ContentArchiveValueObject
+    contents: ContentBlock<any>[]
     status: "published" | "not-published"
     createdAt: Date
     updatedAt: Date

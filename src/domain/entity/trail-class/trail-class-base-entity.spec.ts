@@ -1,7 +1,6 @@
 import { InvalidTrailClassPropetyDomainException } from "@/domain/domain-exception/invalid-trail-class-propety-domain-exception"
 import { TrailClassBaseEntity } from "./trail-class-base-entity"
-import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object"
-import { ContentEmptyValueObject } from "../value-objects/content-empty-value-object"
+ 
 
 
 describe("(UnityTest) - TrailClassBaseEntity \n\n", () => {

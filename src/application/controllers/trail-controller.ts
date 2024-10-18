@@ -15,19 +15,19 @@ export class TrailControler extends GenericController {
         super();
     }
 
-    async createTrail(ctx: IHttpContext): Promise<void> {
-        try {
+    // async createTrail(ctx: IHttpContext): Promise<void> {
+    //     try {
 
-            const data = ctx.getRequest().body
-            const trail = await new CreateTrailUseCase(this.trailRepository, this.storageService).execute(data)
+    //         const data = ctx.getRequest().body
+    //         const trail = await new CreateTrailUseCase(this.trailRepository, this.storageService).execute(data)
 
-            return ctx.sendResponse(this.createSuccessResponse(trail))
+    //         return ctx.sendResponse(this.createSuccessResponse(trail))
 
-        } catch (error) {
+    //     } catch (error) {
 
-            return ctx.sendResponse(this.createErrorResponse(error))
-        }
-    }
+    //         return ctx.sendResponse(this.createErrorResponse(error))
+    //     }
+    // }
 
     async listTrails(ctx: IHttpContext) {
         try {

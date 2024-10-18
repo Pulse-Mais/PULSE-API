@@ -1,4 +1,4 @@
-import { TrailClass, ContentArchiveValueObject } from "@/domain/domain-services/trail-class"
+import { TrailClass} from "@/domain/domain-services/trail-class"
 import { CreateTrailClassInput } from "@/domain/entity/trail-class/trail-class-types"
 
 export function generatePublishedTrailClassToTests(idTrail: string): TrailClass {
@@ -6,19 +6,13 @@ export function generatePublishedTrailClassToTests(idTrail: string): TrailClass 
         idTrail: idTrail,
         title: "Teste",
         description: "teste",
-        subtitle: "teste",
+        type: 'class',
         duration: 10,
     }
 
     const trailClassPublished = TrailClass.create(inputTrailClassPublished)
 
-    trailClassPublished.setArchiveTrailClassContent(
-        new ContentArchiveValueObject(
-            `trilhas/trail-${idTrail}/trailClass-${trailClassPublished.getId()}/`,
-            "filled",
-            "pdf"
-        ))
-    
+ 
     trailClassPublished.publish()
 
     return trailClassPublished

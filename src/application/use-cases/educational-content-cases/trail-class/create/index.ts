@@ -1,5 +1,5 @@
-export { mockTrailClassRepository } from '../../../../../../test/mocks/mock-trail-class-repository';
-export { mockTrailRepository } from '../../../../../../test/mocks/mock-trail-repository';
+// export { mockTrailClassRepository } from '../../../../../../test/mocks/mock-trail-class-repository';
+// export { mockTrailRepository } from '../../../../../../test/mocks/mock-trail-repository';
 export { CreateTrailClassUseCase } from './create-trail-class-use-case';
 export { TrailFolderNotAvaibilityApplicationException } from './../../../../application-exceptions/use-cases-application-exceptions/trail-folder-not-avaibility-application-exception';
 export { InvalidTrailPropetyDomainException } from "@/domain/domain-exception/invalid-trail-propety-domain-exception";
@@ -14,6 +14,6 @@ export { TrailClassStorageKeyEmptyApplicationException } from "@/application/app
 export { TrailClassPartionNotCreatedApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-class-partition-not-created-app-exception";
 export { TrailClassNotSavedOnRepositoryApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-class-not-saved-on-repository-app-exception";
 export { IStorageService } from "../../../../interfaces/IStorage-service";
-export { GenericUseCase } from "../../../gereric-use-case";
+ 
 export { CreateTrailClassInputDTO } from "./dto/create-trail-class-input-dto";
-export { CreateTrailClassOutputDTO } from "./dto/create-trail-class-output-dto";
+export { CreateTrailClassOutputDTO } from "./dto/create-trail-content-output-dto";

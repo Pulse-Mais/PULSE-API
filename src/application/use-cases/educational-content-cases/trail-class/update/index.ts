@@ -15,7 +15,7 @@ export { TrailClassNotFoundApplicationException } from "@/application/applicatio
 export { TrailClassNotSavedOnRepositoryApplicationException } from "@/application/application-exceptions/use-cases-application-exceptions/trail-class-not-saved-on-repository-app-exception";
 export { InvalidRequestParamsAppException } from "@/application/application-exceptions/controllers-application-exceptions/invalid-request-params-app-exception";
 
-export { GenericUseCase } from "../../../gereric-use-case";
+ 
 export { UpdateTrailClassInfoInputDTO } from "./dto/update-trail-class-info-input-dto";
 export { UpdateTrailClassInfoOutputDTO } from "./dto/update-trail-class-info-output-dto";
 export { TrailDomainService } from "@/domain/domain-services/trail/trail-domain-service";

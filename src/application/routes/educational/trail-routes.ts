@@ -4,11 +4,11 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 
 export const TrailRoutes = (server: FastifyInstance, trailController: TrailControler) => {
-    server.post("/create-trail", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
+    // server.post("/create-trail", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailController.createTrail(fastifyAdapter);
-    });
+    //     return await trailController.createTrail(fastifyAdapter);
+    // });
 
     server.get("/trails", async (request: FastifyRequest, reply: FastifyReply) => {
         const fastifyAdapter = new FastifyAdapter<boolean>(request, reply);

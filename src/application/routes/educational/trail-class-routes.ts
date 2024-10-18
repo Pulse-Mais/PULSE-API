@@ -2,9 +2,15 @@ import { CreateTrailInputDTO } from './../../use-cases/educational-content-cases
 import { FastifyAdapter } from "@/infra/adapters/fastify-adapter";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { TrailClassControler } from "@/application/controllers/trail-class-controller";
-
+ 
+ 
+ 
 export const trailClassRoutes = (server: FastifyInstance, trailClassController: TrailClassControler) => {
 
+
+
+
+        server.register(require('@fastify/multipart'))
     /**   
         * * CRIAR UMA AULA
 
@@ -15,12 +21,35 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
         * @returns {Promise<CreateTrailClassOutputDTO>}  
     */
 
-    server.post("/create-trail-class/:idTrail", async (request: FastifyRequest, reply: FastifyReply) => {
+    server.post("/create-class-or-activity/:idTrail", async (request: any, reply: FastifyReply) => {
         const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.createTrailClass(fastifyAdapter);
+        return await trailClassController.createTrailClass(fastifyAdapter); // Passa os arquivos recebidos
     });
 
+    server.post("/upload", async (request: any, reply: FastifyReply) => {
+        const parts = request.parts(); // Parte para iterar sobre os arquivos e campos
+        const files: any[] = [];
+        let data: any = null;
+
+        // Itera sobre todas as partes do multipart/form-data
+        for await (const part of parts) {
+            console.log('Parte:', part);
+            if (part.file) {
+                // Se for um arquivo, guarda no array de arquivos
+                files.push(part);
+            } else if (part.fieldname === 'data') {
+                // Se for o campo 'data', armazena o valor
+                data = JSON.parse(part.value); // Converte de string para JSON
+            }
+        }
+
+        // Agora você pode usar os arquivos e os dados JSON
+        console.log('Arquivos:', files);
+        console.log('Dados:', data);
+
+        return reply.send({ success: true });
+    });
 
     /** 
         * * ATUALIZAR INFORMAÇÕES DE UMA AULA
@@ -31,11 +60,11 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
         * @returns {Promise<void>}  
     */
 
-    server.put("/update-trail-class/:idTrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
+    // server.put("/update-trail-class/:idTrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.updateTrailClassInfo(fastifyAdapter);
-    });
+    //     return await trailClassController.updateTrailClassInfo(fastifyAdapter);
+    // });
 
     /** PUBLICAR UMA AULA
   
@@ -45,11 +74,11 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
         * @returns {Promise<void>}  
     */
 
-    server.put("/publish-trail-class/:idTrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
+    // server.put("/publish-trail-class/:idTrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.publishTrailClass(fastifyAdapter);
-    });
+    //     return await trailClassController.publishTrailClass(fastifyAdapter);
+    // });
 
     /** LIBERAR UMA AULA
   
@@ -59,11 +88,11 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
         * @returns {Promise<void>}  
     */
 
-    server.put("/unlock-trail-class/:idTrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
+    // server.put("/unlock-trail-class/:idTrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.unlockTrailClass(fastifyAdapter);
-    });
+    //     return await trailClassController.unlockTrailClass(fastifyAdapter);
+    // });
 
     /** APAGAR UMA AULA
  
@@ -90,11 +119,11 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
        * @returns {Promise<void>}  
    */
 
-    server.post("/create-trail-class-content/archive/:idTrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
+    // server.post("/create-trail-class-content/archive/:idTrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.getUrlForUploadArchiveContent(fastifyAdapter);
-    });
+    //     return await trailClassController.getUrlForUploadArchiveContent(fastifyAdapter);
+    // });
 
     /** SINALIZAR QUE O CONTEÚDO DO TIPO ARCHIVE FOI CRIADO  
      
@@ -108,10 +137,10 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
         
     */
 
-    server.post("/archive-created", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
-        return await trailClassController.archiveContentCreated(fastifyAdapter);
-    });
+    // server.post("/archive-created", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
+    //     return await trailClassController.archiveContentCreated(fastifyAdapter);
+    // });
 
 
     /** CRIAR CONTEÚDO DO TIPO VIDEO
@@ -122,11 +151,11 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
         * @returns {Promise<void>}  
     */
 
-    server.post("/create-class-content/video/:idtrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
+    // server.post("/create-class-content/video/:idtrail/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.getUrlForUploadVideoContent(fastifyAdapter);
-    });
+    //     return await trailClassController.getUrlForUploadVideoContent(fastifyAdapter);
+    // });
 
 
     /** SINALIZAR QUE O CONTEÚDO DO TIPO VIDEO FOI CRIADO  
@@ -146,23 +175,23 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
         
     */
 
-    server.get("/trail/:idTrail/trail-classs/ ", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
+    // server.get("/trail/:idTrail/trail-classs/ ", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.videoContentCreated(fastifyAdapter)
-    })
+    //     return await trailClassController.videoContentCreated(fastifyAdapter)
+    // })
 
-    server.get("/trail/:idTrail/trail-classes", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
+    // server.get("/trail/:idTrail/trail-classes", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.listTrailClasses(fastifyAdapter)
-    })
+    //     return await trailClassController.listTrailClasses(fastifyAdapter)
+    // })
 
-    server.get("/trail/:idTrail/trail-class/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
-        const fastifyAdapter = new FastifyAdapter(request, reply);
+    // server.get("/trail/:idTrail/trail-class/:idTrailClass", async (request: FastifyRequest, reply: FastifyReply) => {
+    //     const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.getTrailClass(fastifyAdapter)
+    //     return await trailClassController.getTrailClass(fastifyAdapter)
 
-    })
+    // })
 
 }

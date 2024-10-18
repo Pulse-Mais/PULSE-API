@@ -1,19 +1,15 @@
 import { InvalidTrailClassPropetyDomainException } from "@/domain/domain-exception/invalid-trail-class-propety-domain-exception";
-import { ContentEmptyValueObject } from "../value-objects/content-empty-value-object";
-import { ContentArticleValueObject } from "../value-objects/content-article-value-object";
-import { ContentVideoValueObject } from "../value-objects/content-video-value-object";
-import { ContentArchiveValueObject } from "../value-objects/content-archive-value-object";
+import { ContentBlock } from "../value-objects/trail-content-item-value-object";
 
 
 export class TrailClassBaseEntity {
     private id?: string;
     private idTrail?: string
     private title?: string
-    private subtitle?: string
     private description?: string
     private duration?: number
     private status?: "published" | "not-published"
-    private content?: ContentEmptyValueObject | ContentArticleValueObject | ContentVideoValueObject | ContentArchiveValueObject;
+    private contents?: ContentBlock<any>[]
     private createdAt?: Date;
     private updatedAt?: Date;
 
@@ -102,64 +98,9 @@ export class TrailClassBaseEntity {
         this.title = title;
     }
 
+ 
 
-    public getSubtitle() {
-        return this.subtitle;
-    }
-
-    public setSubtitle(subtitle: string): void {
-
-        if (!subtitle) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "113",
-                "subtitle",
-                `O subtítulo não pode ser vazio!`
-            )
-        }
-
-        if (subtitle.length < 5 || subtitle.length > 70) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "122",
-                "subtitle",
-                `O subtítulo deve ter entre 5 e 70 caracteres.`
-            )
-        }
-
-        const invalidCharacters = /[^a-zA-Z\u00C0-\u00FF0-9\s ?!.,"'-]/;
-        const hasInvalidCharacters = subtitle.match(invalidCharacters);
-
-        if (hasInvalidCharacters) {
-
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "131",
-                "subtitle",
-                `O subtítulo contém caracteres inválidos. \n Caracteres inválidos encontrados: ${hasInvalidCharacters}`
-            )
-        }
-
-        if (/(\d{2,})/.test(subtitle)) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "140",
-                "subtitle",
-                `O subtítulo não pode conter sequências numéricas.`
-            )
-        }
-
-        if (this.verifyIfContainsSwearsWords(subtitle.toLowerCase())) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "149",
-                "subtitle",
-                `O subtítulo contém palavras de baixo calão.`
-            )
-        }
-
-        this.subtitle = subtitle;
-    }
+    
 
     public getDescription() {
         return this.description
@@ -215,59 +156,59 @@ export class TrailClassBaseEntity {
 
     public setStatus(status: "published" | "not-published"): void {
 
-        if (typeof status !== 'string' || !['published', 'not-published'].includes(status)) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "223",
-                "status",
-                `status inválido. Status: ${status}`
-            )
-        }
+        // if (typeof status !== 'string' || !['published', 'not-published'].includes(status)) {
+        //     throw new InvalidTrailClassPropetyDomainException(
+        //         "trail-class-base-entity.ts",
+        //         "223",
+        //         "status",
+        //         `status inválido. Status: ${status}`
+        //     )
+        // }
 
-        if (this.getStatus() === "published" && status === "not-published") {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "223",
-                "status",
-                `status inválido. Status: ${status}. Não é possível 'despublicar' uma aula já publicada.`
-            )
-        }
+        // if (this.getStatus() === "published" && status === "not-published") {
+        //     throw new InvalidTrailClassPropetyDomainException(
+        //         "trail-class-base-entity.ts",
+        //         "223",
+        //         "status",
+        //         `status inválido. Status: ${status}. Não é possível 'despublicar' uma aula já publicada.`
+        //     )
+        // }
 
-        if (status === "published" && this.getContent() === undefined) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "232",
-                "status",
-                `status inválido. O status não pode ser "published" se o conteúdo não for válido`
-            )
-        }
+        // if (status === "published" && this.getContent() === undefined) {
+        //     throw new InvalidTrailClassPropetyDomainException(
+        //         "trail-class-base-entity.ts",
+        //         "232",
+        //         "status",
+        //         `status inválido. O status não pode ser "published" se o conteúdo não for válido`
+        //     )
+        // }
 
-        if (status === "published" && this.getContent()?.status === "empty") {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "status",
-                `status inválido. O status não pode ser "published" se o conteúdo for vazio`
-            )
-        }
+        // if (status === "published" && this.getContent()?.status === "empty") {
+        //     throw new InvalidTrailClassPropetyDomainException(
+        //         "trail-class-base-entity.ts",
+        //         "241",
+        //         "status",
+        //         `status inválido. O status não pode ser "published" se o conteúdo for vazio`
+        //     )
+        // }
 
-        if (status === "published" && this.getContent()?.status === "in-upload") {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "status",
-                `status inválido. O status não pode ser "published" se o conteúdo for vazio`
-            )
-        }
+        // if (status === "published" && this.getContent()?.status === "in-upload") {
+        //     throw new InvalidTrailClassPropetyDomainException(
+        //         "trail-class-base-entity.ts",
+        //         "241",
+        //         "status",
+        //         `status inválido. O status não pode ser "published" se o conteúdo for vazio`
+        //     )
+        // }
 
-        if (status === "published" && this.getContent()?.type === "empty") {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "status",
-                `status inválido. O status não pode ser "published" se o conteúdo tipo do conteúdo for vazio`
-            )
-        }
+        // if (status === "published" && this.getContent()?.type === "empty") {
+        //     throw new InvalidTrailClassPropetyDomainException(
+        //         "trail-class-base-entity.ts",
+        //         "241",
+        //         "status",
+        //         `status inválido. O status não pode ser "published" se o conteúdo tipo do conteúdo for vazio`
+        //     )
+        // }
 
         this.status = status;
     }
@@ -308,11 +249,11 @@ export class TrailClassBaseEntity {
     }
 
     public getContent() {
-        return this.content
+        return this.contents
     }
 
-    public setContent(content: ContentEmptyValueObject | ContentArticleValueObject | ContentVideoValueObject | ContentArchiveValueObject) {
-        if (!content) {
+    public setContents(contents: ContentBlock<any>[]) {
+        if (!contents) {
             throw new InvalidTrailClassPropetyDomainException(
                 "trail-class-base-entity.ts",
                 "241",
@@ -320,49 +261,8 @@ export class TrailClassBaseEntity {
                 `Não é possível definir o conteúdo de uma aula, com um conteúdo vazio, meu mano.`
             )
         }
-        
-        if (
-            !(content instanceof ContentEmptyValueObject) &&
-            !(content instanceof ContentArticleValueObject) &&
-            !(content instanceof ContentVideoValueObject) &&
-            !(content instanceof ContentArchiveValueObject)
-        ) {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "404",
-                "content",
-                "O tipo de conteúdo não é suportado."
-            )
-        }
 
-        if (this.getStatus() === "published" && content.type === "empty") {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `Não é possível definir o conteúdo de uma aula publicada, com o tipo do conteúdo vazio.`
-            )
-        }
-
-        if (this.getStatus() === "published" && content.status === "empty") {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `Não é possível definir o conteúdo de uma aula publicada, com o status do conteúdo como 'empty'.`
-            )
-        }
-
-        if (this.getStatus() === "published" && content.status === "in-upload") {
-            throw new InvalidTrailClassPropetyDomainException(
-                "trail-class-base-entity.ts",
-                "241",
-                "content",
-                `Não é possível definir o conteúdo de uma aula publicada, com o status do conteúdo como 'in-upload'.`
-            )
-        }
-
-        this.content = content
+        this.contents = contents
     }
 
     public getCreatedAt() {
