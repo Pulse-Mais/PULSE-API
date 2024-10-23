@@ -12,10 +12,6 @@ export class TrailClass extends TrailClassBaseEntity {
         super()
     }
 
-    public addContents(contents: ContentBlock<any>[]) {
-        
-    }
-
     public static create(input: CreateTrailClassInput) {
 
         const trailClass = new TrailClass()

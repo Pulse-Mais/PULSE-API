@@ -8,7 +8,7 @@ import { InvalidRequestParamsAppException } from "../application-exceptions/cont
 import { IContentDeliveryNetworkingService } from "../interfaces/IContent-delivery-networking-service";
 import { IStorageService } from "../interfaces/IStorage-service";
 import { IVideoService } from "../interfaces/IVideo-service";
- 
+
 import { CreateTrailClassOutputDTO, CreateTrailClassInputDTO, CreateTrailClassUseCase } from "../use-cases/educational-content-cases/trail-class/create";
 import { DeleteTrailClassOutputDTO, DeleteTrailClassInputDTO, DeleteTrailClassUseCase } from "../use-cases/educational-content-cases/trail-class/delete";
 import { PublishTrailClassOutputDTO, PublishTrailClassInputDTO, PublishTrailClassUseCase } from "../use-cases/educational-content-cases/trail-class/publish";
@@ -32,29 +32,17 @@ export class TrailClassControler extends GenericController {
 
         try {
             const req = await ctx.getRequest()
-            const data = req.data
-            console.log('data', data)
-            const files = req.files 
-        
-            const { idTrail } = await req.params
+
+            const idTrail = req.params.idTrail
             if (!idTrail) throw new InvalidRequestParamsAppException("trail-class-controller", "42", "idTrail");
 
-            const input: CreateTrailClassInputDTO = {
-                idTrail,
-                type: data.type,
-                title: data.title,
-                description: data.description,
-                duration: data.duration,
-                content: data.content,
-                files: files
-            }
-
             const output: CreateTrailClassOutputDTO = await new CreateTrailClassUseCase(
-                this.storageService, 
+                this.storageService,
+                this.videoService,
                 this.trailClassRepository, this.trailRepository
-            ).execute(input)
+            ).execute(idTrail, req.parts)
 
-            return ctx.sendResponse(this.createSuccessResponse(output))
+            return ctx.sendResponse(this.createSuccessResponse({ 'output': output }))
 
         } catch (error) {
             return ctx.sendResponse(this.createErrorResponse(error))

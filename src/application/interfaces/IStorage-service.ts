@@ -2,5 +2,6 @@ import { ArchiveContentItem } from "@/domain/entity/value-objects/archive-block-
 
 
 export interface IStorageService {
-    getPromise(archive: ArchiveContentItem): Promise<any>;
+    getPromise(archive: ArchiveContentItem, idTrailClass: string): Promise<any>;
+    teste(fileStream: any, filename: string): Promise<any>;
 }

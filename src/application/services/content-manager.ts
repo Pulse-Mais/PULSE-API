@@ -5,63 +5,68 @@ import { TextContentItem } from "@/domain/entity/value-objects/text-block-conten
 import { VideoContent, VideoContentItem } from "@/domain/entity/value-objects/video-block-content-item"
 import { IStorageService } from "../interfaces/IStorage-service"
 import { ContentBlock } from "@/domain/entity/value-objects/trail-content-item-value-object"
+import { IVideoService } from "../interfaces/IVideo-service"
 
+interface saveFilesInput {
+    idTrailClass: string
+    archives: any
+    videos: any
+}
 export class ContentManager {
 
-    constructor(private readonly storageService: IStorageService) { }
+    constructor(
+        private readonly storageService: IStorageService,
+        private readonly videosService: IVideoService
+    ) { }
 
-    private async saveArchiveFiles(archives: ArchiveContentItem[]) {
+    private async saveArchiveFiles(idTrailClass: string, archives: any) {
         try {
-            const promises = archives.map(async archive => {
-                const s3Response = await this.storageService.getPromise(archive);
+            const promises = []
+            for await (const part of archives) {
+                const filename = part.filename;
+                const key = `${idTrailClass}/${filename}`
+                const extension = part.mimetype
+                const promiseWithFilename = this.storageService.getPromise(
+                    part,
+                    idTrailClass
+                ).then((result) => ({ result, filename, key, extension }))
 
-                return {
-                    s3Response,   
-                    archive       
-                }
-            })
-    
-            return await Promise.all(promises);
+                promises.push(promiseWithFilename);
+            }
+
+            return await Promise.all(promises)
         } catch (error) {
-            throw new Error('Error saving archive content');
+            throw new Error(`Error saving archive content ${error}`);
         }
     }
-    
 
-    private async saveVideoFiles(videos: VideoContentItem[]) {
-        return Promise.all([{
-            teste: 'null',
-            mux: {
-                video: 'teste'
-            }
-        }])
+    private async saveVideoFiles(idTrailClass: string, videos: any) {
+
+        const promises = []
+        for await (const part of videos) {
+            const filename = part.filename;
+            const extension = part.mimetype
+
+           promises.push(await this.videosService.uploadWithDirectEndpoint(part))
+        }
+
+        return Promise.all(promises)
     }
 
 
-    async saveFiles(archives: ArchiveContentItem[], videos: ContentBlock<any>[]) {
+    async saveFiles(input: saveFilesInput) {
         const savedFiles = await Promise.all([
-            this.saveArchiveFiles(archives),
-            this.saveVideoFiles(videos)
+            this.saveArchiveFiles(input.idTrailClass, input.archives),
+            this.saveVideoFiles(input.idTrailClass, input.videos)
         ])
 
-        const archivesFiles: ArchiveContentItem[] = savedFiles[0].map(f => {
-            f.archive.location = f.s3Response.Key
-            f.archive.upload.status = 'uploaded'
-            f.archive.content.binary = 'None'
-    
-            return f.archive 
-        })
-    
-
-
-        const archivesVideos = savedFiles[1].map(f => {
-            f.teste = f.mux.video
-        })
-       
+        const archivesFiles = savedFiles[0]
+        const videoFiles = savedFiles[1]
+ 
         return {
-            'archives':archivesFiles as ArchiveContentItem[],
-            'videos': []
-       
+            'archives': archivesFiles,
+            'videos': videoFiles
+
         }
     }
 }

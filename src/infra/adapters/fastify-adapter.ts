@@ -13,19 +13,15 @@ export class FastifyAdapter<T> implements IHttpContext {
         this.req = req;
         this.res = res
     }
- 
+
     async getRequest(): Promise<IHttpRequest> {
-        const files = await this.req.file()
-        const teste = await this.req.parts()
-        console.log('teste', files)
-     
+        const parts = this.req.parts()
         const resquest = {
             headers: this.req.raw.headers,
             body: this.req.body,
             params: this.req.params,
             query: this.req.query,
-            files: files,
-            data: this.req.data
+            parts: parts
         }
 
         return resquest

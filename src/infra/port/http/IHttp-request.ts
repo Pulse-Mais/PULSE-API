@@ -3,6 +3,5 @@ export interface IHttpRequest {
     body: any
     params?: any
     query: any
-    files?: any
-    data?: any
+    parts?: any
 }

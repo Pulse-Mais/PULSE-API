@@ -9,11 +9,16 @@ export class TrailClassBaseEntity {
     private description?: string
     private duration?: number
     private status?: "published" | "not-published"
-    private contents?: ContentBlock<any>[]
+    private contents: ContentBlock<any>[] = []
     private createdAt?: Date;
     private updatedAt?: Date;
 
     constructor() { }
+
+    public addContent(content: ContentBlock<any>) {
+        console.log('adicionandoAAAAAAAAAAAAAAAAAAAAAAAAAA', content)
+        this.contents.push(content)
+    }
 
     public getId() {
         return this.id
@@ -21,10 +26,10 @@ export class TrailClassBaseEntity {
 
     public setId(id: string) {
         const validIdCharacters = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
+        console.log('id', id)
         if (!validIdCharacters.test(id)) throw new InvalidTrailClassPropetyDomainException("trail-class-base-entity.ts", "35", "id")
         if (id.length < 36) throw new InvalidTrailClassPropetyDomainException("trail-class-base-entity.ts", "40", "id")
-
+        console.log('não chego uaqui', id)
         this.id = id
     }
 
@@ -98,9 +103,9 @@ export class TrailClassBaseEntity {
         this.title = title;
     }
 
- 
 
-    
+
+
 
     public getDescription() {
         return this.description

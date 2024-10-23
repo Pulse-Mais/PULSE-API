@@ -3,7 +3,7 @@ import { HeadObjectCommand, PutObjectCommand, PutObjectCommandInput, S3Client } 
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import 'dotenv/config';
 
-export class AmazonS3Adapter implements IStorageService {
+export class AmazonS3Adapter   {
 
     private readonly acesssKeyId: string = process.env.AWS_ACCESS_KEY_ID!;
     private readonly secretAccessKey: string = process.env.AWS_SECRET_ACCESS_KEY!;
@@ -68,7 +68,7 @@ export class AmazonS3Adapter implements IStorageService {
 
         const command = new PutObjectCommand(putObjectInput);
         
-        const url = await getSignedUrl(this.client, command, { expiresIn: 3600 });
+        const url =' await getSignedUrl(this.client, command, { expiresIn: 3600 })';
 
         if (!url) throw new Error("Error ao criar url!");
         console.log(url, "URL NO STORAGE SERVICE");

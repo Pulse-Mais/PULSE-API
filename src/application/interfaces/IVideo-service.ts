@@ -1,5 +1,5 @@
 
 
 export interface IVideoService {
-    getUrlForUploadVideoContent: () => Promise<{ url: string, idUpload: string }>
+    uploadWithDirectEndpoint: (videoBuffer: any) => Promise<any>
 }

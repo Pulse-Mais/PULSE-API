@@ -2,15 +2,16 @@ import { CreateTrailInputDTO } from './../../use-cases/educational-content-cases
 import { FastifyAdapter } from "@/infra/adapters/fastify-adapter";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { TrailClassControler } from "@/application/controllers/trail-class-controller";
- 
- 
- 
+import { S3storageService } from '@/application/services/s3-storage-service';
+
+
+const s3storageService = new S3storageService()
 export const trailClassRoutes = (server: FastifyInstance, trailClassController: TrailClassControler) => {
 
 
 
 
-        server.register(require('@fastify/multipart'))
+    server.register(require('@fastify/multipart'), { throwFileSizeLimit: false })
     /**   
         * * CRIAR UMA AULA
 
@@ -24,29 +25,28 @@ export const trailClassRoutes = (server: FastifyInstance, trailClassController: 
     server.post("/create-class-or-activity/:idTrail", async (request: any, reply: FastifyReply) => {
         const fastifyAdapter = new FastifyAdapter(request, reply);
 
-        return await trailClassController.createTrailClass(fastifyAdapter); // Passa os arquivos recebidos
+        return await trailClassController.createTrailClass(fastifyAdapter);  
     });
 
     server.post("/upload", async (request: any, reply: FastifyReply) => {
-        const parts = request.parts(); // Parte para iterar sobre os arquivos e campos
+        console.log('chegou aqui')
+        const parts = request.parts();
+        console.log('passou de req.parts')  
         const files: any[] = [];
         let data: any = null;
-
-        // Itera sobre todas as partes do multipart/form-data
+        
         for await (const part of parts) {
-            console.log('Parte:', part);
-            if (part.file) {
-                // Se for um arquivo, guarda no array de arquivos
-                files.push(part);
-            } else if (part.fieldname === 'data') {
-                // Se for o campo 'data', armazena o valor
-                data = JSON.parse(part.value); // Converte de string para JSON
+ 
+            if (part.type === 'file' && !part.mimetype.startsWith('video')) {
+                console.log('ARQUVIOOO!', part)
+                await s3storageService.teste(part.file, part.filename)
+            } else  {
+               console.log('Não é um arquivo, parte:', part);
             }
         }
 
-        // Agora você pode usar os arquivos e os dados JSON
-        console.log('Arquivos:', files);
-        console.log('Dados:', data);
+       
+ 
 
         return reply.send({ success: true });
     });

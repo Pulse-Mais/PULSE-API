@@ -17,11 +17,64 @@ import { AlternativesContent, AlternativesContentItem } from '@/domain/entity/va
 import { DissertativeContent, DissertativeContentItem } from '@/domain/entity/value-objects/dissertatives-block-content-item';
 import { VideoContent, VideoContentItem } from '@/domain/entity/value-objects/video-block-content-item';
 
+interface createArchiveContentItemInput {
+  idTrailClass: string
+  index: number
+  content: ArchiveContent
+  status: 'pending' | 'uploaded' | 'error'
+}
+
+interface createTextContentItemInput {
+  idTrailClass: string
+  index: number
+  content: string
+  status: 'pending' | 'uploaded' | 'error'
+}
+
+interface createAlternativesContentItemInput {
+  idTrailClass: string
+  index: number
+  content: AlternativesContent
+  status: 'pending' | 'uploaded' | 'error'
+}
+
+interface createDissertativeContentItemInput {
+  idTrailClass: string
+  index: number
+  content: DissertativeContent
+  status: 'pending' | 'uploaded' | 'error'
+}
+
+interface createVideoContentItemInput {
+  idTrailClass: string
+  index: number
+  content: VideoContent
+  status: 'pending' | 'uploaded' | 'error'
+}
 export class TrailDomainService {
   constructor() { }
 
   createTrail(input: CreateTrailInputDomainService): Trail {
     return Trail.create(input)
+  }
+
+  createArchiveContentItem(input: createArchiveContentItemInput) {
+    return new ArchiveContentItem(input.idTrailClass, input.index, input.content, { status: input.status })
+  }
+
+  createVideoContentItem(input: createVideoContentItemInput) {
+    return new VideoContentItem(input.idTrailClass, input.index, input.content, { status: input.status, id: ''})
+  }
+  createTextContentItem(input: createTextContentItemInput) {
+    return new TextContentItem(input.idTrailClass, input.index, input.content, { status: input.status })
+  }
+
+  createAlternativesContentItem(input: createAlternativesContentItemInput) {
+    return new AlternativesContentItem(input.idTrailClass, input.index, input.content, { status: input.status })
+  }
+
+  createDissertativeContentItem(input: createDissertativeContentItemInput) {
+    return new DissertativeContentItem(input.idTrailClass, input.index, input.content, { status: input.status })
   }
 
   createTrailClassContents(idTrailClass: string, contentBlocks: ContentBlock<any>[], files: any[]) {
@@ -45,11 +98,11 @@ export class TrailDomainService {
           let archiveContent: ArchiveContent = {
             title: cb.content,
             extension: inMemoryFile.mimetype,
-            binary: inMemoryFile.buffer
+            location: inMemoryFile.buffer
           }
 
           createdContents.archives.push(new ArchiveContentItem(
-            idTrailClass, cb.index, cb.type, archiveContent, { status: 'pending' }
+            idTrailClass, cb.index, archiveContent, { status: 'pending' }
           ))
           console.log('createdContents.archives', createdContents.archives)
           break;
@@ -63,11 +116,12 @@ export class TrailDomainService {
           let videoContent: VideoContent = {
             title: cb.content,
             extension: inMemoryVideo.mimetype,
-            binary: inMemoryVideo.buffer
+            location: inMemoryVideo.buffer
           }
 
           createdContents.videos.push(new VideoContentItem(
-            idTrailClass, cb.index, cb.type, videoContent, { status: 'pending' }
+
+            idTrailClass, cb.index, videoContent, { status: 'pending', id: ''}
           ))
           break;
 
